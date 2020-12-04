@@ -1,3 +1,6 @@
+#ifndef HLS_H
+#define HLS_H
+
 /* opendir closedir lstat getpwuid getgrgid req */
 #include <sys/types.h>
 /* opendir readdir req */
@@ -25,11 +28,14 @@
 #include <stdbool.h>
 
 /**
- * struct file_list_s - Doubly linked list node
+ * struct file_list_s - doubly linked list node
  *
- * @c: char stored in the node
- * @prev: Pointer to the previous element of the list
- * @next: Pointer to the next element of the list
+ * @f_name: file or dir name
+ * @f_slnk: symlink target name
+ * @f_stat: pointer to stat struct with lstat output
+ * @dir_files: if parsed dir, head of file list of contents
+ * @prev: pointer to next node
+ * @next: pointer to previous node
  */
 typedef struct file_list_s
 {
@@ -66,3 +72,5 @@ bool stringExactMatch(char *s1, char *s2);
 /* helpers4.c */
 void parseDirs(file_list_t *dir_list_head);
 void printDirs(file_list_t *dir_list_head);
+
+#endif /* HLS_H */

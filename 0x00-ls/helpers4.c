@@ -1,20 +1,16 @@
 #include "hls.h"
+#include "flags.h"
 
-/* flags */
-extern bool singleColumn;
-extern bool allFiles;
-extern bool almostAllFiles;
-extern bool longFormat;
-extern bool reverseOrder;
-extern bool fileSizeSort;
-extern bool modTimeSort;
-extern bool Recursive;
-
+/**
+ * parseDirs - walks through a list of directories and populates their
+ * `dir_files` list
+ * @dir_list_head: head of doubly linked list of directory profiles
+ */
 void parseDirs(file_list_t *dir_list_head)
 {
 	DIR *dir;
 	struct dirent *read;
-	file_list_t *file_list_head = NULL, *temp = dir_list_head;
+	file_list_t *file_list_head, *temp = dir_list_head;
 	struct stat file_stat;
 	char *path = NULL;
 
@@ -22,6 +18,7 @@ void parseDirs(file_list_t *dir_list_head)
 
 	while (temp)
 	{
+		file_list_head = NULL;
 		dir = opendir(temp->f_name);
 		if (!dir)
 			accessError(temp->f_name);
@@ -44,13 +41,16 @@ void parseDirs(file_list_t *dir_list_head)
 			accessError(temp->f_name);
 		closedir(dir);
 
-		dir_list_head->dir_files = file_list_head;
-
+		temp->dir_files = file_list_head;
 		temp = temp->next;
 	}
 	free(path);
 }
 
+/**
+ * printDirs - print directories and their contents from a doubly linked list
+ * @dir_list_head: head of doubly linked list of directory profiles
+ */
 void printDirs(file_list_t *dir_list_head)
 {
 	file_list_t *temp = dir_list_head;

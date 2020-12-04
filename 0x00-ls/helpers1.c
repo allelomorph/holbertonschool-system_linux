@@ -1,22 +1,17 @@
 #include "hls.h"
+#include "flags.h"
 
-/* flags */
-extern bool singleColumn;
-extern bool allFiles;
-extern bool almostAllFiles;
-extern bool longFormat;
-extern bool reverseOrder;
-extern bool fileSizeSort;
-extern bool modTimeSort;
-extern bool Recursive;
-
+/**
+ * setFlags - sets global booleans based on toggles in command line args
+ * @flags: single arg containing flags
+ */
 void setFlags(char *flags)
 {
 	int i;
 
-	for(i = 1; flags[i]; i++)
+	for (i = 1; flags[i]; i++)
 	{
-		switch(flags[i])
+		switch (flags[i])
 		{
 		case '1':
 			singleColumn   = true;
@@ -49,6 +44,11 @@ void setFlags(char *flags)
 	}
 }
 
+/**
+ * statCopy - duplicates a stat struct and its contents
+ * @st: original stat struct to copy
+ * Return: pointer to copied struct, or NULL on failure
+ */
 struct stat *statCopy(struct stat st)
 {
 	struct stat *new;
@@ -73,19 +73,24 @@ struct stat *statCopy(struct stat st)
 	new->st_mtime = st.st_mtime;
 	new->st_ctime = st.st_ctime;
 
-	return new;
+	return (new);
 }
 
+/**
+ * _strcopy - copies a string
+ * @string: original string
+ * Return: copied string, or NULL on failure
+ */
 char *_strcopy(char *string)
 {
 	int i, len = 0;
 	char *copy = NULL;
 
 	if (!string)
-		return NULL;
+		return (NULL);
 
 	/* measure length */
-	for(i = 0; string[i]; i++)
+	for (i = 0; string[i]; i++)
 		len++;
 
 	/* new array */
@@ -97,18 +102,22 @@ char *_strcopy(char *string)
 	}
 
 	/* copy */
-	for(i = 0; i <= len; i++)
+	for (i = 0; i <= len; i++)
 		copy[i] = string[i];
 
-	return copy;
+	return (copy);
 }
 
+/**
+ * printFileList - prints each member of a file_list_t list, according to flags
+ * @head: pointer to first member of a file_list_t list
+ */
 void printFileList(file_list_t *head)
 {
 	file_list_t *temp;
 
 	temp = head;
-	/* if reverse flag is on, advance temp to tail to prepare for revered traversal */
+	/* if reverse flag is on, advance to tail for reversed traversal */
 	if (reverseOrder)
 		while (temp->next)
 			temp = temp->next;
@@ -137,6 +146,10 @@ void printFileList(file_list_t *head)
 	}
 }
 
+/**
+ * deleteListNode - removes a node from a doubly linked list
+ * @node: pointer to a member of a file_list_t list
+ */
 void deleteListNode(file_list_t *node)
 {
 	file_list_t *temp, *bef_cut, *aft_cut;

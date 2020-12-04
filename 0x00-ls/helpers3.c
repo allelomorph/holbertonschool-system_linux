@@ -1,20 +1,17 @@
 #include "hls.h"
+#include "flags.h"
 
-/* flags */
-extern bool singleColumn;
-extern bool allFiles;
-extern bool almostAllFiles;
-extern bool longFormat;
-extern bool reverseOrder;
-extern bool fileSizeSort;
-extern bool modTimeSort;
-extern bool Recursive;
-
+/**
+ * modeString - formats a string to represent a st_mode value for a file
+ * @mode: mode_t value for bitmasking from a stat struct
+ * Return: formatted string with file type and permissions
+ */
 char *modeString(mode_t mode)
 {
 	char mode_s[11];
 
-	switch (mode & S_IFMT) {
+	switch (mode & S_IFMT)
+	{
 	case S_IFREG:
 		mode_s[0] = '-';
 		break;
@@ -28,7 +25,7 @@ char *modeString(mode_t mode)
 		mode_s[0] = 'c';
 		break;
 	case S_IFSOCK:
-	        mode_s[0] = 's';
+		mode_s[0] = 's';
 		break;
 	case S_IFLNK:
 		mode_s[0] = 'l';
@@ -48,9 +45,14 @@ char *modeString(mode_t mode)
 	mode_s[9] = (mode & S_IXOTH) ? 'x' : '-';
 	mode_s[10] = '\0';
 
-	return _strcopy(mode_s);
+	return (_strcopy(mode_s));
 }
 
+/**
+ * dateTimeString - selectively edits the output of `ctime`
+ * @time: time_t time value from a stat struct
+ * Return: formatted string with shortened time format
+ */
 char *dateTimeString(time_t time)
 {
 	char *time_s, *fmt_time_s;
@@ -66,9 +68,14 @@ char *dateTimeString(time_t time)
 	fmt_time_s[12] = '\0';
 
 	/* Dec  4 02:49 - 13 chars incl. \0, no \n */
-	return fmt_time_s;
+	return (fmt_time_s);
 }
 
+/**
+ * longFormatPrint - formats long-form output of file info based on stat struct
+ * @node: node in a linked list of file profiles
+ * Return: exit macros for success and failure
+ */
 int longFormatPrint(file_list_t *node)
 {
 	char *mode_buf, *time_buf;
@@ -78,19 +85,19 @@ int longFormatPrint(file_list_t *node)
 	if (!node || !node->f_stat)
 	{
 		fprintf(stderr, "longFormatPrint: missing f_stat");
-		return EXIT_FAILURE;
+		return (EXIT_FAILURE);
 	}
 
-        mode_buf = modeString(node->f_stat->st_mode);
+	mode_buf = modeString(node->f_stat->st_mode);
 	time_buf = dateTimeString(node->f_stat->st_mtime);
 	usr = getpwuid(node->f_stat->st_uid);
 	grp = getgrgid(node->f_stat->st_gid);
 	printf("%s %u %s %s %4u %s %s",
 	       mode_buf,
-	       (unsigned)node->f_stat->st_nlink,
+	       (unsigned int)node->f_stat->st_nlink,
 	       usr->pw_name ? usr->pw_name : "",
 	       grp->gr_name ? grp->gr_name : "",
-	       (unsigned)node->f_stat->st_size,
+	       (unsigned int)node->f_stat->st_size,
 	       time_buf,
 	       node->f_name);
 
@@ -99,26 +106,36 @@ int longFormatPrint(file_list_t *node)
 
 	free(mode_buf);
 	free(time_buf);
-	return EXIT_SUCCESS;
+	return (EXIT_SUCCESS);
 }
 
+/**
+ * accessError - prints access errors to stderr
+ * @file: name of file that caused access error
+ */
 void accessError(const char *file)
 {
 	fprintf(stderr, "hls: cannot access ");
 	perror(file);
 }
 
-
+/**
+ * stringExactMatch - goes beyond strcmp to ensure that the two string match to
+ * the null bit
+ * @s1: first string to compare
+ * @s2: second string to compare
+ * Return: boolean representing exact match
+ */
 bool stringExactMatch(char *s1, char *s2)
 {
-        while (s1 && s2)
+	while (s1 && s2)
 	{
 		if (*s1 != *s2)
-			return false;
+			return (false);
 		else if (*s1 == '\0' && *s2 == '\0')
-		        return true;
+			return (true);
 		s1++;
 		s2++;
 	}
-	return false;
+	return (false);
 }
