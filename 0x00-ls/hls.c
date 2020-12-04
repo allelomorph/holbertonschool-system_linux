@@ -9,40 +9,38 @@ bool reverseOrder   = false;
 bool fileSizeSort   = false;
 bool modTimeSort    = false;
 bool Recursive      = false;
-/* consider making a `defaultDir` flag for when no args or only flag args */
 
 int main(int argc, char *argv[])
 {
+	int i;
 	file_list_t *file_list = NULL;
 	file_list_t *dir_list = NULL;
 
-	/* need to bring in _strcmp() from foundations!! */
-	/* and what sorting algo? insertion?? */
+	for (i = 0; i < argc; i++)
+		if (argv[i][0] == '-')
+			setFlags(argv[i]);
+
 	parseArgs(argc, argv, &file_list, &dir_list);
 
 	/* sortList(flie or dir list)
 	     sort lists based on flags (default alpha lowercase first)
-	     -l -S and -t will require a list of stat structs not strings
 	*/
+	/* no hidden file screen on files from args, only on files from dirs */
 
-	/* listFiles(file list/array from args)
-	      prints file args (maybe sorted) in single line before dirs
-	*/
+	if (file_list)
+		printFileList(file_list);
 
-	/* loop through -- listDirectory(file list/array from args)
-	      !! if both file list and dir list empty, then listDir `.`
-	      prints dirs in dir list first by <name>:\n, and then as a file list
-	      this is where -a and -A will filter output
-	 */
+	if (dir_list)
+	{
+		parseDirs(dir_list);
+		printDirs(dir_list);
+	}
 
-	testPrintFlags();
-
-	printf("files:\n");
-	testPrintList(file_list);
-	printf("dirs:\n");
-	testPrintList(dir_list);
-
-	/* cleanup/free func on lists and buffers */
+	/* cleanup lists and buffers */
+	if (file_list)
+		freeList(file_list);
+	if (dir_list)
+		freeList(dir_list);
 
 	return EXIT_SUCCESS;
 }
