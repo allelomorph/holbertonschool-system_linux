@@ -10,7 +10,7 @@ extern bool fileSizeSort;
 extern bool modTimeSort;
 extern bool Recursive;
 
-int setFlags(char *flags)
+void setFlags(char *flags)
 {
 	int i;
 
@@ -44,46 +44,11 @@ int setFlags(char *flags)
 			break;
 		default:
 			fprintf(stderr, "hls: invalid option -- '%c'\n", flags[i]);
-			return EXIT_FAILURE;
+			exit(2);
 		}
 	}
-	return EXIT_SUCCESS;
 }
 
-void readDirectory(char *dirName)
-{
-	DIR *dir;
-	struct dirent *read;
-	/* struct stat *buf; */
-
-	dir = opendir(dirName);
-
-	while ((read = readdir(dir)) != NULL)
-	{
-		/* hidden files */
-		if (read->d_name[0] == '.')
-		{
-			/* . and .. */
-			if ((read->d_name[1] == '.' && !(read->d_name[2]))
-			    || !(read->d_name[1]))
-			{
-				if (allFiles)
-					printf("%s  ", read->d_name);
-			}
-			/* user-created hidden */
-			else if (almostAllFiles)
-				printf("%s  ", read->d_name);
-		}
-		/* normal files */
-		else
-			printf("%s  ", read->d_name);
-	}
-	printf("\n");
-	closedir(dir);
-}
-
-
-/* copies stat structs */
 struct stat *statCopy(struct stat st)
 {
 	struct stat *new;
@@ -113,8 +78,8 @@ struct stat *statCopy(struct stat st)
 
 char *_strcopy(char *string)
 {
-	int i, len;
-	char *copy;
+	int i, len = 0;
+	char *copy = NULL;
 
 	if (!string)
 		return NULL;
@@ -132,8 +97,70 @@ char *_strcopy(char *string)
 	}
 
 	/* copy */
-	for(i = 0; string[i]; i++)
+	for(i = 0; i <= len; i++)
 		copy[i] = string[i];
 
 	return copy;
+}
+
+void printFileList(file_list_t *head)
+{
+	file_list_t *temp;
+
+	temp = head;
+	/* if reverse flag is on, advance temp to tail to prepare for revered traversal */
+	if (reverseOrder)
+		while (temp->next)
+			temp = temp->next;
+
+	while (temp)
+	{
+		if (longFormat)
+			longFormatPrint(temp);
+		else
+			printf("%s", temp->f_name);
+
+		if (singleColumn || longFormat ||
+		    /* end of list moving forward */
+		    (!reverseOrder && !(temp->next)) ||
+		    /* beginning of list moving backward */
+		    (reverseOrder && !(temp->prev)))
+			printf("\n");
+		else
+			printf("  ");
+
+		/* next node */
+		if (reverseOrder)
+			temp = temp->prev;
+		else
+			temp = temp->next;
+	}
+}
+
+void deleteListNode(file_list_t *node)
+{
+	file_list_t *temp, *bef_cut, *aft_cut;
+
+	if (!node)
+		return;
+
+	temp = node;
+
+	bef_cut = temp->prev;
+	aft_cut = temp->next;
+	if (bef_cut)
+		bef_cut->next = aft_cut;
+	if (aft_cut)
+		aft_cut->prev = bef_cut;
+
+	if (temp->f_name)
+		free((char *)temp->f_name);
+	if (temp->f_slnk)
+		free((char *)temp->f_slnk);
+	if (temp->f_stat)
+		free((struct stat *)temp->f_stat);
+	if (temp->dir_files)
+		freeList(temp->dir_files);
+
+	free(temp);
 }
