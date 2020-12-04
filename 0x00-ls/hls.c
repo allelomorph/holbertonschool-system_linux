@@ -22,9 +22,7 @@ int main(int argc, char *argv[])
 
 	parseArgs(argc, argv, &file_list, &dir_list);
 
-	/* sortList(flie or dir list)
-	     sort lists based on flags (default alpha lowercase first)
-	*/
+	/* sort lists based on flags (default alpha lowercase first) */
 	/* no hidden file screen on files from args, only on files from dirs */
 
 	if (file_list)
@@ -42,5 +40,5 @@ int main(int argc, char *argv[])
 	if (dir_list)
 		freeList(dir_list);
 
-	return EXIT_SUCCESS;
+	return (EXIT_SUCCESS);
 }

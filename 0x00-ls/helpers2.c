@@ -1,26 +1,16 @@
 #include "hls.h"
-
-/* flags */
-extern bool singleColumn;
-extern bool allFiles;
-extern bool almostAllFiles;
-extern bool longFormat;
-extern bool reverseOrder;
-extern bool fileSizeSort;
-extern bool modTimeSort;
-extern bool Recursive;
+#include "flags.h"
 
 /**
-   UOPDATE UPDATE UPDATE!!
- * add_dnodeint - adds a new node at the beginning of a dlistint_t list
- * @head: double pointer to first member of a dlistint_t list
- * @n: int value stored in new node
+ * addListNode - adds a new node at the beginning of a file_list_t list
+ * @head: double pointer to first member of a file_list_t list
+ * @f_name: name of file corresponding to this position in the list
+ * @f_stat: stat struct containing information about the file named
  * Return: address of the new element, or NULL if it failed
  */
-
 file_list_t *addListNode(file_list_t **head, char *f_name, struct stat f_stat)
 {
-        file_list_t *new;
+	file_list_t *new;
 	char *rl_buf = NULL;
 	size_t rl_bufSize = 256;
 
@@ -32,7 +22,7 @@ file_list_t *addListNode(file_list_t **head, char *f_name, struct stat f_stat)
 		return (NULL);
 	}
 
-        new->f_name = _strcopy(f_name);
+	new->f_name = _strcopy(f_name);
 	if (S_ISLNK(f_stat.st_mode))
 	{
 		readlink(f_name, rl_buf, rl_bufSize);
@@ -54,9 +44,13 @@ file_list_t *addListNode(file_list_t **head, char *f_name, struct stat f_stat)
 	return (new);
 }
 
+/**
+ * freeList - frees all node members and nodes of a file_list_t list
+ * @head: double pointer to first member of a file_list_t list
+ */
 void freeList(file_list_t *head)
 {
-        file_list_t *temp;
+	file_list_t *temp;
 
 	while (head)
 	{
@@ -77,13 +71,14 @@ void freeList(file_list_t *head)
 	}
 }
 
-/* parseArgs(argv)
-   runs setFlags on flag args
-   lstat remaining args
-   throw errors to stderr (errs in arg order not sorted order)
-   use remainder to populate one list/array of general files,
-   and one of dirs
-*/
+/**
+ * parseArgs - parses command line arguments and populates linked lists of
+ * files and directories accordingly
+ * @argc: argument count passed from main
+ * @argv: array of args passed from main
+ * @file_list: pointer to head of a doubly linked list of file info structs
+ * @dir_list: pointer to head of a doubly linked list of directory info structs
+ */
 void parseArgs(int argc, char *argv[], file_list_t **file_list,
 	       file_list_t **dir_list)
 {
@@ -119,6 +114,9 @@ void parseArgs(int argc, char *argv[], file_list_t **file_list,
 	}
 }
 
+/**
+ * testPrintFlags - easy reference for flag toggles
+ */
 void testPrintFlags(void)
 {
 	printf("singleColumn   = %s\n", singleColumn ? "true" : "false");
@@ -131,6 +129,11 @@ void testPrintFlags(void)
 	printf("Recursive      = %s\n", Recursive ? "true" : "false");
 }
 
+/**
+ * testPrintList - reference printing for doubly linked lists
+ * @head: double pointer to first member of a file_list_t list
+ * Return: amount of nodes printed
+ */
 size_t testPrintList(file_list_t *head)
 {
 	const file_list_t *temp = head;
