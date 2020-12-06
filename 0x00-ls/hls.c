@@ -10,6 +10,9 @@ bool fileSizeSort   = false;
 bool modTimeSort    = false;
 bool Recursive      = false;
 
+/* error handling */
+int exitCode = EXIT_SUCCESS;
+
 /**
  * main - entry point into `hls`, a clone of tha bash function `ls`
  * @argc: number of command line arguments
@@ -53,5 +56,5 @@ int main(int argc, char *argv[])
 	if (dir_list)
 		freeList(dir_list);
 
-	return (EXIT_SUCCESS);
+	return (exitCode);
 }

@@ -171,5 +171,5 @@ void fileError(const char *file)
 
 	perror(file);
 	errno = 0;
-	/* exit_code = 2; */
+	exitCode = 2;
 }

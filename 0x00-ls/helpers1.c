@@ -117,6 +117,7 @@ char *_strcopy(char *string)
 void printFileList(file_list_t *head, bool cmdLineArgs)
 {
 	file_list_t *temp = head;
+	bool firstInList = true;
 
 	/* if reverse flag is on, advance to tail for reversed traversal */
 	if (reverseOrder)
@@ -127,29 +128,31 @@ void printFileList(file_list_t *head, bool cmdLineArgs)
 	{
 		if (cmdLineArgs || displayAllowed(temp->f_name))
 		{
+			if (!firstInList)
+			{
+				if (singleColumn || longFormat)
+					printf("\n");
+				else
+					printf("  ");
+			}
+
 			if (longFormat)
 				longFormatPrint(temp);
 			else
 				printf("%s", temp->f_name);
 
-			if (singleColumn || longFormat)
-				printf("\n");
-			else
-				printf("  ");
+			firstInList = false;
 		}
-
-		if ((!singleColumn && !longFormat) &&
-		    /* end of list moving forward */
-		    ((!reverseOrder && !(temp->next)) ||
-		    /* beginning of list moving backward */
-		     (reverseOrder && !(temp->prev))))
-			printf("\n");
 
 		/* next node */
 		if (reverseOrder)
 			temp = temp->prev;
 		else
 			temp = temp->next;
+
+		/* final newline */
+		if (!temp)
+			printf("\n");
 	}
 }
 
