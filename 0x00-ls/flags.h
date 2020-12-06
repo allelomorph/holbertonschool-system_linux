@@ -13,4 +13,6 @@ extern bool fileSizeSort;
 extern bool modTimeSort;
 extern bool Recursive;
 
+extern int exitCode;
+
 #endif /* FLAGS_H */
