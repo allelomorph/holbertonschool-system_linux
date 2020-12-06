@@ -4,11 +4,13 @@
 /**
  * addListNode - adds a new node at the beginning of a file_list_t list
  * @head: double pointer to first member of a file_list_t list
- * @f_name: name of file corresponding to this position in the list
- * @f_stat: stat struct containing information about the file named
+ * @filename: name of file corresponding to this position in the list
+ * @path: full path of file relative to working directory
+ * @st: stat struct containing information about the file named
  * Return: address of the new element, or NULL if it failed
  */
-file_list_t *addListNode(file_list_t **head, char *filename, char *path, struct stat st)
+file_list_t *addListNode(file_list_t **head, char *filename, char *path,
+			 struct stat st)
 {
 	file_list_t *new;
 	char *rl_buf = NULL;

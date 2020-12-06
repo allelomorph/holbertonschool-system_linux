@@ -34,10 +34,7 @@ void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs)
 					else
 						fileError(path);
 					if (S_ISDIR(file_stat.st_mode) && Recursive)
-					{
-						cmdLineArgs = false;
-						parseDirs(file_list_head, cmdLineArgs);
-					}
+						parseDirs(file_list_head, false);
 				}
 				if (errno)
 					fileError(temp->f_path);
@@ -52,84 +49,16 @@ void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs)
 	free(path);
 }
 
-#ifdef BLHBLAH
-/*OLD DRAFTS*/
-
-/**
- * parseDirs - walks through a list of directories and populates their
- * `dir_files` list
- * @dir_list_head: head of doubly linked list of directory profiles
- * @cmdLineArgs: boolean indicating if directory was passed by user as arg
- */
-void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs)
-{
-	DIR *dir;
-	struct dirent *read;
-	file_list_t *file_list_head, *temp = dir_list_head;
-	struct stat file_stat;
-	char *path = NULL;
-
-	path = malloc(sizeof(char) * 256);
-	while (temp)
-	{
-		if (dirParseAllowed(temp->f_name, cmdLineArgs))
-		{
-			file_list_head = NULL;
-			dir = opendir(temp->f_path);
-			if (dir)
-			{
-				while ((read = readdir(dir)) != NULL)
-				{
-					sprintf(path, "%s/%s", temp->f_path,
-						read->d_name);
-					if (lstat(path, &file_stat) == 0)
-					{
-						printf("\tparseDirs: adding list node for %s at %s\n", read->d_name, temp->f_path);
-						addListNode(&file_list_head,
-							    read->d_name, path, file_stat);
-					}
-					else
-					{
-						printf("parseDirs:lstat:\n");
-						fileError(path);
-					}
-					if (S_ISDIR(file_stat.st_mode) && Recursive)
-					{
-						printf("recursing to parse %s inside %s\n", read->d_name, temp->f_path);
-						cmdLineArgs = false;
-						parseDirs(file_list_head, cmdLineArgs);
-					}
-				}
-				if (errno)
-				{
-					printf("parseDirs:readdir:\n");
-					fileError(temp->f_path);
-				}
-				closedir(dir);
-				temp->dir_files = file_list_head;
-			}
-			else
-			{
-				printf("parseDirs:opendir:\n");
-				fileError(temp->f_path);
-				printf("skipping to next\n");
-			}
-		}
-		else
-			printf("parsing reected for: %s @ %p\n", temp->f_name, (void *)temp);
-		temp = Recursive ? NULL : temp->next;
-	}
-	free(path);
-}
-
-#endif
 
 /**
  * printDirs - prints any directories found in a file_list_t list,
  * and their contents
  * @dir_list_head: head of doubly linked list of directory profiles
+ * @cmdLineArgs: indicates whether dirs in list were named as args
+ * @fileArgsEmpty: indicates whether or not command line args contained files
  */
-void printDirs(file_list_t *dir_list_head, bool cmdLineArgs, bool fileArgsEmpty)
+void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
+	       bool fileArgsEmpty)
 {
 	file_list_t *temp = dir_list_head;
 	bool onlyOneDir = false;
@@ -221,15 +150,14 @@ void fileError(const char *file)
 		fprintf(stderr, "hls: cannot access ");
 		break;
 	case EACCES:
-	        fprintf(stderr, "hls: cannot open ");
+		fprintf(stderr, "hls: cannot open ");
 		break;
 	default:
-	        fprintf(stderr, "hls: unknown error ");
+		fprintf(stderr, "hls: unknown error ");
 		break;
 	}
 
 	perror(file);
-	/*
-	  exit_code = 2;
-	 */
+
+	/* exit_code = 2; */
 }
