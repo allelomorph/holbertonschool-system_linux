@@ -112,11 +112,10 @@ char *_strcopy(char *string)
  * printFileList - prints each member of a file_list_t list, according to flags
  * @head: pointer to first member of a file_list_t list
  */
-void printFileList(file_list_t *head)
+void printFileList(file_list_t *head, bool cmdLineArgs)
 {
-	file_list_t *temp;
+	file_list_t *temp = head;
 
-	temp = head;
 	/* if reverse flag is on, advance to tail for reversed traversal */
 	if (reverseOrder)
 		while (temp->next)
@@ -124,20 +123,22 @@ void printFileList(file_list_t *head)
 
 	while (temp)
 	{
-		if (longFormat)
-			longFormatPrint(temp);
-		else
-			printf("%s", temp->f_name);
+		if (cmdLineArgs || displayAllowed(temp->f_name))
+		{
+			if (longFormat)
+				longFormatPrint(temp);
+			else
+				printf("%s", temp->f_name);
 
-		if (singleColumn || longFormat ||
-		    /* end of list moving forward */
-		    (!reverseOrder && !(temp->next)) ||
-		    /* beginning of list moving backward */
-		    (reverseOrder && !(temp->prev)))
-			printf("\n");
-		else
-			printf("  ");
-
+			if (singleColumn || longFormat ||
+			    /* end of list moving forward */
+			    (!reverseOrder && !(temp->next)) ||
+			    /* beginning of list moving backward */
+			    (reverseOrder && !(temp->prev)))
+				printf("\n");
+			else
+				printf("  ");
+		}
 		/* next node */
 		if (reverseOrder)
 			temp = temp->prev;
