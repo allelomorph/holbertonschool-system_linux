@@ -8,7 +8,7 @@
  * @f_stat: stat struct containing information about the file named
  * Return: address of the new element, or NULL if it failed
  */
-file_list_t *addListNode(file_list_t **head, char *f_name, struct stat f_stat)
+file_list_t *addListNode(file_list_t **head, char *filename, char *path, struct stat st)
 {
 	file_list_t *new;
 	char *rl_buf = NULL;
@@ -22,24 +22,29 @@ file_list_t *addListNode(file_list_t **head, char *f_name, struct stat f_stat)
 		return (NULL);
 	}
 
-	new->f_name = _strcopy(f_name);
-	if (S_ISLNK(f_stat.st_mode))
+	/* init contents */
+	new->f_name = _strcopy(filename);
+	if (S_ISLNK(st.st_mode))
 	{
-		readlink(f_name, rl_buf, rl_bufSize);
+		readlink(filename, rl_buf, rl_bufSize);
 		new->f_slnk = _strcopy(rl_buf);
 	}
 	else
 		new->f_slnk = NULL;
+	new->f_path = _strcopy(path);
 	if (longFormat || fileSizeSort || modTimeSort)
-		new->f_stat = statCopy(f_stat);
+		new->f_stat = statCopy(st);
 	else
 		new->f_stat = NULL;
 	new->dir_files = NULL;
 	new->prev = NULL;
+
+	/* insert at head of list */
 	new->next = *head;
 	if (*head)
 		(*head)->prev = new;
 	*head = new;
+
 	free(rl_buf);
 	return (new);
 }
@@ -62,8 +67,12 @@ void freeList(file_list_t *head)
 			free((char *)temp->f_name);
 		if (temp->f_slnk)
 			free((char *)temp->f_slnk);
+		if (temp->f_path)
+			free((char *)temp->f_path);
 		if (temp->f_stat)
 			free((struct stat *)temp->f_stat);
+
+		/* recurses to clear list of dir contents */
 		if (temp->dir_files)
 			freeList(temp->dir_files);
 
@@ -86,7 +95,6 @@ void parseArgs(int argc, char *argv[], file_list_t **file_list,
 	int i, errno;
 	bool nonFlagArgs = false;
 
-	/* need to store destinations of soft links */
 	for (i = 1; i < argc; i++)
 	{
 		if (argv[i][0] != '-')
@@ -95,22 +103,22 @@ void parseArgs(int argc, char *argv[], file_list_t **file_list,
 			if (lstat(argv[i], &file_stat) == 0) /* read success */
 			{
 				if (S_ISDIR(file_stat.st_mode))
-					addListNode(dir_list, argv[i], file_stat);
+					addListNode(dir_list, argv[i], argv[i], file_stat);
 				else
-					addListNode(file_list, argv[i], file_stat);
+					addListNode(file_list, argv[i], argv[i], file_stat);
 			}
 			else
-				accessError(argv[i]);
+				fileError(argv[i]);
 		}
 	}
 
-	/* if no args, or only flag args were passed, defaults to `.` */
+	/* if no args, or only flag args, defaults to `.` contents */
 	if (argc == 1 || !nonFlagArgs)
 	{
 		if (lstat(".", &file_stat) == 0) /* read success */
-			addListNode(dir_list, ".", file_stat);
+			addListNode(dir_list, ".", ".", file_stat);
 		else
-			accessError(".");
+			fileError(".");
 	}
 }
 
@@ -144,6 +152,7 @@ size_t testPrintList(file_list_t *head)
 		printf("index: %lu node @: %p\n", nodes, (void *)temp);
 		printf("\tf_name: %s\n", temp->f_name);
 		printf("\tf_slnk: %s\n", temp->f_slnk);
+		printf("\tf_path: %s\n", temp->f_path);
 		printf("\tf_stat @: %p\n", (void *)temp->f_stat);
 		printf("\tdir_files @: %p\n", (void *)temp->dir_files);
 		if (temp->dir_files)

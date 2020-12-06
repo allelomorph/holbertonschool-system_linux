@@ -1,6 +1,8 @@
 #ifndef FLAGS_H
 #define FLAGS_H
 
+#include <stdbool.h>
+
 /* option flags */
 extern bool singleColumn;
 extern bool allFiles;

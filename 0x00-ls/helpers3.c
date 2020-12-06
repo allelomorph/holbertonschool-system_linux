@@ -92,7 +92,7 @@ int longFormatPrint(file_list_t *node)
 	time_buf = dateTimeString(node->f_stat->st_mtime);
 	usr = getpwuid(node->f_stat->st_uid);
 	grp = getgrgid(node->f_stat->st_gid);
-	printf("%s %u %s %s %4u %s %s",
+	printf("%s %2u %s %s %4u %s %s",
 	       mode_buf,
 	       (unsigned int)node->f_stat->st_nlink,
 	       usr->pw_name ? usr->pw_name : "",
@@ -110,23 +110,13 @@ int longFormatPrint(file_list_t *node)
 }
 
 /**
- * accessError - prints access errors to stderr
- * @file: name of file that caused access error
- */
-void accessError(const char *file)
-{
-	fprintf(stderr, "hls: cannot access ");
-	perror(file);
-}
-
-/**
  * stringExactMatch - goes beyond strcmp to ensure that the two string match to
  * the null bit
  * @s1: first string to compare
  * @s2: second string to compare
  * Return: boolean representing exact match
  */
-bool stringExactMatch(char *s1, char *s2)
+bool stringExactMatch(const char *s1, char *s2)
 {
 	while (s1 && s2)
 	{
