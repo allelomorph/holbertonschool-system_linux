@@ -111,6 +111,8 @@ char *_strcopy(char *string)
 /**
  * printFileList - prints each member of a file_list_t list, according to flags
  * @head: pointer to first member of a file_list_t list
+ * @cmdLineArgs: indicates whether or not acting upon file lists created
+ * from initial args
  */
 void printFileList(file_list_t *head, bool cmdLineArgs)
 {

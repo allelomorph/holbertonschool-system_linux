@@ -23,7 +23,6 @@
 #include <grp.h>
 /* errno req */
 #include <errno.h>
-
 /* for flags */
 #include <stdbool.h>
 
@@ -32,6 +31,7 @@
  *
  * @f_name: file or dir name
  * @f_slnk: symlink target name
+ * @f_path: full path relative to working directory
  * @f_stat: pointer to stat struct with lstat output
  * @dir_files: head of file_list_t of directory contents
  * @prev: pointer to next node
@@ -93,7 +93,8 @@ void printFileList(file_list_t *head, bool cmdLineArgs);
 void deleteListNode(file_list_t *node);
 
 /* helpers2.c */
-file_list_t *addListNode(file_list_t **head, char *filename, char *path, struct stat f_stat);
+file_list_t *addListNode(file_list_t **head, char *filename, char *path,
+			 struct stat f_stat);
 void freeList(file_list_t *head);
 void parseArgs(int argc, char *argv[], file_list_t **file_list,
 	       file_list_t **dir_list);

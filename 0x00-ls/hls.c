@@ -10,6 +10,12 @@ bool fileSizeSort   = false;
 bool modTimeSort    = false;
 bool Recursive      = false;
 
+/**
+ * main - entry point into `hls`, a clone of tha bash function `ls`
+ * @argc: number of command line arguments
+ * @argv: array of command line arguments
+ * Return: EXIT_SUCCESS, EXIT_FAILURE for minor problems, and 2 for major ones
+ */
 int main(int argc, char *argv[])
 {
 	int i;
@@ -40,10 +46,10 @@ int main(int argc, char *argv[])
 		parseDirs(dir_list, cmdLineArgs);
 		printDirs(dir_list, cmdLineArgs, fileArgsEmpty);
 	}
-	/*
-	testPrintList(file_list);
-	testPrintList(dir_list);
-	*/
+
+	/* testPrintList(file_list); */
+	/* testPrintList(dir_list); */
+
 	/* cleanup lists and buffers */
 	if (file_list)
 		freeList(file_list);
