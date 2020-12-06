@@ -132,15 +132,19 @@ void printFileList(file_list_t *head, bool cmdLineArgs)
 			else
 				printf("%s", temp->f_name);
 
-			if (singleColumn || longFormat ||
-			    /* end of list moving forward */
-			    (!reverseOrder && !(temp->next)) ||
-			    /* beginning of list moving backward */
-			    (reverseOrder && !(temp->prev)))
+			if (singleColumn || longFormat)
 				printf("\n");
 			else
 				printf("  ");
 		}
+
+		if ((!singleColumn && !longFormat) &&
+		    /* end of list moving forward */
+		    ((!reverseOrder && !(temp->next)) ||
+		    /* beginning of list moving backward */
+		     (reverseOrder && !(temp->prev))))
+			printf("\n");
+
 		/* next node */
 		if (reverseOrder)
 			temp = temp->prev;

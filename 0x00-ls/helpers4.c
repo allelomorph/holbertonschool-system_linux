@@ -58,14 +58,18 @@ void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs)
  * @fileArgsEmpty: indicates whether or not command line args contained files
  */
 void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
-	       bool fileArgsEmpty)
+	       int nonFlagArgs)
 {
 	file_list_t *temp = dir_list_head;
-	bool onlyOneDir = false;
+	bool onlyOneDir = false, firstDir = true;
 
-	/* special case of one dir arg and no other args */
-	if (fileArgsEmpty && !(temp->next))
+	/* special case of one dir arg and no other nonflag args */
+	if (nonFlagArgs < 2 && !(temp->next))
 		onlyOneDir = true;
+
+	/* first dir in list omits leading newline */
+	if (!onlyOneDir && !(temp->prev))
+		firstDir = true;
 
 	/* if reverse flag is on, advance temp to tail for reversed traversal */
 	if (reverseOrder)
@@ -77,8 +81,10 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 		if (dirParseAllowed(temp->f_name, cmdLineArgs)
 		    && temp->dir_files)
 		{
-			/* newline before next dir in list */
-			if (!onlyOneDir)
+			/*
+			printf("firstDir: %s\n", firstDir ? "true" : "false");
+			*/
+			if (!onlyOneDir && !firstDir)
 				printf("\n");
 
 			/* recusive mode prints dir name even if only one arg */
@@ -89,7 +95,10 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 			printFileList(temp->dir_files, cmdLineArgs);
 
 			if (Recursive)
-				printDirs(temp->dir_files, cmdLineArgs, false);
+				printDirs(temp->dir_files, cmdLineArgs,
+					  nonFlagArgs);
+
+			firstDir = false;
 		}
 		if (reverseOrder)
 			temp = temp->prev;
@@ -147,10 +156,13 @@ void fileError(const char *file)
 	switch (errno)
 	{
 	case ENOENT:
+		/* file/dir missing or bad name */
 		fprintf(stderr, "hls: cannot access ");
 		break;
 	case EACCES:
-		fprintf(stderr, "hls: cannot open ");
+		/* stock ls prints files even with locked perms */
+		/* but locked dirs will throw an error */
+		fprintf(stderr, "hls: cannot open directory ");
 		break;
 	default:
 		fprintf(stderr, "hls: unknown error ");
@@ -158,6 +170,6 @@ void fileError(const char *file)
 	}
 
 	perror(file);
-
+	errno = 0;
 	/* exit_code = 2; */
 }
