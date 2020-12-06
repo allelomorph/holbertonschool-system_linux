@@ -90,18 +90,18 @@ void freeList(file_list_t *head)
  * @file_list: pointer to head of a doubly linked list of file info structs
  * @dir_list: pointer to head of a doubly linked list of directory info structs
  */
-void parseArgs(int argc, char *argv[], file_list_t **file_list,
+int parseArgs(int argc, char *argv[], file_list_t **file_list,
 	       file_list_t **dir_list)
 {
 	struct stat file_stat;
 	int i, errno;
-	bool nonFlagArgs = false;
+	int nonFlagArgs = 0;
 
 	for (i = 1; i < argc; i++)
 	{
 		if (argv[i][0] != '-')
 		{
-			nonFlagArgs = true;
+			nonFlagArgs++;
 			if (lstat(argv[i], &file_stat) == 0) /* read success */
 			{
 				if (S_ISDIR(file_stat.st_mode))
@@ -115,13 +115,14 @@ void parseArgs(int argc, char *argv[], file_list_t **file_list,
 	}
 
 	/* if no args, or only flag args, defaults to `.` contents */
-	if (argc == 1 || !nonFlagArgs)
+	if (nonFlagArgs == 0)
 	{
 		if (lstat(".", &file_stat) == 0) /* read success */
 			addListNode(dir_list, ".", ".", file_stat);
 		else
 			fileError(".");
 	}
+	return (nonFlagArgs);
 }
 
 /**

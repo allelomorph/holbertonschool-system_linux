@@ -18,10 +18,10 @@ bool Recursive      = false;
  */
 int main(int argc, char *argv[])
 {
-	int i;
+	int i, nonFlagArgs = 0;
 	file_list_t *file_list = NULL;
 	file_list_t *dir_list = NULL;
-	bool cmdLineArgs = true, fileArgsEmpty = true;
+	bool cmdLineArgs = true;
 
 	/* first pass through argv to set option flags */
 	for (i = 0; i < argc; i++)
@@ -29,27 +29,24 @@ int main(int argc, char *argv[])
 			setFlags(argv[i]);
 
 	/* second pass through argv to store file/dir profiles for sorting */
-	parseArgs(argc, argv, &file_list, &dir_list);
+	nonFlagArgs = parseArgs(argc, argv, &file_list, &dir_list);
 
 	/* sort lists based on flags (default alpha lowercase first) */
 	/* no hidden file screen on files from args, only on files from dirs */
 
 	if (file_list)
-	{
-		fileArgsEmpty = false;
 		printFileList(file_list, cmdLineArgs);
-	}
 
 	if (dir_list)
 	{
 		/* populates dir profiles with file profile list of contents*/
 		parseDirs(dir_list, cmdLineArgs);
-		printDirs(dir_list, cmdLineArgs, fileArgsEmpty);
+		printDirs(dir_list, cmdLineArgs, nonFlagArgs);
 	}
-
-	/* testPrintList(file_list); */
-	/* testPrintList(dir_list); */
-
+	/*
+	testPrintList(file_list);
+	testPrintList(dir_list);
+	*/
 	/* cleanup lists and buffers */
 	if (file_list)
 		freeList(file_list);

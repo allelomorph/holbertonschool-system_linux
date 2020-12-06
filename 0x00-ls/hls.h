@@ -96,7 +96,7 @@ void deleteListNode(file_list_t *node);
 file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 			 struct stat f_stat);
 void freeList(file_list_t *head);
-void parseArgs(int argc, char *argv[], file_list_t **file_list,
+int parseArgs(int argc, char *argv[], file_list_t **file_list,
 	       file_list_t **dir_list);
 void testPrintFlags(void);
 size_t testPrintList(file_list_t *head);
@@ -110,7 +110,7 @@ bool stringExactMatch(const char *s1, char *s2);
 /* helpers4.c */
 void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs);
 void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
-	       bool fileArgsEmpty);
+	       int nonFlagArgs);
 bool displayAllowed(const char *filename);
 bool dirParseAllowed(const char *dirname, bool cmdLineArgs);
 void fileError(const char *file);
