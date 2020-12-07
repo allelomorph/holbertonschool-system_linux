@@ -39,9 +39,9 @@ file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 	else
 		new->f_stat = NULL;
 	new->dir_files = NULL;
-	new->prev = NULL;
 
 	/* insert at head of list */
+	new->prev = NULL;
 	new->next = *head;
 	if (*head)
 		(*head)->prev = new;
@@ -114,6 +114,16 @@ int parseArgs(int argc, char *argv[], file_list_t **file_list,
 		}
 	}
 
+	/* lists are built by adding at the head, to be sorted later */
+	/* but by default, args should be printed in arg order */
+	if (!fileSizeSort && !modTimeSort)
+	{
+		if (file_list)
+			reverseList(file_list);
+		if (dir_list)
+			reverseList(dir_list);
+	}
+
 	/* if no args, or only flag args, defaults to `.` contents */
 	if (nonFlagArgs == 0)
 	{
@@ -169,4 +179,26 @@ size_t testPrintList(file_list_t *head)
 		temp = temp->next;
 	}
 	return (nodes);
+}
+
+void reverseList(file_list_t **head)
+{
+	file_list_t *temp, *swap;
+
+	temp = *head;
+
+	while (temp)
+	{
+		swap = temp->next;
+		temp->next = temp->prev;
+		temp->prev = swap;
+
+		if (!temp->prev)
+		{
+			*head = temp;
+			break;
+		}
+
+		temp = swap;
+	}
 }
