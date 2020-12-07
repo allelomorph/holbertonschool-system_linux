@@ -12,7 +12,7 @@
 file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 			 struct stat st)
 {
-	file_list_t *new, *tail;
+	file_list_t *new;
 	char *rl_buf = NULL;
 	size_t rl_bufSize = 256;
 
@@ -41,30 +41,12 @@ file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 	new->dir_files = NULL;
 
 	/* insert at head of list */
-	(void)tail;
 	new->prev = NULL;
 	new->next = *head;
 	if (*head)
 		(*head)->prev = new;
 	*head = new;
 
-	/* insert at tail of list */
-	/*
-	tail = *head;
-        if (!tail)
-                *head = new;
-        else
-        {
-                while (tail->next)
-                        tail = tail->next;
-                tail->next = new;
-        }
-        new->prev = tail;
-        new->next = NULL;
-	*/
-	/*
-	printf("addListNode: *head: %p tail: %p new: %p\n", (void *)*head, (void *)tail, (void *)new);
-	*/
 	free(rl_buf);
 	return (new);
 }
@@ -132,12 +114,15 @@ int parseArgs(int argc, char *argv[], file_list_t **file_list,
 		}
 	}
 
-	/*
-	if (file_list)
-		reverseList(file_list);
-	if (dir_list)
-		reverseList(dir_list);
-	*/
+	/* lists are built by adding at the head, to be sorted later */
+	/* but by default, args should be printed in arg order */
+	if (!fileSizeSort && !modTimeSort)
+	{
+		if (file_list)
+			reverseList(file_list);
+		if (dir_list)
+			reverseList(dir_list);
+	}
 
 	/* if no args, or only flag args, defaults to `.` contents */
 	if (nonFlagArgs == 0)
@@ -213,5 +198,7 @@ void reverseList(file_list_t **head)
 			*head = temp;
 			break;
 		}
+
+		temp = swap;
 	}
 }
