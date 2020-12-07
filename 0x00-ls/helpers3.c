@@ -55,7 +55,7 @@ char *modeString(mode_t mode)
  */
 char *dateTimeString(time_t time)
 {
-	char *time_s, *fmt_time_s;
+	char *time_s = NULL, *fmt_time_s = NULL;
 	int i;
 
 	fmt_time_s = malloc(sizeof(char) * 13);
@@ -78,9 +78,10 @@ char *dateTimeString(time_t time)
  */
 int longFormatPrint(file_list_t *node)
 {
-	char *mode_buf, *time_buf;
-	struct passwd *usr;
-	struct group *grp;
+	char *mode_buf = NULL, *time_buf = NULL,
+		*usrn_buf = NULL, *grpn_buf = NULL;
+	struct passwd *usr = NULL;
+	struct group *grp = NULL;
 
 	if (!node || !node->f_stat)
 	{
@@ -91,16 +92,36 @@ int longFormatPrint(file_list_t *node)
 	mode_buf = modeString(node->f_stat->st_mode);
 	time_buf = dateTimeString(node->f_stat->st_mtime);
 	usr = getpwuid(node->f_stat->st_uid);
+	if (usr)
+		usrn_buf = usr->pw_name;
 	grp = getgrgid(node->f_stat->st_gid);
-	printf("%s %2u %s %s %4u %s %s",
+	if (grp)
+		grpn_buf = grp->gr_name;
+
+	/* file type, permissions, and number of hard links */
+	printf("%s %2u ",
 	       mode_buf,
-	       (unsigned int)node->f_stat->st_nlink,
-	       usr->pw_name ? usr->pw_name : "",
-	       grp->gr_name ? grp->gr_name : "",
+	       (unsigned int)node->f_stat->st_nlink);
+
+	/* user name or UID if not named */
+	if (usrn_buf)
+		printf("%s ", usrn_buf);
+	else
+		printf("%3u ", (unsigned int)node->f_stat->st_uid);
+
+	/* group name or GID if not named */
+	if (grpn_buf)
+		printf("%s ", grpn_buf);
+	else
+		printf("%3u ", (unsigned int)node->f_stat->st_gid);
+
+	/* file size in bytes, last modifcation time, name */
+	printf("%4u %s %s",
 	       (unsigned int)node->f_stat->st_size,
 	       time_buf,
 	       node->f_name);
 
+	/* symbolic link destination */
 	if (node->f_slnk)
 		printf(" -> %s", node->f_slnk);
 
