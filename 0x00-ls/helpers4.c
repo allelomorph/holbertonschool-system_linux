@@ -68,7 +68,7 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 	if (nonFlagArgs < 2 && !(temp->next))
 		onlyOneDir = true;
 
-	/* first dir in list omits leading newline */
+	/* first dir in arg-derived list omits leading newline */
 	if (!onlyOneDir && !(temp->prev))
 		firstDir = true;
 
@@ -82,7 +82,8 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 		if (dirParseAllowed(temp->f_name, cmdLineArgs)
 		    && temp->dir_files)
 		{
-			if (!onlyOneDir && !firstDir)
+			if ((!onlyOneDir && !firstDir) ||
+			    !cmdLineArgs)
 				printf("\n");
 
 			/* recusive mode prints dir name even if only one arg */
