@@ -15,6 +15,7 @@ file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 	file_list_t *new;
 	char *rl_buf = NULL;
 	size_t rl_bufSize = 256;
+	ssize_t read_bytes = 0;
 
 	rl_buf = malloc(rl_bufSize);
 	new = malloc(sizeof(file_list_t));
@@ -28,8 +29,15 @@ file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 	new->f_name = _strcopy(filename);
 	if (S_ISLNK(st.st_mode))
 	{
-		readlink(filename, rl_buf, rl_bufSize);
-		new->f_slnk = _strcopy(rl_buf);
+		read_bytes = readlink(path, rl_buf, rl_bufSize - 1);
+		if (read_bytes == -1)
+			fileError(path);
+		else
+		{
+			/* readlink does not automatically NULL-terminate */
+			rl_buf[read_bytes] = '\0';
+			new->f_slnk = _strcopy(rl_buf);
+		}
 	}
 	else
 		new->f_slnk = NULL;
