@@ -63,14 +63,17 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 {
 	file_list_t *temp = dir_list_head;
 	bool onlyOneDir = false, firstDir = true;
+	int dir_list_len;
 
-	/* special case of one dir arg and no other nonflag args */
-	if (nonFlagArgs < 2 && !(temp->next))
+	for (dir_list_len = 0; temp; dir_list_len++)
+		temp = temp->next;
+	temp = dir_list_head;
+
+	if (nonFlagArgs < 2)
 		onlyOneDir = true;
-
-	/* first dir in arg-derived list omits leading newline */
-	if (!onlyOneDir && !(temp->prev))
-		firstDir = true;
+	else
+		if (nonFlagArgs > dir_list_len)
+			firstDir = false;
 
 	/* if reverse flag is on, advance temp to tail for reversed traversal */
 	if (reverseOrder)
