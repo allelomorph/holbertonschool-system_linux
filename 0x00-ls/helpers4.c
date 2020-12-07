@@ -44,7 +44,8 @@ void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs)
 			else
 				fileError(temp->f_path);
 		}
-		temp = Recursive ? NULL : temp->next;
+		/* when recursing, only parse current list node at this level */
+		temp = (Recursive && !cmdLineArgs) ? NULL : temp->next;
 	}
 	free(path);
 }
@@ -81,9 +82,6 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 		if (dirParseAllowed(temp->f_name, cmdLineArgs)
 		    && temp->dir_files)
 		{
-			/*
-			printf("firstDir: %s\n", firstDir ? "true" : "false");
-			*/
 			if (!onlyOneDir && !firstDir)
 				printf("\n");
 

@@ -46,10 +46,10 @@ int main(int argc, char *argv[])
 		parseDirs(dir_list, cmdLineArgs);
 		printDirs(dir_list, cmdLineArgs, nonFlagArgs);
 	}
-
+	/*
 	testPrintList(file_list);
 	testPrintList(dir_list);
-
+	*/
 	/* cleanup lists and buffers */
 	if (file_list)
 		freeList(file_list);
