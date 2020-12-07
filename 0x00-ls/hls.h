@@ -100,6 +100,8 @@ int parseArgs(int argc, char *argv[], file_list_t **file_list,
 	       file_list_t **dir_list);
 void testPrintFlags(void);
 size_t testPrintList(file_list_t *head);
+void reverseList(file_list_t **head);
+
 
 /* helpers3.c */
 char *modeString(mode_t mode);

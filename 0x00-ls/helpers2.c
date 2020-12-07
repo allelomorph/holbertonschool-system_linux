@@ -12,7 +12,7 @@
 file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 			 struct stat st)
 {
-	file_list_t *new;
+	file_list_t *new, *tail;
 	char *rl_buf = NULL;
 	size_t rl_bufSize = 256;
 
@@ -39,14 +39,32 @@ file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 	else
 		new->f_stat = NULL;
 	new->dir_files = NULL;
-	new->prev = NULL;
 
 	/* insert at head of list */
+	(void)tail;
+	new->prev = NULL;
 	new->next = *head;
 	if (*head)
 		(*head)->prev = new;
 	*head = new;
 
+	/* insert at tail of list */
+	/*
+	tail = *head;
+        if (!tail)
+                *head = new;
+        else
+        {
+                while (tail->next)
+                        tail = tail->next;
+                tail->next = new;
+        }
+        new->prev = tail;
+        new->next = NULL;
+	*/
+	/*
+	printf("addListNode: *head: %p tail: %p new: %p\n", (void *)*head, (void *)tail, (void *)new);
+	*/
 	free(rl_buf);
 	return (new);
 }
@@ -114,6 +132,13 @@ int parseArgs(int argc, char *argv[], file_list_t **file_list,
 		}
 	}
 
+	/*
+	if (file_list)
+		reverseList(file_list);
+	if (dir_list)
+		reverseList(dir_list);
+	*/
+
 	/* if no args, or only flag args, defaults to `.` contents */
 	if (nonFlagArgs == 0)
 	{
@@ -169,4 +194,24 @@ size_t testPrintList(file_list_t *head)
 		temp = temp->next;
 	}
 	return (nodes);
+}
+
+void reverseList(file_list_t **head)
+{
+	file_list_t *temp, *swap;
+
+	temp = *head;
+
+	while (temp)
+	{
+		swap = temp->next;
+		temp->next = temp->prev;
+		temp->prev = swap;
+
+		if (!temp->prev)
+		{
+			*head = temp;
+			break;
+		}
+	}
 }
