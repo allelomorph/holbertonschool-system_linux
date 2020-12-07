@@ -117,7 +117,7 @@ char *_strcopy(char *string)
 void printFileList(file_list_t *head, bool cmdLineArgs)
 {
 	file_list_t *temp = head;
-	bool firstInList = true;
+	bool filesPrinted = false;
 
 	/* if reverse flag is on, advance to tail for reversed traversal */
 	if (reverseOrder)
@@ -128,7 +128,7 @@ void printFileList(file_list_t *head, bool cmdLineArgs)
 	{
 		if (cmdLineArgs || displayAllowed(temp->f_name))
 		{
-			if (!firstInList)
+			if (filesPrinted)
 			{
 				if (singleColumn || longFormat)
 					printf("\n");
@@ -141,7 +141,7 @@ void printFileList(file_list_t *head, bool cmdLineArgs)
 			else
 				printf("%s", temp->f_name);
 
-			firstInList = false;
+			filesPrinted = true;
 		}
 
 		/* next node */
@@ -150,8 +150,8 @@ void printFileList(file_list_t *head, bool cmdLineArgs)
 		else
 			temp = temp->next;
 
-		/* final newline */
-		if (!temp)
+		/* final newline only if files were allowed display */
+		if (!temp && filesPrinted)
 			printf("\n");
 	}
 }
