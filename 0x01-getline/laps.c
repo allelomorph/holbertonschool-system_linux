@@ -89,9 +89,9 @@ void race_state(int *id, size_t size)
 	for (i = 0; i < size; i++)
 	{
 		temp = cars;
-		/* find insertion point */
 		while (temp && temp->next && temp->next->id <= id[i])
-			temp = temp->next;
+			temp = temp->next; /* find insertion point */
+
 		if (temp && temp->id == id[i])
 		{
 			temp->laps++;
@@ -106,9 +106,9 @@ void race_state(int *id, size_t size)
 		if (!temp || (temp == cars && temp->id > id[i]))
 		{
 			new->next = temp;
-			cars = (racecar_t *)new;
+			cars = new;
 		}
-		else
+		else /* insert before next higher value, or at tail if none */
 		{
 			new->next = temp->next;
 			temp->next = new;
