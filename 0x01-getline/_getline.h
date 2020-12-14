@@ -14,8 +14,20 @@
 #include <stdio.h>
 #include <errno.h>
 
+/*
+typedef struct fd_profile_s
+{
+	int fd;
+	char *read_buf;
+	size_t line_start;
+	fd_profile_s *next;
+} fd_profile_t;
+*/
+
 #define READ_SIZE 1024
 
+char *copy_line(char *read_buf, size_t *line_start, bool *overflow);
+char *buff_load(int fd, char *read_buf, size_t line_start);
 char *_getline(const int fd);
 
 /* total of 5 helpers to _getline allowed */
