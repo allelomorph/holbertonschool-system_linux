@@ -20,9 +20,9 @@ typedef struct racecar_s
 	struct racecar_s *next;
 } racecar_t;
 
-racecar_t *car_list_add_node(racecar_t *cars, int id);
+racecar_t *car_list_add_node(int id);
 void print_car_list(racecar_t *cars);
-void free_car_list(racecar_t *cars);
+void free_car_list(racecar_t **cars);
 void race_state(int *id, size_t size);
 
 #endif /* LAPS_H */
