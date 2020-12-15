@@ -30,14 +30,6 @@ void print_car_list(racecar_t *cars)
 {
 	racecar_t *temp = NULL;
 
-	temp = cars;
-	while (temp)
-	{
-		if (temp->new_entry)
-			printf("Car %i joined the race\n", temp->id);
-		temp = temp->next;
-	}
-
 	printf("Race state:\n");
 	temp = cars;
 	while (temp)
@@ -83,7 +75,6 @@ void race_state(int *id, size_t size)
 
 	if (size == 0)
 		free_car_list(&cars);
-
 	if (size == 0 || id == NULL)
 		return;
 
@@ -102,6 +93,7 @@ void race_state(int *id, size_t size)
 		new = car_list_add_node(id[i]);
 		if (!new)
 			return;
+		printf("Car %i joined the race\n", new->id);
 
 		/* insert at head */
 		if (!temp || (temp == cars && temp->id > id[i]))
