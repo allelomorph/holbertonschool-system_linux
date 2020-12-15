@@ -2,7 +2,6 @@
 
 /**
  * car_list_add_node - allocates new node for linked list of racecar ids
- * @cars: list of car profiles
  * @id: new id to profile
  * Return: new node in list
  */
