@@ -71,6 +71,111 @@ fd_profile_t *add_profile(fd_profile_t **head, int fd)
 }
 
 
+/**
+ * buff_load - reads new group of READ_SIZE bytes into buffer when necessary
+ * @fd: file descriptor to read from
+ * @read_buf: buffer to read into
+ * @line_start: starting index in buffer after last delimiter processed
+ * @EOF_reached: pointer to bool: end of file found by read(), only \0 bytes
+ * remain in buffer
+ * Return: pointer to current buffer or NULL on failure or end of file
+ * content reached
+ */
+char *buff_load(int fd, char *read_buf, size_t line_start, bool *EOF_reached)
+{
+	ssize_t bytes_read = 0;
+	size_t i;
+
+	if (!read_buf)
+		return (NULL);
+
+	/* read bytes into buffer if first call with this fd, */
+	/* or previous call moved line_start to beginning of new buffer */
+	if (line_start == 0)
+	{
+		/* skip init on stdin */
+		if (fd != 0)
+			memset(read_buf, '\0', READ_SIZE);
+		bytes_read = read(fd, read_buf, READ_SIZE);
+		if (bytes_read == -1)
+			return (NULL);
+	}
+
+	/* bytes_read == 0 when EOF occurs within current buffer */
+	/* thorough check here allows for \0 chars to appear in body of file */
+	if (bytes_read == 0)
+	{
+		*EOF_reached = true;
+
+		for (i = line_start; i < READ_SIZE; i++)
+			if (read_buf[i] != '\0')
+				*EOF_reached = false;
+
+		/* file contents read and no more lines to return */
+		if (*EOF_reached)
+		{
+			free(read_buf);
+			return (NULL);
+		}
+	}
+
+	return (read_buf);
+}
+
+
+/**
+ * copy_line - copies a \n-delimited string of bytes from a read buffer
+ * @read_buf: buffer to copy from
+ * @line_start: refernece to int: starting index in buffer to copy from
+ * @overflow: refernce to bool: is the current line straddling a buffer edge?
+ * @EOF_reached: end of file found by read(), only \0 bytes remain in buffer
+ * Return: full \n-delimited line copied from buffer, or NULL on failure
+ */
+char *copy_line(char *read_buf, size_t *line_start, bool *overflow,
+		bool EOF_reached)
+{
+	size_t i, line_end, line_len;
+	char *line = NULL, *new_line = NULL;
+	static char *unfinished_line;
+	static size_t unfinished_line_len;
+
+	/* edge case: EOF reached but no final \n: return unfinished "line" */
+	if (!read_buf)
+		return (EOF_reached ? unfinished_line : NULL);
+
+	/* parse buffer for line starting and ending indicies */
+	for (i = *line_start; i < READ_SIZE && read_buf[i] != '\n'; i++)
+	{}
+	*overflow = (i == READ_SIZE);
+	line_end = i;
+	line_len = (line_end - *line_start);
+
+	new_line = malloc(sizeof(char) * (line_len + 1));
+	if (!new_line)
+		return (NULL);
+	for (i = *line_start; i < line_end; i++)
+		new_line[i - *line_start] = read_buf[i];
+	new_line[line_len] = '\0';
+	*line_start = *overflow ? 0 : (line_end + 1) % READ_SIZE;
+	/* prepend previous unfinished line */
+	if (unfinished_line)
+		line = join_line(&unfinished_line, &new_line,
+				 unfinished_line_len, line_len);
+	else
+		line = new_line;
+	/* if buffer edge met before delimiter, store line as unfinished */
+	if (*overflow)
+	{
+		unfinished_line_len += line_len;
+		unfinished_line = line;
+	}
+	else
+		unfinished_line_len = 0;
+
+	return (line);
+}
+
+
 char *join_line(char **unfinished_line, char **new_line,
 		size_t unfinished_line_len, size_t line_len)
 {
@@ -105,103 +210,6 @@ char *join_line(char **unfinished_line, char **new_line,
 	return (line);
 }
 
-/**
- * copy_line - copies a \n-delimited string of bytes from a read buffer
- * @read_buf: buffer to copy from
- * @line_start: refernece to int: starting index in buffer to copy from
- * @overflow: refernce to bool: is the current line straddling a buffer edge?
- * Return: full \n-delimited line copied from buffer, or NULL on failure
- */
-char *copy_line(char *read_buf, size_t *line_start, bool *overflow)
-{
-	size_t i, line_end, line_len;
-	char *line = NULL, *new_line = NULL;
-	static char *unfinished_line;
-	static size_t unfinished_line_len;
-
-	if (!read_buf)
-		return (NULL);
-
-	/* parse buffer for line starting and ending indicies */
-	for (i = *line_start; i < READ_SIZE && read_buf[i] != '\n'; i++)
-	{}
-	*overflow = (i == READ_SIZE);
-	line_end = i;
-	line_len = (line_end - *line_start);
-
-	new_line = malloc(sizeof(char) * (line_len + 1));
-	if (!new_line)
-		return (NULL);
-	for (i = *line_start; i < line_end; i++)
-		new_line[i - *line_start] = read_buf[i];
-	new_line[line_len] = '\0';
-	*line_start = *overflow ? 0 : (line_end + 1) % READ_SIZE;
-
-	/* prepend previous unfinished line */
-	if (unfinished_line)
-		line = join_line(&unfinished_line, &new_line,
-				 unfinished_line_len, line_len);
-	else
-		line = new_line;
-
-	/* if buffer edge met before delimiter, store line as unfinished */
-	if (*overflow)
-	{
-		unfinished_line_len += line_len;
-		unfinished_line = line;
-	}
-	else
-		unfinished_line_len = 0;
-
-	return (line);
-}
-
-
-/**
- * buff_load - reads new group of READ_SIZE bytes into buffer when necessary
- * @fd: file descriptor to read from
- * @read_buf: buffer to read into
- * @line_start: starting index in buffer after last delimiter processed
- * Return: pointer to current buffer or NULL on failure or end of file
- * content reached
- */
-char *buff_load(int fd, char *read_buf, size_t line_start)
-{
-	ssize_t bytes_read = 0;
-	bool remainder_empty = true;
-	size_t i;
-
-	/* read bytes into buffer if first call with this fd, */
-	/* or previous call moved line_start to beginning of new buffer */
-	if (line_start == 0)
-	{
-		/* skip init on stdin */
-		if (fd != 0)
-			memset(read_buf, '\0', READ_SIZE);
-		bytes_read = read(fd, read_buf, READ_SIZE);
-		if (bytes_read == -1)
-			return (NULL);
-	}
-
-	/* bytes_read == 0 when EOF occurs within current buffer */
-	/* thorough check here allows for \0 chars to appear in body of file */
-	if (bytes_read == 0)
-	{
-		for (i = line_start; i < READ_SIZE; i++)
-			if (read_buf[i] != '\0')
-				remainder_empty = false;
-
-		/* file contents read and no more lines to return */
-		if (remainder_empty)
-		{
-			free(read_buf);
-			return (NULL);
-		}
-	}
-
-	return (read_buf);
-}
-
 
 /**
  * _getline - reads an entire line from a file descriptor
@@ -214,7 +222,7 @@ char *_getline(const int fd)
 	static fd_profile_t *profile_list;
 	fd_profile_t *temp = NULL;
 	char *line = NULL;
-	bool overflow = false;
+	bool overflow = false, EOF_reached = false;
 
 	/* open() returns -1 on error; screening out stdin, stdout, stderr */
 	/* need to handle stdin in theory */
@@ -237,10 +245,11 @@ char *_getline(const int fd)
 
 	do {
 		temp->read_buf = buff_load(temp->fd, temp->read_buf,
-					   temp->line_start);
+					   temp->line_start, &EOF_reached);
 		line = copy_line(temp->read_buf,
-				 &(temp->line_start), &overflow);
-	} while (overflow && line);
+				 &(temp->line_start),
+				 &overflow, EOF_reached);
+	} while (overflow && line && !EOF_reached);
 
 	return (line);
 }
