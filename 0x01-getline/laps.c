@@ -1,12 +1,12 @@
 #include "laps.h"
 
 /**
- * car_list_add_node - adds new node to linked list of racecar ids
+ * car_list_add_node - allocates new node for linked list of racecar ids
  * @cars: list of car profiles
  * @id: new id to profile
  * Return: new node in list
  */
-racecar_t *car_list_add_node(racecar_t *cars, int id)
+racecar_t *car_list_add_node(int id)
 {
 	racecar_t *new = NULL;
 
@@ -14,7 +14,7 @@ racecar_t *car_list_add_node(racecar_t *cars, int id)
 	if (!new)
 	{
 		fprintf(stderr, "race_state: Can't malloc!\n");
-		free_car_list(cars);
+		return (NULL);
 	}
 	new->id = id;
 	new->laps = 0;
@@ -53,11 +53,11 @@ void print_car_list(racecar_t *cars)
  * free_car_list - frees linked list of racecar ids and lap counts
  * @cars: list of car profiles
  */
-void free_car_list(racecar_t *cars)
+void free_car_list(racecar_t **cars)
 {
 	racecar_t *head = NULL, *temp = NULL;
 
-	head = cars;
+	head = *cars;
 
 	while (head)
 	{
@@ -65,6 +65,8 @@ void free_car_list(racecar_t *cars)
 		head = head->next;
 		free(temp);
 	}
+
+	*cars = NULL;
 }
 
 /**
@@ -81,10 +83,10 @@ void race_state(int *id, size_t size)
 	size_t i;
 
 	if (size == 0)
-	{
-		free_car_list(cars);
+		free_car_list(&cars);
+
+	if (size == 0 || id == NULL)
 		return;
-	}
 
 	for (i = 0; i < size; i++)
 	{
@@ -98,14 +100,14 @@ void race_state(int *id, size_t size)
 			continue;
 		}
 
-		new = car_list_add_node(cars, id[i]);
+		new = car_list_add_node(id[i]);
 		if (!new)
 			return;
 
 		/* insert at head */
 		if (!temp || (temp == cars && temp->id > id[i]))
 		{
-			new->next = temp;
+			new->next = cars;
 			cars = new;
 		}
 		else /* insert before next higher value, or at tail if none */
