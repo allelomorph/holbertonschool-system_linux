@@ -38,11 +38,16 @@ typedef struct fd_profile_s
 /* (up to 5 helpers allowed to _getline() */
 
 void free_profiles(fd_profile_t **head);
+
 fd_profile_t *add_profile(fd_profile_t  **head, int fd);
+
+char *buff_load(int fd, char *read_buf, size_t line_start, bool *EOF_reached);
+
+char *copy_line(char *read_buf, size_t *line_start,
+		bool *overflow, bool EOF_reached);
+
 char *join_line(char **unfinished_line, char **new_line,
 		size_t unfinished_line_len, size_t line_len);
-char *copy_line(char *read_buf, size_t *line_start, bool *overflow);
-char *buff_load(int fd, char *read_buf, size_t line_start);
 
 char *_getline(const int fd);
 
