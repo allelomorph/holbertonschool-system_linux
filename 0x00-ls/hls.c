@@ -36,6 +36,10 @@ int main(int argc, char *argv[])
 
 	/* sort lists based on flags (default alpha lowercase first) */
 	/* no hidden file screen on files from args, only on files from dirs */
+	/*
+	insertion_sort_list(&file_list);
+	insertion_sort_list(&dir_list);
+	*/
 
 	if (file_list)
 		printFileList(file_list, cmdLineArgs);
@@ -46,10 +50,10 @@ int main(int argc, char *argv[])
 		parseDirs(dir_list, cmdLineArgs);
 		printDirs(dir_list, cmdLineArgs, nonFlagArgs);
 	}
-	/*
+
 	testPrintList(file_list);
 	testPrintList(dir_list);
-	*/
+
 	/* cleanup lists and buffers */
 	if (file_list)
 		freeList(file_list);

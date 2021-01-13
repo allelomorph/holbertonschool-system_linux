@@ -75,6 +75,8 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 		if (nonFlagArgs > dir_list_len)
 			firstDir = false;
 
+	insertion_sort_list(&dir_list_head);
+
 	/* if reverse flag is on, advance temp to tail for reversed traversal */
 	if (reverseOrder)
 		while (temp->next)

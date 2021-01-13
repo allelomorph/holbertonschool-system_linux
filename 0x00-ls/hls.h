@@ -102,12 +102,14 @@ void testPrintFlags(void);
 size_t testPrintList(file_list_t *head);
 void reverseList(file_list_t **head);
 
-
 /* helpers3.c */
 char *modeString(mode_t mode);
 char *dateTimeString(time_t time);
 int longFormatPrint(file_list_t *node);
 bool stringExactMatch(const char *s1, char *s2);
+int criteriaSort(file_list_t *node1, file_list_t *node2);
+void insertion_sort_list(file_list_t **list);
+int _strcmp(const char *str1, const char *str2);
 
 /* helpers4.c */
 void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs);
