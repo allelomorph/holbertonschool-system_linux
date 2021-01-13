@@ -119,6 +119,8 @@ void printFileList(file_list_t *head, bool cmdLineArgs)
 	file_list_t *temp = head;
 	bool filesPrinted = false;
 
+	insertion_sort_list(&head);
+
 	/* if reverse flag is on, advance to tail for reversed traversal */
 	if (reverseOrder)
 		while (temp->next)

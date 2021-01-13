@@ -150,3 +150,98 @@ bool stringExactMatch(const char *s1, char *s2)
 	}
 	return (false);
 }
+
+/**
+ * criteriaSort - compares struct member values based on option flags,
+ * for sorting of list nodes
+ * @node1: node in doubly linked list of structs to be sorted
+ * @node1: node in doubly linked list of structs to be sorted
+ * Return: difference in compared values
+ */
+int criteriaSort(file_list_t *node1, file_list_t *node2)
+{
+	int diff = 0;
+
+	/*
+	if ((!node1 || !node2) || (!node1->f_stat || !node2->f_stat))
+	currently no protections against NULL structs or members
+	*/
+
+	if (fileSizeSort)
+		diff = (node2->f_stat->st_size - node1->f_stat->st_size);
+	else if (modTimeSort)
+		diff = (node2->f_stat->st_mtime - node1->f_stat->st_mtime);
+	else
+		diff = _strcmp(node2->f_name, node1->f_name);
+
+	printf("criteriaSort: diff: %i\n", diff);
+
+	return (diff);
+}
+
+/**
+ * insertion_sort_list - sorts a doubly linked list of structs in ascending
+ * order using an insertion sort algorithm
+ * @list: doubly linked list of structs to be sorted
+ */
+void insertion_sort_list(file_list_t **list)
+{
+        file_list_t *lead, *follow, *new, *temp;
+
+        if (!list || !(*list) || !((*list)->next))
+                return;
+
+        /* dance begins with 1st from house left following */
+        follow = (*list);
+        /* and next dancer to house right leading */
+        lead = (*list)->next;
+        while (lead)
+        {
+                new = lead->next;
+                while (follow && criteriaSort(lead, follow) < 0) /* lead->crit < follow->crit */
+                {
+                        /* lead and follow swap positions */
+                        if (follow->prev)
+                                follow->prev->next = lead;
+                        else
+                                /* if lead makes it to house left, now head */
+                                *list = lead;
+                        if (lead->next)
+                                lead->next->prev = follow;
+                        temp = lead->next;
+                        lead->next = follow;
+                        lead->prev = follow->prev;
+                        follow->next = temp;
+                        follow->prev = lead;
+
+			/* compare next pair, flowing to house left */
+                        follow = lead->prev;
+                }
+                /* lead sorted to left, new cycle starts @ right leading edge */
+                lead = new;
+                if (lead)
+                        follow = lead->prev;
+        }
+}
+
+/**
+ * _strcmp - compares two strings by each char's ASCII value
+ * @s1: first string to compare
+ * @s2: second string to compare
+ * Return: difference between first non-matching char from left
+ */
+int _strcmp(const char *str1, const char *str2)
+{
+        int diff = 0;
+        int i;
+
+        /* index through str1 and str2 until first null byte */
+        for (i = 0; str1[i] && str2[i]; i++)
+        {
+                diff = (str1[i] - str2[i]);
+                if (diff != 0)
+                        break;
+        }
+
+        return (diff);
+}
