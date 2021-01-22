@@ -37,8 +37,8 @@ def read_write_heap(pid, read_str, write_str):
         print("Usage: read_write_heap(pid, read_str, write_str)")
         exit(1)
 
-    if type(write_str) != str or write_str == "":
-        print("Missing or invalid write string!")
+    if type(write_str) != str:
+        print("Invalid write string!")
         print("Usage: read_write_heap(pid, read_str, write_str)")
         exit(1)
 
