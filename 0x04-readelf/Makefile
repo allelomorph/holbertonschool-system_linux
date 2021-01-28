@@ -2,41 +2,46 @@
 # 0x04. C - ELF: readelf - project 364; one rule per exercise
 
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -pedantic -fno-builtin
-#OBJ = $(SRC:.c=.o)
+# consider -fno-builtin
+CFLAGS = -Wall -Werror -Wextra -pedantic
 
-#$(OBJ): $(SRC)
-#	$(info $$var is [${SRC}])
-#	$(info $$var is [${OBJ}])
-#	$(CC) -c $(CFLAGS) $(SRC)
+# shared among all builds
+main_help.o: main_help.c
+	$(CC) -c $(CFLAGS) main_help.c
+getFileHeader.o: getFileHeader.c
+	$(CC) -c $(CFLAGS) getFileHeader.c
 
-0-hreadelf: SRC := 0-hreadelf.c
-0-hreadelf: NAME := 0-hreadelf
-0-hreadelf.o: $(SRC)
-	$(CC) -c $(CFLAGS) $(SRC)
-0-hreadelf: holberton.h 0-hreadelf.o
-	$(CC) $(CFLAGS) 0-hreadelf.o -o $(NAME)
+# task 0
+printELFHeader.o: printELFHeader.c
+	$(CC) -c $(CFLAGS) printELFHeader.c
+f_header_strs.o: f_header_strs.c
+	$(CC) -c $(CFLAGS) f_header_strs.c
+0-hreadelf.o: 0-hreadelf.c
+	$(CC) -c $(CFLAGS) 0-hreadelf.c
 
-1-hreadelf: SRC := 1-hreadelf.c
-1-hreadelf: NAME := 1-hreadelf
-1-hreadelf.o: $(SRC)
-	$(CC) -c $(CFLAGS) $(SRC)
-1-hreadelf: holberton.h 1-hreadelf.o
-	$(CC) $(CFLAGS) 1-hreadelf.o -o $(NAME)
+0-hreadelf: holberton.h 0-hreadelf.o f_header_strs.o \
+	printELFHeader.o getFileHeader.o main_help.o
+	$(CC) $(CFLAGS) 0-hreadelf.o f_header_strs.o printELFHeader.o \
+	getFileHeader.o main_help.o -o 0-hreadelf
 
-2-hreadelf: SRC := 2-hreadelf.c
-2-hreadelf: NAME := 2-hreadelf
-2-hreadelf.o: $(SRC)
-	$(CC) -c $(CFLAGS) $(SRC)
-2-hreadelf: holberton.h 2-hreadelf.o
-	$(CC) $(CFLAGS) 2-hreadelf.o -o $(NAME)
+# task 1
+1-hreadelf.o: 1-hreadelf.c
+	$(CC) -c $(CFLAGS) 1-hreadelf.c
+1-hreadelf: holberton.h 1-hreadelf.o getFileHeader.o main_help.o
+	$(CC) $(CFLAGS) 1-hreadelf.o getFileHeader.o main_help.o -o 1-hreadelf
 
-100-hreadelf: SRC := 100-hreadelf.c
-100-hreadelf: NAME := 100-hreadelf
-100-hreadelf.o: $(SRC)
-	$(CC) -c $(CFLAGS) $(SRC)
-100-hreadelf: holberton.h 100-hreadelf.o
-	$(CC) $(CFLAGS) 100-hreadelf.o -o $(NAME)
+# task 2
+2-hreadelf.o: 2-hreadelf.c
+	$(CC) -c $(CFLAGS) 2-hreadelf.c
+2-hreadelf: holberton.h 2-hreadelf.o getFileHeader.o main_help.o
+	$(CC) $(CFLAGS) 2-hreadelf.o getFileHeader.o main_help.o -o 2-hreadelf
+
+# task 100
+100-hreadelf.o: 100-hreadelf.c
+	$(CC) -c $(CFLAGS) 100-hreadelf.c
+100-hreadelf: holberton.h 100-hreadelf.o getFileHeader.o main_help.o
+	$(CC) $(CFLAGS) 100-hreadelf.o getFileHeader.o main_help.o -o 100-hreadelf
+
 
 .PHONY: all clean_all oclean_all fclean_all re_all
 
