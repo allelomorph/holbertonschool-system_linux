@@ -1,0 +1,121 @@
+#include "holberton.h"
+
+
+int getFileHeader(re_state *state)
+{
+	/* read full identity array */
+	if (fread(state->f_header.e_ident, EI_NIDENT, 1, state->f_stream) != 1)
+		return (1);
+
+	/* Determine how to read the rest of the header.  */
+	if (state->f_header.e_ident[EI_DATA] == ELFDATA2MSB)
+		state->big_endian = true;
+
+	/* For now we only support 32 bit and 64 bit ELF files.  */
+        if (state->f_header.e_ident[EI_CLASS] != ELFCLASS64)
+		state->ELF_32bit = true;
+
+	/* Read in the rest of the header.  */
+	if (state->ELF_32bit)
+	{
+		Elf32_Ehdr ehdr32;
+
+		if (fread(&(ehdr32.e_type), (sizeof(ehdr32) - EI_NIDENT),
+			  1, state->f_stream) != 1)
+			return (1);
+
+		if (state->big_endian)
+			bswapElf32_Ehdr(&ehdr32);
+
+		/* state->f_header 64 bit by default */
+		state->f_header.e_type      = (Elf64_Half)ehdr32.e_type;
+		state->f_header.e_machine   = (Elf64_Half)ehdr32.e_machine;
+		state->f_header.e_version   = (Elf64_Word)ehdr32.e_version;
+		state->f_header.e_entry     = (Elf64_Addr)ehdr32.e_entry;
+		state->f_header.e_phoff     = (Elf64_Off)ehdr32.e_phoff;
+		state->f_header.e_shoff     = (Elf64_Off)ehdr32.e_shoff;
+		state->f_header.e_flags     = (Elf64_Word)ehdr32.e_flags;
+		state->f_header.e_ehsize    = (Elf64_Half)ehdr32.e_ehsize;
+		state->f_header.e_phentsize = (Elf64_Half)ehdr32.e_phentsize;
+		state->f_header.e_phnum     = (Elf64_Half)ehdr32.e_phnum;
+		state->f_header.e_shentsize = (Elf64_Half)ehdr32.e_shentsize;
+		state->f_header.e_shnum     = (Elf64_Half)ehdr32.e_shnum;
+		state->f_header.e_shstrndx  = (Elf64_Half)ehdr32.e_shstrndx;
+	}
+	else
+	{
+		Elf64_Ehdr ehdr64;
+
+		if (fread(&(ehdr64.e_type), (sizeof(ehdr64) - EI_NIDENT),
+			  1, state->f_stream) != 1)
+			return (1);
+
+		if (state->big_endian)
+			bswapElf64_Ehdr(&ehdr64);
+
+		/* state->f_header 64 bit by default */
+		state->f_header.e_type      = ehdr64.e_type;
+		state->f_header.e_machine   = ehdr64.e_machine;
+		state->f_header.e_version   = ehdr64.e_version;
+		state->f_header.e_entry     = ehdr64.e_entry;
+		state->f_header.e_phoff     = ehdr64.e_phoff;
+		state->f_header.e_shoff     = ehdr64.e_shoff;
+		state->f_header.e_flags     = ehdr64.e_flags;
+		state->f_header.e_ehsize    = ehdr64.e_ehsize;
+		state->f_header.e_phentsize = ehdr64.e_phentsize;
+		state->f_header.e_phnum     = ehdr64.e_phnum;
+		state->f_header.e_shentsize = ehdr64.e_shentsize;
+		state->f_header.e_shnum     = ehdr64.e_shnum;
+		state->f_header.e_shstrndx  = ehdr64.e_shstrndx;
+	}
+
+	return (0);
+}
+
+
+/* end of getFileHeader for task 1 */
+#ifdef ZZZ
+	if (state->f_header.e_shoff)
+	{
+		/* There may be some extensions in the first section header. */
+		if (state->ELF_32bit)
+			get_32bit_section_headers (filedata, TRUE);
+		else
+			get_64bit_section_headers (filedata, TRUE);
+	}
+#endif
+
+
+void bswapElf64_Ehdr(Elf64_Ehdr *ehdr64)
+{
+	ehdr64->e_type      = __builtin_bswap16(ehdr64->e_type);
+	ehdr64->e_machine   = __builtin_bswap16(ehdr64->e_machine);
+	ehdr64->e_version   = __builtin_bswap32(ehdr64->e_version);
+	ehdr64->e_entry     = __builtin_bswap64(ehdr64->e_entry);
+	ehdr64->e_phoff     = __builtin_bswap64(ehdr64->e_phoff);
+	ehdr64->e_shoff     = __builtin_bswap64(ehdr64->e_shoff);
+	ehdr64->e_flags     = __builtin_bswap32(ehdr64->e_flags);
+	ehdr64->e_ehsize    = __builtin_bswap16(ehdr64->e_ehsize);
+	ehdr64->e_phentsize = __builtin_bswap16(ehdr64->e_phentsize);
+	ehdr64->e_phnum     = __builtin_bswap16(ehdr64->e_phnum);
+	ehdr64->e_shentsize = __builtin_bswap16(ehdr64->e_shentsize);
+	ehdr64->e_shnum     = __builtin_bswap16(ehdr64->e_shnum);
+	ehdr64->e_shstrndx  = __builtin_bswap16(ehdr64->e_shstrndx);
+}
+
+void bswapElf32_Ehdr(Elf32_Ehdr *ehdr32)
+{
+	ehdr32->e_type      = __builtin_bswap16(ehdr32->e_type);
+	ehdr32->e_machine   = __builtin_bswap16(ehdr32->e_machine);
+	ehdr32->e_version   = __builtin_bswap32(ehdr32->e_version);
+	ehdr32->e_entry     = __builtin_bswap32(ehdr32->e_entry);
+	ehdr32->e_phoff     = __builtin_bswap32(ehdr32->e_phoff);
+	ehdr32->e_shoff     = __builtin_bswap32(ehdr32->e_shoff);
+	ehdr32->e_flags     = __builtin_bswap32(ehdr32->e_flags);
+	ehdr32->e_ehsize    = __builtin_bswap16(ehdr32->e_ehsize);
+	ehdr32->e_phentsize = __builtin_bswap16(ehdr32->e_phentsize);
+	ehdr32->e_phnum     = __builtin_bswap16(ehdr32->e_phnum);
+	ehdr32->e_shentsize = __builtin_bswap16(ehdr32->e_shentsize);
+	ehdr32->e_shnum     = __builtin_bswap16(ehdr32->e_shnum);
+	ehdr32->e_shstrndx  = __builtin_bswap16(ehdr32->e_shstrndx);
+}
