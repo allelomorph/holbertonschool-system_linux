@@ -63,7 +63,10 @@ int openELFFile(re_state *state)
 /* fprintf */
 void errorMsg(char *format, char *err_str, re_state *state)
 {
+/*
 	fprintf(stderr, "%s: Error: ", state->exec_name);
+*/
+	fprintf(stderr, "readelf: Error: ");
 	if (err_str == NULL)
 		fprintf(stderr, format, state->f_name);
 	else
