@@ -40,7 +40,7 @@ void bswapElf32_Ehdr(Elf32_Ehdr *ehdr32);
 /* printELFHeader.c */
 int printELFHeader(re_state *state);
 
-/* f_header_strs.c */
+/* fh_strings.c */
 const char *getELFType(Elf64_Half e_type);
 const char *getOsabiName(unsigned char osabi);
 const char *getMachineName (Elf64_Half e_machine);
