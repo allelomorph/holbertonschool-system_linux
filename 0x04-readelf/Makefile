@@ -18,15 +18,15 @@ getFileHeader.o: getFileHeader.c
 printELFHeader.o: printELFHeader.c
 	$(CC) -c $(CFLAGS) printELFHeader.c
 
-f_header_strs.o: f_header_strs.c
-	$(CC) -c $(CFLAGS) f_header_strs.c
+fh_strings.o: fh_strings.c
+	$(CC) -c $(CFLAGS) fh_strings.c
 
 0-hreadelf.o: 0-hreadelf.c
 	$(CC) -c $(CFLAGS) 0-hreadelf.c
 
-0-hreadelf: holberton.h 0-hreadelf.o f_header_strs.o \
+0-hreadelf: holberton.h 0-hreadelf.o fh_strings.o \
 	printELFHeader.o getFileHeader.o main_help.o
-	$(CC) $(CFLAGS) 0-hreadelf.o f_header_strs.o printELFHeader.o \
+	$(CC) $(CFLAGS) 0-hreadelf.o fh_strings.o printELFHeader.o \
 	getFileHeader.o main_help.o -o 0-hreadelf
 
 
