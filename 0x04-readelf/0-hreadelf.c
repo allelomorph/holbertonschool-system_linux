@@ -7,7 +7,7 @@
 int main(int argc, char **argv)
 {
 	re_state state;
-	int retval;
+	int retval = 0;
 
 	if (argc != 2)
 	{
