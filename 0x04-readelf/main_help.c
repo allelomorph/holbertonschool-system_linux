@@ -83,6 +83,7 @@ void initState(re_state *state)
 	state->ELF_32bit = false;
 	memset(&(state->f_header), 0, sizeof(Elf64_Ehdr));
         state->s_headers = NULL;
+	state->sh_strtab = NULL;
         state->p_headers = NULL;
 }
 
@@ -100,6 +101,12 @@ void closeState(re_state *state)
 	{
 		free(state->s_headers);
 		state->s_headers = NULL;
+	}
+
+	if (state->sh_strtab != NULL)
+	{
+		free(state->sh_strtab);
+		state->sh_strtab = NULL;
 	}
 
 	if (state->p_headers != NULL)

@@ -1,17 +1,37 @@
-/*
-#include <stdio.h>
-
-int main(void)
-{
-	printf("Makefile test program #1\n");
-	return (0);
-}
-*/
 #include "holberton.h"
 
-/*
-    Usage: 1-hreadelf elf_filename
-    Your standard output, error output and status should be the exact same as:
-    readelf -W -S
-    (section headers only, in wide mode)
-*/
+/* fprintf */
+#include <stdio.h>
+
+
+int main(int argc, char **argv)
+{
+	re_state state;
+	int retval = 0;
+
+	if (argc != 2)
+	{
+		fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+		return (1);
+	}
+
+	initState(&state);
+	state.exec_name = argv[0];
+	state.f_name = argv[1];
+
+	retval = openELFFile(&state);
+	if (retval == 0)
+	{
+		retval = getFileHeader(&state);
+ 		if (retval == 0)
+		        retval = (getSecHeaders(&state) || getSHStrTab(&state));
+		else
+			errorMsg("%s: Failed to read file header\n",
+				 NULL, &state);
+ 		if (retval == 0)
+		        retval = printSecHeaders(&state);
+	}
+
+	closeState(&state);
+	return (retval);
+}
