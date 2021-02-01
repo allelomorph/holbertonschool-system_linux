@@ -27,7 +27,7 @@ typedef struct readelf_state {
 
 /* files shared by all versions: */
 /* main_help.c */
-int openELFFile(re_state *state);
+int openELF(re_state *state);
 void errorMsg(char *format, char *err_str, re_state *state);
 void initState(re_state *state);
 void closeState(re_state *state);
@@ -37,10 +37,13 @@ int getFileHeader(re_state *state);
 void bswapElf64_Ehdr(Elf64_Ehdr *ehdr64);
 void bswapElf32_Ehdr(Elf32_Ehdr *ehdr32);
 
+/* getSecHeadStrTab.c */
+int getSecHeadStrTab(re_state *state);
+
 
 /* 0-hreadelf: */
-/* printELFHeader.c */
-int printELFHeader(re_state *state);
+/* printFileHeader.c */
+int printFileHeader(re_state *state);
 
 /* fh_strings.c */
 const char *getELFType(Elf64_Half e_type);
@@ -51,7 +54,7 @@ const char *getMachineName (Elf64_Half e_machine);
 /* int main(int argc, char **argv) */
 
 
-/* 1-hreadelf and 2-hreadelf: */
+/* 1-hreadelf: */
 /* getSecHeaders.c */
 int getSecHeaders(re_state *state);
 int get64bitSecHeaders(re_state *state);
@@ -59,15 +62,12 @@ int get32bitSecHeaders(re_state *state);
 void bswapElf64_Shdr(Elf64_Shdr *shdr64);
 void bswapElf32_Shdr(Elf32_Shdr *shdr32);
 
-
-/* 1-hreadelf: */
 /* printSecHeaders.c */
 int printSecHeaders(re_state *state);
 
 /* sh_strings.c */
 const char *getSecType(Elf64_Word sh_type);
 const char *getSecFlags(Elf64_Xword sh_flags);
-int getSHStrTab(re_state *state);
 
 /* 1-hreadelf.c */
 /* int main(int argc, char **argv) */
@@ -109,12 +109,15 @@ const char *getSymBinding(re_state *state, unsigned int binding);
 /* printSymTables.c */
 int printSymTables(re_state *state);
 
-char *getSymVerStr(char *strtab, Elf64_Versym *sym_vers, unsigned int sym_idx, Elf64_Vernaux *versions, unsigned int num_vers);
-Elf64_Versym *getVersyms(re_state *state, Elf64_Shdr *versym_shdr, unsigned int num_syms);
-Elf64_Vernaux *getVernauxFlatArr(re_state *state, Elf64_Shdr *verneed_shdr, unsigned int *num_vers);
+/* get_sym_vers.c */
+char *getSymVerStr(char *strtab, Elf64_Versym *sym_vers, unsigned int sym_idx,
+		   Elf64_Vernaux *versions, unsigned int num_vers);
+Elf64_Versym *getVersyms(re_state *state, Elf64_Shdr *versym_shdr,
+			 unsigned int num_syms);
+Elf64_Vernaux *getVernauxFlatArr(re_state *state, Elf64_Shdr *verneed_shdr,
+				 unsigned int *num_vers);
 void bswapElf64_Verneed(Elf64_Verneed *verneed64);
 void bswapElf64_Vernaux(Elf64_Vernaux *vernaux64);
-
 
 /* 100-hreadelf.c */
 /* int main(int argc, char **argv) */
