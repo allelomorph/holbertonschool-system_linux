@@ -1,0 +1,14 @@
+#!/bin/bash
+# task 0: readelf -hW testing
+
+for file in ELF_examples/*; do
+    echo "-->ELF: $file"
+    readelf -hW $file | cat -e
+    echo "-->$?"
+    ./0-hreadelf $file | cat -e
+    echo "-->$?"
+    diff <(readelf -hW $file | cat -e) <(./0-hreadelf $file | cat -e)
+
+    echo "-->return or ctrl+d to continue"
+    read
+done;
