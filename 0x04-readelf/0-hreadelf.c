@@ -19,12 +19,12 @@ int main(int argc, char **argv)
 	state.exec_name = argv[0];
 	state.f_name = argv[1];
 
-	retval = openELFFile(&state);
+	retval = openELF(&state);
 	if (retval == 0)
 	{
 		retval = getFileHeader(&state);
 		if (retval == 0)
-		        retval = printELFHeader(&state);
+		        retval = printFileHeader(&state);
 		else
 			errorMsg("%s: Failed to read file header\n",
 				 NULL, &state);

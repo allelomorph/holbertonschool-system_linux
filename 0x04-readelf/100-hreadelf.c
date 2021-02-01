@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 	state.exec_name = argv[0];
 	state.f_name = argv[1];
 
-	retval = openELFFile(&state);
+	retval = openELF(&state);
 	if (retval == 0)
 	{
 		retval = getFileHeader(&state);
