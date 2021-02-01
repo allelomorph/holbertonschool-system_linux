@@ -18,7 +18,7 @@
 /* stat S_ISREG fopen rewind */
 /* omitting "Out of memory allocating file data structure" error */
 /* skipping archive opening and errors */
-int openELFFile(re_state *state)
+int openELF(re_state *state)
 {
 	struct stat statbuf;
 	char magic[(EI_NIDENT / 2)];

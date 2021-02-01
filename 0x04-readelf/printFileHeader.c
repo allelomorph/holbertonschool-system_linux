@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-int printELFHeader(re_state *state)
+int printFileHeader(re_state *state)
 {
 	unsigned int i;
 
