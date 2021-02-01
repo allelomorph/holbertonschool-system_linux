@@ -75,7 +75,6 @@ void errorMsg(char *format, char *err_str, re_state *state)
 void initState(re_state *state)
 {
 	state->exec_name = NULL;
-	state->exit_code = 0;
 	state->f_name = NULL;
 	state->f_stream = NULL;
 	state->f_size = 0;
@@ -84,7 +83,10 @@ void initState(re_state *state)
 	memset(&(state->f_header), 0, sizeof(Elf64_Ehdr));
         state->s_headers = NULL;
 	state->sh_strtab = NULL;
+	state->prog_interp = NULL;
         state->p_headers = NULL;
+	state->dyn_sym = NULL;
+	state->sym_tab = NULL;
 }
 
 
@@ -109,9 +111,28 @@ void closeState(re_state *state)
 		state->sh_strtab = NULL;
 	}
 
+	if (state->prog_interp != NULL)
+	{
+		free(state->prog_interp);
+		state->prog_interp = NULL;
+	}
+
 	if (state->p_headers != NULL)
 	{
 		free(state->p_headers);
 		state->p_headers = NULL;
 	}
+
+	if (state->dyn_sym != NULL)
+	{
+		free(state->dyn_sym);
+		state->dyn_sym = NULL;
+	}
+
+	if (state->sym_tab != NULL)
+	{
+		free(state->sym_tab);
+		state->sym_tab = NULL;
+	}
+
 }

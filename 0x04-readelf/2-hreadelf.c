@@ -23,11 +23,17 @@ int main(int argc, char **argv)
 	if (retval == 0)
 	{
 		retval = getFileHeader(&state);
-		if (retval == 0)
-		        retval = printELFHeader(&state);
+ 		if (retval == 0)
+		        retval = (getSecHeaders(&state) || getSHStrTab(&state));
 		else
 			errorMsg("%s: Failed to read file header\n",
 				 NULL, &state);
+ 		if (retval == 0)
+		        retval = (getProgHeaders(&state) ||
+				  getProgInterp(&state));
+
+		if (retval == 0)
+		        retval = printProgHeaders(&state);
 	}
 
 	closeState(&state);
