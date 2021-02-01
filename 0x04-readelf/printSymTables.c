@@ -7,6 +7,12 @@
 #include <stdlib.h>
 
 
+/**
+ * printSymTables - formatted printing of symbol tables stored in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int printSymTables(re_state *state)
 {
 	Elf64_Shdr *sym_shdr = NULL, *st_shdr = NULL;

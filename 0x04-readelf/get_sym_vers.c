@@ -7,7 +7,18 @@
 #include <stdlib.h>
 
 
-char *getSymVerStr(char *strtab, Elf64_Versym *sym_vers, unsigned int sym_idx, Elf64_Vernaux *versions, unsigned int num_vers)
+/**
+ * getSymVerStr - formats a string containing the version of a dynamic symbol
+ *
+ * @strtab: symbol string table
+ * @sym_vers: array of Elf64_Versym in same order as symbol table
+ * @sym_idx: index of symbol in table and sym_vers
+ * @versions: array of Elf64_Vernaux containing symbol version information
+ * @num_vers: amount of possible versions
+ * Return: NULL on failure, formatted symbol version string on success
+ */
+char *getSymVerStr(char *strtab, Elf64_Versym *sym_vers, unsigned int sym_idx,
+		   Elf64_Vernaux *versions, unsigned int num_vers)
 {
 	static char buff[128];
 	char *ver_str = NULL;
@@ -29,6 +40,16 @@ char *getSymVerStr(char *strtab, Elf64_Versym *sym_vers, unsigned int sym_idx, E
 }
 
 /* get array of Versym nums */
+/**
+ * printSecHeaders - reads ELF to return an array of version numbers for
+ * dynamic symbols
+ *
+ * @state: struct containing file data and info for error printing
+ * @versym_shdr: section header of type SHT_VERSYM
+ * @num_syms: total symbols in table
+ * Return: NULL on failure, on success an array of Elf64_Versym containing
+ * dynamic symbol version numbers
+ */
 Elf64_Versym *getVersyms(re_state *state, Elf64_Shdr *versym_shdr, unsigned int num_syms)
 {
 	Elf64_Versym *sym_vers = NULL;
@@ -56,6 +77,18 @@ Elf64_Versym *getVersyms(re_state *state, Elf64_Shdr *versym_shdr, unsigned int 
 }
 
 /* get flattened array of versions (Vernaux) */
+
+/**
+ * getVernauxFlatArr - reads ELF to return an array of versions for dynamic
+ * symbols. Normally interleaved with verneed structs, the array is "flattened"
+ * to only include the vernaux structs
+ *
+ * @state: struct containing file data and info for error printing
+ * @verneed_shdr: section header of type SHT_VERNEED
+ * @num_vers: total amount of vernaux found
+ * Return: NULL on failure, on success an array of Elf64_Vernaux containing
+ * dynamic symbol versions
+ */
 Elf64_Vernaux *getVernauxFlatArr(re_state *state, Elf64_Shdr *verneed_shdr, unsigned int *num_vers)
 {
 	unsigned int vernaux_ct = 0, next_vn, next_vna, i = 0, j;
@@ -134,6 +167,13 @@ Elf64_Vernaux *getVernauxFlatArr(re_state *state, Elf64_Shdr *verneed_shdr, unsi
 }
 
 
+/**
+ * bswapElf64_Verneed - byte swaps all little endian values in a Elf64_Verneed
+ * to their big endian versions (no 32 bit equivalent as both versions of the
+ * struct have the same total size)
+ *
+ * @verneed64: struct to byte swap
+ */
 void bswapElf64_Verneed(Elf64_Verneed *verneed64)
 {
 	verneed64->vn_version = __builtin_bswap16(verneed64->vn_version);
@@ -144,6 +184,13 @@ void bswapElf64_Verneed(Elf64_Verneed *verneed64)
 }
 
 
+/**
+ * bswapElf64_Vernaux - byte swaps all little endian values in a Elf64_Vernaux
+ * to their big endian versions (no 32 bit equivalent as both versions of the
+ * struct have the same total size)
+ *
+ * @vernaux64: struct to byte swap
+ */
 void bswapElf64_Vernaux(Elf64_Vernaux *vernaux64)
 {
 	vernaux64->vna_hash  = __builtin_bswap32(vernaux64->vna_hash);
