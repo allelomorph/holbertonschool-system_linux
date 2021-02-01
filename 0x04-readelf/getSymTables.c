@@ -7,6 +7,13 @@
 #include <stdlib.h>
 
 
+/**
+ * getSymTables - selects function to get symbol tables based on 32 or
+ * 64 configuration in ELF
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int getSymTables(re_state *state)
 {
 	if (state->ELF_32bit)
@@ -17,6 +24,12 @@ int getSymTables(re_state *state)
 
 
 /* malloc lseek fread */
+/**
+ * get64bitSymTables - reads ELF and stores symbol tables in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int get64bitSymTables(re_state *state)
 {
         Elf64_Sym *sym_tab = NULL;
@@ -59,6 +72,12 @@ int get64bitSymTables(re_state *state)
 }
 
 /* malloc lseek fread free */
+/**
+ * get32bitSymTables - reads ELF and stores symbol tables in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int get32bitSymTables(re_state *state)
 {
         Elf32_Sym *sym_tab32 = NULL, *curr32 = NULL;
@@ -119,6 +138,12 @@ int get32bitSymTables(re_state *state)
 	return (0);
 }
 
+/**
+ * bswapElf64_Sym - byte swaps all little endian values in a Elf64_Sym
+ * to their big endian versions
+ *
+ * @sym64: struct to byte swap
+ */
 void bswapElf64_Sym(Elf64_Sym *sym64)
 {
 	sym64->st_name   = __builtin_bswap32(sym64->st_name);
@@ -129,6 +154,12 @@ void bswapElf64_Sym(Elf64_Sym *sym64)
 	sym64->st_size  = __builtin_bswap64(sym64->st_size);
 }
 
+/**
+ * bswapElf32_Sym - byte swaps all little endian values in a Elf32_Sym
+ * to their big endian versions
+ *
+ * @sym32: struct to byte swap
+ */
 void bswapElf32_Sym(Elf32_Sym *sym32)
 {
 	/* note: Elf32_Sym members in different order than in Elf64_Sym */

@@ -1,6 +1,12 @@
 #include "holberton.h"
 
 
+/**
+ * getSymVisibility - converts symbol visibility code to formatted string
+ *
+ * @visibility: visibility type code from symbol table
+ * Return: string containing visibility type
+ */
 const char *getSymVisibility(unsigned int visibility)
 {
 	switch (visibility)
@@ -30,6 +36,13 @@ const char *getSymVisibility(unsigned int visibility)
                  ELF32_ST_VISIBILITY(other) or ELF64_ST_VISIBILITY(other)
 */
 
+/**
+ * getSymIdxType - converts symbol index code to formatted string
+ *
+ * @state: struct containing file data and info for error printing
+ * @type: index code from symbol table
+ * Return: string containing index type
+ */
 const char *getSymIdxType(re_state *state, unsigned int type)
 {
         static char buff[32];
@@ -57,6 +70,12 @@ const char *getSymIdxType(re_state *state, unsigned int type)
 }
 
 
+/**
+ * getSymType - converts symbol type code to formatted string
+ *
+ * @type: type code from symbol table
+ * Return: string containing symbol type
+ */
 const char *getSymType(unsigned int type)
 {
 	static char buff[64];
@@ -82,6 +101,13 @@ const char *getSymType(unsigned int type)
 	}
 }
 
+/**
+ * getSymBinding - converts symbol binding code to formatted string
+ *
+ * @state: struct containing file data and info for error printing
+ * @binding: binding code from symbol table
+ * Return: string containing binding type
+ */
 const char *getSymBinding(re_state *state, unsigned int binding)
 {
 	static char buff[64];
