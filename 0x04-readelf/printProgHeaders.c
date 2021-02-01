@@ -88,7 +88,8 @@ int printProgHeaders(re_state *state)
 
 				/* ignoring .tbss, .bss only NOBITS handled */
 				if ((section->sh_type == SHT_NOBITS &&
-				     section->sh_offset == seg_end) ||
+				     (segment->p_type == PT_LOAD &&
+				      (segment + 1)->p_type != PT_LOAD)) ||
 				    (section->sh_type != SHT_NOBITS &&
 				     (section->sh_offset >= segment->p_offset &&
 				      section->sh_offset < seg_end)))
