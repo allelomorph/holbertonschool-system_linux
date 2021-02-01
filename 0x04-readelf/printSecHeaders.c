@@ -4,6 +4,12 @@
 #include <stdio.h>
 
 
+/**
+ * printSecHeaders - formatted printing of section headers stored in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int printSecHeaders(re_state *state)
 {
 	uint64_t i;

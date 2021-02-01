@@ -11,6 +11,12 @@
 
 
 /* snprintf */
+/**
+ * getSegType - converts segment type code to formatted string
+ *
+ * @p_type: segment type code from segment header
+ * Return: string containing segment type
+ */
 const char *getSegType(Elf64_Word p_type)
 {
 	static char buff[32];
@@ -40,6 +46,13 @@ const char *getSegType(Elf64_Word p_type)
 }
 
 
+/**
+ * getProgInterp - reads ELF .interp section to store name of program
+ * interpreter in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int getProgInterp(re_state *state)
 {
 	Elf64_Shdr s_head;

@@ -20,8 +20,8 @@ int printSymTables(re_state *state)
 	{
 		sym_shdr = state->s_headers + i;
 
-		if (/*sym_shdr->sh_type != SHT_SYMTAB
-		      &&*/ sym_shdr->sh_type != SHT_DYNSYM)
+		if (sym_shdr->sh_type != SHT_SYMTAB
+		    && sym_shdr->sh_type != SHT_DYNSYM)
 			continue;
 
 		if (sym_shdr->sh_entsize == 0)

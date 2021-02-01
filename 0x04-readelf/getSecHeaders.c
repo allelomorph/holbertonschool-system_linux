@@ -7,6 +7,13 @@
 #include <stdlib.h>
 
 
+/**
+ * getSecHeaders - selects function to get section headers based on 32 or
+ * 64 configuration in ELF
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int getSecHeaders(re_state *state)
 {
 	if (state->f_header.e_shoff)
@@ -23,6 +30,12 @@ int getSecHeaders(re_state *state)
 
 
 /* malloc lseek fread */
+/**
+ * get64bitSecHeaders - reads ELF and stores section headers in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int get64bitSecHeaders(re_state *state)
 {
 	Elf64_Shdr *s_headers = NULL;
@@ -52,6 +65,12 @@ int get64bitSecHeaders(re_state *state)
 }
 
 /* malloc lseek fread free */
+/**
+ * get32bitSecHeaders - reads ELF and stores section headers in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int get32bitSecHeaders(re_state *state)
 {
 	Elf32_Shdr *s_headers32 = NULL, *curr32 = NULL;
@@ -99,6 +118,12 @@ int get32bitSecHeaders(re_state *state)
 	return (0);
 }
 
+/**
+ * bswapElf64_Shdr - byte swaps all little endian values in a Elf64_Shdr
+ * to their big endian versions
+ *
+ * @shdr64: struct to byte swap
+ */
 void bswapElf64_Shdr(Elf64_Shdr *shdr64)
 {
 	shdr64->sh_name      = __builtin_bswap32(shdr64->sh_name);
@@ -113,6 +138,12 @@ void bswapElf64_Shdr(Elf64_Shdr *shdr64)
 	shdr64->sh_entsize   = __builtin_bswap64(shdr64->sh_entsize);
 }
 
+/**
+ * bswapElf32_Shdr - byte swaps all little endian values in a Elf32_Shdr
+ * to their big endian versions
+ *
+ * @shdr32: struct to byte swap
+ */
 void bswapElf32_Shdr(Elf32_Shdr *shdr32)
 {
 	shdr32->sh_name      = __builtin_bswap32(shdr32->sh_name);

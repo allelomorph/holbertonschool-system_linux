@@ -7,6 +7,12 @@
 #include <stdlib.h>
 
 
+/**
+ * getSecHeadStrTab - reads ELF and stores section header string table in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int getSecHeadStrTab(re_state *state)
 {
         Elf64_Shdr st_shdr;

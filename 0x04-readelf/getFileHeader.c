@@ -1,6 +1,11 @@
 #include "holberton.h"
 
-
+/**
+ * getFileHeader - reads ELF and stores file header in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int getFileHeader(re_state *state)
 {
 	/* read full identity array */
@@ -73,19 +78,12 @@ int getFileHeader(re_state *state)
 }
 
 
-/* end of getFileHeader for task 1 */
-#ifdef ZZZ
-	if (state->f_header.e_shoff)
-	{
-		/* There may be some extensions in the first section header. */
-		if (state->ELF_32bit)
-			get_32bit_section_headers (filedata, TRUE);
-		else
-			get_64bit_section_headers (filedata, TRUE);
-	}
-#endif
-
-
+/**
+ * bswapElf64_Ehdr - byte swaps all little endian values in a Elf64_Ehdr
+ * to their big endian versions
+ *
+ * @ehdr64: struct to byte swap
+ */
 void bswapElf64_Ehdr(Elf64_Ehdr *ehdr64)
 {
 	ehdr64->e_type      = __builtin_bswap16(ehdr64->e_type);
@@ -103,6 +101,14 @@ void bswapElf64_Ehdr(Elf64_Ehdr *ehdr64)
 	ehdr64->e_shstrndx  = __builtin_bswap16(ehdr64->e_shstrndx);
 }
 
+
+
+/**
+ * bswapElf32_Ehdr - byte swaps all little endian values in a Elf32_Ehdr
+ * to their big endian versions
+ *
+ * @ehdr32: struct to byte swap
+ */
 void bswapElf32_Ehdr(Elf32_Ehdr *ehdr32)
 {
 	ehdr32->e_type      = __builtin_bswap16(ehdr32->e_type);

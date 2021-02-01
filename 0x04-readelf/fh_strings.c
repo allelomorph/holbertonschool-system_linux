@@ -1,6 +1,12 @@
 #include "holberton.h"
 
 /* trim to only include macros in elf.h and linux/elf.h*/
+/**
+ * getELFType - converts ELF type code to formatted string
+ *
+ * @e_type: ELF type code from file header
+ * Return: string containing file type
+ */
 const char *getELFType(Elf64_Half e_type)
 {
 	static char buff[32] = {'\0'};
@@ -22,6 +28,12 @@ const char *getELFType(Elf64_Half e_type)
 }
 
 /* trimmed to only include macros in elf.h */
+/**
+ * getOsabiName - converts ELF OS/ABI code to formatted string
+ *
+ * @osabi: ELF OS/ABI code from file header
+ * Return: string containing OS/ABI
+ */
 const char *getOsabiName(unsigned char osabi)
 {
 	static char buff[32] = {'\0'};
@@ -66,6 +78,12 @@ const char *getOsabiName(unsigned char osabi)
 
 
 /* trimmed to only include macros in elf.h */
+/**
+ * getMachineName - converts ELF machine code to formatted string
+ *
+ * @e_machine: ELF machine code from file header
+ * Return: string containing machine name
+ */
 const char *getMachineName (Elf64_Half e_machine)
 {
 	static char buff[64] = {'\0'};
