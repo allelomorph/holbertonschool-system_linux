@@ -3,7 +3,12 @@
 /* memcmp */
 #include <string.h>
 
-
+/**
+ * printFileHeader - formatted printing of file header stored in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int printFileHeader(re_state *state)
 {
 	unsigned int i;
@@ -63,39 +68,3 @@ int printFileHeader(re_state *state)
 
 	return (0);
 }
-
-/*
-  Start of program headers:          64 (bytes into file)
-  (bytes 32 - 39, read backwards since little endian: 00 00 00 00 00 00 00 40 = 64 (here 8 bytes/64 bits since 64 bit machine, would be 28 - 31, 4 bytes, 32 bits otherwise))
-
-  Start of section headers:          4472 (bytes into file)
-  (bytes 40 - 47, read backwards since little endian: 00 00 00 00 00 00 11 78 = 4472 (here 8 bytes/64 bits since 64 bit machine, would be 32 - 35, 4 bytes, 32 bits otherwise))
-
-  Flags:                             0x0
-  (bytes 48 - 51?, read backwards since little endian: 00 00 00 00 = 0)
-  (bytes 36 - 39 in 32 bit)
-
-  Size of this header:               64 (bytes)
-  (bytes 52 - 53?, read backwards since little endian: 00 40 = 64)
-  (bytes 40 - 41 in 32 bit)
-
-  Size of program headers:           56 (bytes)
-  (bytes 54 - 55?, read backwards since little endian: 00 38 = 56)
-  (bytes 42 - 43 in 32 bit)
-
-  Number of program headers:         9
-  (bytes 56 - 57?, read backwards since little endian: 00 09 = 9)
-  (bytes 44 - 45 in 32 bit)
-
-  Size of section headers:           64 (bytes)
-  (bytes 58 - 59?, read backwards since little endian: 00 40 = 64)
-  (bytes 46 - 47 in 32 bit)
-
-  Number of section headers:         30
-  (bytes 60 - 61?, read backwards since little endian: 00 1e = 30)
-  (bytes 48 - 49 in 32 bit)
-
-  Section header string table index: 27
-  (bytes 62 - 63?, read backwards since little endian: 00 1b = 27)
-  (bytes 50 - 51 in 32 bit)
-*/

@@ -4,6 +4,13 @@
 #include <stdio.h>
 
 
+/**
+ * main - entry point to 100-hreadelf
+ *
+ * @argc: command line arg count
+ * @argv: command line arg array
+ * Return: 1 on failure, 0 on success
+ */
 int main(int argc, char **argv)
 {
 	re_state state;

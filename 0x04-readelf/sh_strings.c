@@ -7,6 +7,12 @@
 #include <stdlib.h>
 
 
+/**
+ * getSecType - converts section type code to formatted string
+ *
+ * @sh_type: section type code from section header
+ * Return: string containing section type
+ */
 const char *getSecType(Elf64_Word sh_type)
 {
 	static char buff[32];
@@ -51,6 +57,13 @@ const char *getSecType(Elf64_Word sh_type)
 
 /* trimmmed to remove the following flags not found in elf.h: */
 /* SHF_COMPRESSED SHF_X86_64_LARGE SHF_ARM_PURECODE SHF_PPC_VLE SHF_GNU_* */
+
+/**
+ * getSecFlags - converts section flags code to formatted string
+ *
+ * @sh_flags: section flags code from section header
+ * Return: string containing section flags
+ */
 const char *getSecFlags(Elf64_Xword sh_flags)
 {
 	static char buff[64];

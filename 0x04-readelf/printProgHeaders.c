@@ -4,6 +4,13 @@
 #include <stdio.h>
 
 
+/**
+ * printProgHeaders - formatted printing of program headers (segments) stored
+ * in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int printProgHeaders(re_state *state)
 {
 	uint64_t i;
@@ -101,7 +108,3 @@ int printProgHeaders(re_state *state)
 
 	return (0);
 }
-
-/*
-void printSecToSegMap(re_state *state)
-*/

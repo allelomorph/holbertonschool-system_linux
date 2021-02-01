@@ -7,6 +7,13 @@
 #include <stdlib.h>
 
 
+/**
+ * getProgHeaders - selects function to get program headers (segments) based
+ * on 32 or 64 configuration in ELF
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int getProgHeaders(re_state *state)
 {
 	if (state->f_header.e_phoff && state->f_header.e_phnum)
@@ -22,6 +29,13 @@ int getProgHeaders(re_state *state)
 
 
 /* malloc lseek fread */
+/**
+ * get64bitProgHeaders - reads ELF and stores program headers (segments)
+ * in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int get64bitProgHeaders(re_state *state)
 {
 	Elf64_Phdr *p_headers = NULL;
@@ -51,6 +65,13 @@ int get64bitProgHeaders(re_state *state)
 }
 
 /* malloc lseek fread free */
+/**
+ * get32bitProgHeaders - reads ELF and stores program headers (segments)
+ * in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int get32bitProgHeaders(re_state *state)
 {
 	Elf32_Phdr *p_headers32 = NULL, *curr32 = NULL;
@@ -96,6 +117,12 @@ int get32bitProgHeaders(re_state *state)
 	return (0);
 }
 
+/**
+ * bswapElf64_Phdr - byte swaps all little endian values in a Elf64_Phdr
+ * to their big endian versions
+ *
+ * @phdr64: struct to byte swap
+ */
 void bswapElf64_Phdr(Elf64_Phdr *phdr64)
 {
 	phdr64->p_type   = __builtin_bswap32(phdr64->p_type);
@@ -108,6 +135,12 @@ void bswapElf64_Phdr(Elf64_Phdr *phdr64)
 	phdr64->p_align  = __builtin_bswap64(phdr64->p_align);
 }
 
+/**
+ * bswapElf32_Phdr - byte swaps all little endian values in a Elf32_Phdr
+ * to their big endian versions
+ *
+ * @phdr32: struct to byte swap
+ */
 void bswapElf32_Phdr(Elf32_Phdr *phdr32)
 {
 	phdr32->p_type   = __builtin_bswap32(phdr32->p_type);

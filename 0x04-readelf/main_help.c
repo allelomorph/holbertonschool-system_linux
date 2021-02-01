@@ -18,6 +18,12 @@
 /* stat S_ISREG fopen rewind */
 /* omitting "Out of memory allocating file data structure" error */
 /* skipping archive opening and errors */
+/**
+ * openELF - attempts to open an ELF for printing
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int openELF(re_state *state)
 {
 	struct stat statbuf;
@@ -61,6 +67,13 @@ int openELF(re_state *state)
 
 
 /* fprintf */
+/**
+ * errorMsg - formats error printing
+ *
+ * @format: error format string
+ * @err_str: optional second string containing errno string
+ * @state: struct containing file data and info for error printing
+ */
 void errorMsg(char *format, char *err_str, re_state *state)
 {
 	fprintf(stderr, "%s: Error: ", state->exec_name);
@@ -72,6 +85,11 @@ void errorMsg(char *format, char *err_str, re_state *state)
 
 
 /* memset */
+/**
+ * initState - initializes state struct at start
+ *
+ * @state: struct containing file data and info for error printing
+ */
 void initState(re_state *state)
 {
 	state->exec_name = NULL;
@@ -91,6 +109,11 @@ void initState(re_state *state)
 
 
 /* fclose free */
+/**
+ * closeState - closes file stream and frees all memory in state
+ *
+ * @state: struct containing file data and info for error printing
+ */
 void closeState(re_state *state)
 {
 	if (state->f_stream != NULL)
