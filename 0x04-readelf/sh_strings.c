@@ -40,9 +40,10 @@ const char *getSecType(Elf64_Word sh_type)
 	case 0x7fffffff:return "FILTER";
 	case SHT_GNU_LIBLIST:return "GNU_LIBLIST";
 	default:
-		/* This message is probably going to be displayed in a 15
-		   character wide field, so put the hex value first.  */
-		snprintf(buff, sizeof(buff), "%08x: <unknown>", sh_type);
+		if ((sh_type >= SHT_LOOS) && (sh_type <= SHT_HIOS))
+			sprintf (buff, "LOOS+%x", sh_type - SHT_LOOS);
+		else
+			snprintf(buff, sizeof(buff), "%08x: <unknown>", sh_type);
 		return buff;
 	}
 }
@@ -74,7 +75,10 @@ const char *getSecFlags(Elf64_Xword sh_flags)
 		case SHF_OS_NONCONFORMING:*p = 'O'; break;
 		case SHF_GROUP:*p = 'G'; break;
 		case SHF_TLS:*p = 'T'; break;
-		case SHF_EXCLUDE:*p = 'E'; break;
+/* for some reason neither SHF_EXCLUDE nor (1 << 31) expands properly here */
+/*		case SHF_EXCLUDE:*p = 'E'; break; */
+/* patching with explicit (1 << 31):*/
+		case 2147483648:*p = 'E'; break;
 		default:
 			if (flag & SHF_MASKOS)
 			{

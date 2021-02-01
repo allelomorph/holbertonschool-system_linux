@@ -55,9 +55,12 @@ int printSecHeaders(re_state *state)
 		       curr->sh_addralign);
 	}
 
-	printf("Key to Flags:\n" \
-	       "  W (write), A (alloc), X (execute), M (merge), S (strings), l (large)\n" \
-	       "  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)\n" \
+	printf("Key to Flags:\n");
+	if (state->f_header.e_machine == EM_X86_64)
+		printf("  W (write), A (alloc), X (execute), M (merge), S (strings), l (large)\n");
+	else
+		printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");
+	printf("  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)\n" \
 	       "  O (extra OS processing required) o (OS specific), p (processor specific)\n");
 
 	return (0);
