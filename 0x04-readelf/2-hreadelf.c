@@ -24,7 +24,8 @@ int main(int argc, char **argv)
 	{
 		retval = getFileHeader(&state);
  		if (retval == 0)
-		        retval = (getSecHeaders(&state) || getSHStrTab(&state));
+		        retval = (getSecHeaders(&state) ||
+				  getSecHeadStrTab(&state));
 		else
 			errorMsg("%s: Failed to read file header\n",
 				 NULL, &state);
