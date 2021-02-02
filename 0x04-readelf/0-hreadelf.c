@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	{
 		retval = getFileHeader(&state);
 		if (retval == 0)
-		        retval = printFileHeader(&state);
+			retval = printFileHeader(&state);
 		else
 			errorMsg("%s: Failed to read file header\n",
 				 NULL, &state);

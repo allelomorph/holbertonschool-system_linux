@@ -37,12 +37,12 @@ const char *getSegType(Elf64_Word p_type)
 	default:
 		/* ignoring PT_LOPROC to PT_HIPROC and related EM_ codes */
 		if ((p_type >= PT_LOOS) && (p_type <= PT_HIOS))
-			sprintf (buff, "LOOS+%x", p_type - PT_LOOS);
+			sprintf(buff, "LOOS+%x", p_type - PT_LOOS);
 		else
-			snprintf (buff, sizeof(buff), "<unknown>: %x", p_type);
+			snprintf(buff, sizeof(buff), "<unknown>: %x", p_type);
 	}
 
-	return buff;
+	return (buff);
 }
 
 
@@ -87,14 +87,3 @@ int getProgInterp(re_state *state)
 
 	return (0);
 }
-
-/*
-	printf("\n\ttest printing state->sh_strtab\n");
-	for (i = 0; i < st_shdr.sh_size; i++)
-	{
-		printf("%c", state->sh_strtab[i] == '\0' ? '.' : state->sh_strtab[i]);
-		if ((i + 1) % 16 == 0)
-			putchar('\n');
-	}
-	printf("\ni at loop exit: %lu\n", i);
-*/

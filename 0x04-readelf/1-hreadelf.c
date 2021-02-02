@@ -30,14 +30,14 @@ int main(int argc, char **argv)
 	if (retval == 0)
 	{
 		retval = getFileHeader(&state);
- 		if (retval == 0)
-		        retval = (getSecHeaders(&state) ||
+		if (retval == 0)
+			retval = (getSecHeaders(&state) ||
 				  getSecHeadStrTab(&state));
 		else
 			errorMsg("%s: Failed to read file header\n",
 				 NULL, &state);
- 		if (retval == 0)
-		        retval = printSecHeaders(&state);
+		if (retval == 0)
+			retval = printSecHeaders(&state);
 	}
 
 	closeState(&state);
