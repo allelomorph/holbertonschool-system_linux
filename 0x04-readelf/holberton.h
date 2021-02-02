@@ -8,6 +8,26 @@
 /* FILE stream type def */
 #include <stdio.h>
 
+/**
+ * struct readelf_state - ELF information needed globally by most subroutines
+ * @exec_name: name of hreadelf executable, for error return
+ * @f_name: ELF name
+ * @f_stream: ELF file stream
+ * @f_size: signed due to being derived from off_t
+ * @big_endian: endianness of ELF, false by default
+ * @ELF_32bit: ELF is for 32 bit architecture, false by default
+ * @f_header: file header read from ELF
+ * @s_headers: section headers read from ELF
+ * @sh_strtab: full section header string table as one buffer
+ * @prog_interp: contents of .interp section, if present
+ * @p_headers: program headers (segments) read from ELF
+ * @dyn_sym: symbol table from .dynsym section, if present
+ * @sym_tab: symbol table from .symtab section, if present
+ *
+ * Description: used to hold file data that needs to be globally visible to
+ * various functions to ensure consistent error messages and format output.
+ * (Note: if ELF is 32 bit, stucts read from file are cast into 64 bit vers.)
+ */
 typedef struct readelf_state {
         char *exec_name;
 	char *f_name;
