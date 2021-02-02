@@ -94,13 +94,20 @@ int printProgHeaders(re_state *state)
 				section = state->s_headers + j;
 
 				/* ignoring .tbss, .bss only NOBITS handled */
-				if ((section->sh_type == SHT_NOBITS &&
-				     (segment->p_type == PT_LOAD &&
-				      (segment + 1)->p_type != PT_LOAD)) ||
-				    (section->sh_type != SHT_NOBITS &&
-				     (section->sh_offset >= segment->p_offset &&
-				      section->sh_offset < seg_end)))
-					printf("%s ", state->sh_strtab + section->sh_name);
+			        if (section->sh_type == SHT_NOBITS)
+				{
+					if (segment->p_type == PT_LOAD &&
+					    (segment + 1)->p_type != PT_LOAD)
+						printf("%s ", state->sh_strtab + section->sh_name);
+				}
+				else
+				{
+				        if (!(segment->p_type == PT_DYNAMIC &&
+					      state->f_header.e_ident[EI_OSABI] == ELFOSABI_SOLARIS) &&
+					    (section->sh_offset >= segment->p_offset &&
+					     section->sh_offset < seg_end))
+						printf("%s ", state->sh_strtab + section->sh_name);
+				}
 			}
 			putchar('\n');
 		}
