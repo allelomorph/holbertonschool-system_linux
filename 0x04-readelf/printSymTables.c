@@ -83,8 +83,10 @@ int printSymTables(re_state *state)
 		{
 			symbol = s_tab + j;
 
+			/* sparcbigendian32 was an outlier in conditions for appending version strings, */
+			/* patched manually in this test and in getSymVerStr() */
 			if (sym_shdr->sh_type == SHT_DYNSYM &&
-			    (symbol->st_value == 0 &&
+			    ((symbol->st_value == 0 || state->f_header.e_machine == EM_SPARC) &&
 			     ELF64_ST_TYPE(symbol->st_info) != STT_NOTYPE))
 				ver_str = getSymVerStr(strtab, sym_vers, j, vernauxs, num_vers);
 			else
