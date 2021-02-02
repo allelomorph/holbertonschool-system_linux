@@ -35,11 +35,15 @@ char *getSymVerStr(char *strtab, Elf64_Versym *sym_vers, unsigned int sym_idx,
 		}
 	}
 
-	snprintf(buff, sizeof(buff), "@%s (%u)", ver_str, version->vna_other);
-	return buff;
+	/* conditional to patch out sparcbigendian32 syms '_IO_stdin_used' and 'error' */
+	if (ver_str != NULL)
+		snprintf(buff, sizeof(buff), "@%s (%u)", ver_str, version->vna_other);
+	else
+		buff[0] = '\0';
+	return (buff);
 }
 
-/* get array of Versym nums */
+
 /**
  * printSecHeaders - reads ELF to return an array of version numbers for
  * dynamic symbols
@@ -76,7 +80,6 @@ Elf64_Versym *getVersyms(re_state *state, Elf64_Shdr *versym_shdr, unsigned int 
 	return (sym_vers);
 }
 
-/* get flattened array of versions (Vernaux) */
 
 /**
  * getVernauxFlatArr - reads ELF to return an array of versions for dynamic
@@ -91,7 +94,7 @@ Elf64_Versym *getVersyms(re_state *state, Elf64_Shdr *versym_shdr, unsigned int 
  */
 Elf64_Vernaux *getVernauxFlatArr(re_state *state, Elf64_Shdr *verneed_shdr, unsigned int *num_vers)
 {
-	unsigned int vernaux_ct = 0, next_vn, next_vna, i = 0, j;
+	unsigned int vernaux_ct = 0, next_vn, next_vna, i;
 	Elf64_Verneed *verneed;
 	Elf64_Vernaux *vernauxs;
 
@@ -128,7 +131,7 @@ Elf64_Vernaux *getVernauxFlatArr(re_state *state, Elf64_Shdr *verneed_shdr, unsi
 
 	/* flatten mixed Verneed/Vernaux section into Vernaux array */
 	next_vn = verneed_shdr->sh_offset;
-	j = 0;
+	i = 0;
 	do
 	{
 		if (fseek(state->f_stream, next_vn, SEEK_SET) == -1)
@@ -141,20 +144,17 @@ Elf64_Vernaux *getVernauxFlatArr(re_state *state, Elf64_Shdr *verneed_shdr, unsi
 			bswapElf64_Verneed(verneed);
 
 		next_vna = next_vn + sizeof(Elf64_Verneed);
-		for (; i < verneed->vn_cnt && j < vernaux_ct; i++)
-		{
-			if (fseek(state->f_stream, next_vna, SEEK_SET) == -1)
-				return (NULL);
 
-			if (fread(vernauxs + j, sizeof(Elf64_Vernaux),
-				  verneed->vn_cnt, state->f_stream) != verneed->vn_cnt)
-				return (NULL);
+		if (fseek(state->f_stream, next_vna, SEEK_SET) == -1)
+			return (NULL);
 
-			j += verneed->vn_cnt;
-		}
+		if (fread(vernauxs + i, sizeof(Elf64_Vernaux),
+			  verneed->vn_cnt, state->f_stream) != verneed->vn_cnt)
+			return (NULL);
 
+		i += verneed->vn_cnt;
 		next_vn += verneed->vn_next;
-	} while (verneed->vn_next != 0);
+	} while (i < vernaux_ct);
 
 	if (state->big_endian)
 	{
