@@ -1,6 +1,7 @@
 BITS 64
 
-global asm_tolower		; export `asm_tolower` function
+	;; would export `asm_tolower` function here, but changed asm_tolower to private label
+	;; and `call`s to `jmp` to avoid assignment prohibition of `call`
 global asm_strncasecmp		; export `asm_strncasecmp` function
 section .text
 
@@ -29,7 +30,7 @@ section .text
 	;;	return (diff);
 	;; }
 
-asm_tolower:
+.asm_tolower:
 	push    rbp			; prologue
 	mov     rbp, rsp		;
 	mov     DWORD [rbp - 4], edi 	; reserve 4 bytes on stack for int c in edi
@@ -62,13 +63,13 @@ asm_strncasecmp:			;
 	movzx   eax, BYTE [rax]		;
 	movsx   eax, al			;
 	mov     edi, eax		;
-	call    asm_tolower		;
+	jmp    	.asm_tolower		; modified from `call asm_tolower`
 	mov     ebx, eax		; store first asm_tolower return in ebx
 	mov     rax, QWORD [rbp - 40] 	; deref s2
 	movzx   eax, BYTE [rax]		;
 	movsx   eax, al			;
 	mov     edi, eax		;
-	call    asm_tolower		;
+	jmp    	.asm_tolower		; modified from `call asm_tolower`
 	sub     ebx, eax		; subtract second as_tolower return
 	mov     eax, ebx		;
 	mov     DWORD [rbp - 20], eax 	; store result in diff
