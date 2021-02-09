@@ -1,8 +1,8 @@
+#ifndef LIBASM_H
+#define LIBASM_H
+
 /* size_t */
 #include <stddef.h>
-
-/* task 6: write (no need to import header if using `extern write` in .asm) */
-/* #include <unistd.h> */
 
 /* task 0. strlen */
 size_t asm_strlen(const char *str);
@@ -48,3 +48,5 @@ size_t asm_puti(int n);
 
 /* task 14. puti_base */
 size_t asm_puti_base(int n, const char *base);
+
+#endif /* LIBASM_H */
