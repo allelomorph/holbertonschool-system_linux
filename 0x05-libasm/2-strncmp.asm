@@ -31,7 +31,7 @@ asm_strncmp:
 	mov     QWORD [rbp - 40], rdx	; reserve space on stack for n
 	mov     QWORD [rbp - 8], 0	; reserve space on stack for i == 0
 	mov     DWORD [rbp - 12], 0	; reserve space on stack for diff == 0
-	jmp     .s1_s2_loop_tests	;
+	jmp     .s1_or_s2_test		;
 .s1_s2_loop:				;
 	mov     rax, QWORD [rbp - 24]	;
 	movzx   eax, BYTE [rax]		; deref s1
@@ -45,19 +45,20 @@ asm_strncmp:
 	add     QWORD [rbp - 24], 1	; s1++
 	add     QWORD [rbp - 32], 1	; s2++
 	add     QWORD [rbp - 8], 1	; i++
-.s1_s2_loop_tests:			;
+.s1_or_s2_test:				;
 	mov     rax, QWORD [rbp - 24]	;
-	movzx   eax, BYTE [rax]		;
-	test    al, al			;
-	je      .diff_gt_0		;
+	movzx   eax, BYTE [rax]		; deref s1
+	test    al, al			; *s1 == '\0'?
+	jne     .diff_i_tests		;
 	mov     rax, QWORD [rbp - 32]	;
-	movzx   eax, BYTE [rax]		;
-	test    al, al			;
+	movzx   eax, BYTE [rax]		; deref s2
+	test    al, al			; *s2 == '\0'?
 	je      .diff_gt_0		;
-	cmp     DWORD [rbp - 12], 0	;
+.diff_i_tests:				;
+	cmp     DWORD [rbp - 12], 0	; diff == 0?
 	jne     .diff_gt_0		;
 	mov     rax, QWORD [rbp - 8]	;
-	cmp     rax, QWORD [rbp - 40]	;
+	cmp     rax, QWORD [rbp - 40]	; i < n?
 	jb      .s1_s2_loop		;
 .diff_gt_0:				;
 	cmp     DWORD [rbp - 12], 0	;
