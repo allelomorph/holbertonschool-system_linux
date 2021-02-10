@@ -12,7 +12,7 @@ section .text
 	;; 	int diff = 0;
 	;; 	char c1, c2;
 	;;
-	;; 	while (*s1 && *s2 && diff == 0 && i < n)
+	;; 	while ((*s1 || *s2) && diff == 0 && i < n)
 	;; 	{
 	;; 		c1 = (*s1 >= 'A' && *s1 <= 'Z') ? *s1 + ' ' : *s1;
 	;; 		c2 = (*s2 >= 'A' && *s2 <= 'Z') ? *s2 + ' ' : *s2;
@@ -34,7 +34,7 @@ asm_strncasecmp:
 	mov     QWORD [rbp - 40], rdx	; reserve space on stack for n from rdx
 	mov     QWORD [rbp - 8], 0	; reserve space on stack for i
 	mov     DWORD [rbp - 12], 0	; reserve space on stack for diff (and c1, c2)
-	jmp     .s1_s2_loop_tests	;
+	jmp     .s1_or_s2_test		;
 .c1_ternary:				;
 	mov     rax, QWORD [rbp - 24]	;
 	movzx   eax, BYTE [rax]		; deref s1
@@ -78,16 +78,17 @@ asm_strncasecmp:
 	add     QWORD [rbp - 24], 1	; s1++
 	add     QWORD [rbp - 32], 1	; s2++
 	add     QWORD [rbp - 8], 1	; i++
-.s1_s2_loop_tests:			;
+.s1_or_s2_test:				;
 	mov     rax, QWORD [rbp - 24]	;
 	movzx   eax, BYTE [rax]		;
-	test    al, al			; *s1 == '\0'?
-	je      .return_diff		;
+	test    al, al			;
+	jne     .diff_i_tests		;
 	mov     rax, QWORD [rbp - 32]	;
 	movzx   eax, BYTE [rax]		;
-	test    al, al			; *s2 == '\0'?
+	test    al, al			;
 	je      .return_diff		;
-	cmp     DWORD [rbp - 12], 0	; diff == 0?
+.diff_i_tests:				;
+        cmp     DWORD [rbp - 12], 0	; diff == 0?
 	jne     .return_diff		;
 	mov     rax, QWORD [rbp - 8]	;
 	cmp     rax, QWORD [rbp - 40]	; i < n?
