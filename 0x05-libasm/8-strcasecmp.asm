@@ -1,94 +1,90 @@
 BITS 64
 
-global asm_tolower		; export `asm_tolower` function
 global asm_strcasecmp		; export `asm_strcasecmp` function
 section .text
 
-	;; int asm_tolower(int c)
-	;; {
-	;; 	if (c >= 'A' && c <= 'Z')
-	;; 		return (c + ' ');
-	;; 	else
-	;; 		return (c);
-	;; }
+	;; /* originally implemented with a helper function that cloned tolower(). */
+	;; /* but `call` instruction is prohibited by project rules, so switched to ternary */
 	;;
 	;; int asm_strcasecmp(const char *s1, const char *s2)
 	;; {
-	;; 	while (*s1 && *s2 && asm_tolower(*s1) == asm_tolower(*s2))
+	;; 	char c1, c2;
+	;; 	int diff = 0;
+	;;
+	;; 	while (*s1 && *s2 && diff == 0)
 	;; 	{
+	;; 		c1 = (*s1 >= 'A' && *s1 <= 'Z') ? *s1 + ' ' : *s1;
+	;; 		c2 = (*s2 >= 'A' && *s2 <= 'Z') ? *s2 + ' ' : *s2;
+	;; 		diff = c1 - c2;
 	;; 		s1++;
 	;; 		s2++;
-	;;	}
+	;; 	}
 	;;
 	;; 	/* 8-main is expecting difference in ASCII values, not 0/1/-1 implementation */
-	;; 	return (asm_tolower(*s1) - asm_tolower(*s2));
+	;; 	return (diff);
 	;; }
 
-asm_tolower:
+asm_strcasecmp:
 	push    rbp			; prologue
 	mov     rbp, rsp		;
-	mov     DWORD [rbp - 4], edi 	; reserve 4 bytes on stack for int c in edi
-	cmp     DWORD [rbp - 4], 64	; compare c to 'A'
-	jle     .return_c		;
-	cmp     DWORD [rbp - 4], 90 	; compare c to 'Z'
-	jg      .return_c		;
-	mov     eax, DWORD [rbp - 4]	;
-	add     eax, 32			; c + ' '
-	jmp     .return_c_lower		;
-.return_c:				;
-	mov     eax, DWORD [rbp - 4]	; return c as is
-.return_c_lower:			;
-	pop     rbp			; return lowercase c (why rbp and not eax?)
-	ret				;
-					;;
-asm_strcasecmp:				;
-	push    rbp			; prologue
-	mov     rbp, rsp		;
-	push    rbx			; rbx is return value of asm_tolower?
-	sub     rsp, 16			; reserve two more 8 byte spaces on stack
-	mov     QWORD [rbp - 16], rdi 	; store rdi on stack
-	mov     QWORD [rbp - 24], rsi 	; store rsi on stack
-	jmp     .s1_s2_loop_tests      	;
-.inc_s1_s2:				;
-	add     QWORD [rbp - 16], 1   	; s1++
-	add     QWORD [rbp - 24], 1   	; s2++
-.s1_s2_loop_tests:		      	;
-	mov     rax, QWORD [rbp - 16] 	;
-	movzx   eax, BYTE [rax]	      	;
-	test    al, al		      	;
-	je      .find_lowercase_diff	;
-	mov     rax, QWORD [rbp - 24] 	;
-	movzx   eax, BYTE [rax]	      	;
-	test    al, al		      	;
-	je      .find_lowercase_diff	;
-	mov     rax, QWORD [rbp - 16]	;
-	movzx   eax, BYTE [rax]		;
-	movsx   eax, al			;
-	mov     edi, eax		;
-	call    asm_tolower		;
-	mov     ebx, eax		;
+	mov     QWORD [rbp - 24], rdi	; reserve space on stack for s1 from rdi
+	mov     QWORD [rbp - 32], rsi	; reserve space on stack for s2 from rsi
+	mov     DWORD [rbp - 4], 0	; reserve space on stack for diff = 0 (and c1, c2)
+	jmp     .s1_s2_loop_tests	;
+.c1_ternary:				;
 	mov     rax, QWORD [rbp - 24]	;
 	movzx   eax, BYTE [rax]		;
-	movsx   eax, al			;
-	mov     edi, eax		;
-	call    asm_tolower		;
-	cmp     ebx, eax		;
-	je      .inc_s1_s2		;
-.find_lowercase_diff:			;
-	mov     rax, QWORD [rbp - 16]	; begin deref s1 into 1 byte int
+	cmp     al, 64			;
+	jle     .L3			;
+	mov     rax, QWORD [rbp - 24]	;
 	movzx   eax, BYTE [rax]		;
-	movsx   eax, al			; end deref s1 into 1 byte int
-	mov     edi, eax		; asm_tolower uses edi
-	call    asm_tolower		;
-	mov     ebx, eax		; store first return of asm_tolower in ebx
-	mov     rax, QWORD [rbp - 24]	; begin deref s1 into 1 byte int
+	cmp     al, 90			;
+	jg      .L3			;
+	mov     rax, QWORD [rbp - 24]	;
 	movzx   eax, BYTE [rax]		;
-	movsx   eax, al			; end deref s1 into 1 byte int
-	mov     edi, eax		; asm_tolower uses edi
-	call    asm_tolower		;
-	sub     ebx, eax		; difference in returns
-	mov     eax, ebx		;
-	add     rsp, 16			; returning caclulated difference in lowercase ASCII
-	pop     rbx			;
-	pop     rbp			;
+	add     eax, 32			;
+	jmp     .L4			;
+.L3:					;
+	mov     rax, QWORD [rbp - 24]	;
+	movzx   eax, BYTE [rax]		;
+.L4:					;
+	mov     BYTE [rbp - 5], al	;
+	mov     rax, QWORD [rbp - 32]	;
+	movzx   eax, BYTE [rax]		;
+	cmp     al, 64			;
+	jle     .L5			;
+	mov     rax, QWORD [rbp - 32]	;
+	movzx   eax, BYTE [rax]		;
+	cmp     al, 90			;
+	jg      .L5			;
+	mov     rax, QWORD [rbp - 32]	;
+	movzx   eax, BYTE [rax]		;
+	add     eax, 32			;
+	jmp     .L6			;
+.L5:					;
+	mov     rax, QWORD [rbp - 32]	;
+	movzx   eax, BYTE [rax]		;
+.L6:					;
+	mov     BYTE [rbp - 6], al	;
+	movsx   edx, BYTE [rbp - 5]	;
+	movsx   eax, BYTE [rbp - 6]	;
+	sub     edx, eax		;
+	mov     eax, edx		;
+	mov     DWORD [rbp - 4], eax	;
+	add     QWORD [rbp - 24], 1	;
+	add     QWORD [rbp - 32], 1	;
+.s1_s2_loop_tests:			;
+	mov     rax, QWORD [rbp - 24]	;
+	movzx   eax, BYTE [rax]		;
+	test    al, al			;
+	je      .L7			;
+	mov     rax, QWORD [rbp - 32]	;
+	movzx   eax, BYTE [rax]		;
+	test    al, al			;
+	je      .L7			;
+	cmp     DWORD [rbp - 4], 0	;
+	je      .c1_ternary		;
+.L7:					;
+	mov     eax, DWORD [rbp - 4]	;
+	pop     rbp			; epilogue
 	ret				;
