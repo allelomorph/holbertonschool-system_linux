@@ -52,52 +52,47 @@ asm_puti:
 	mov     QWORD [rbp - 24], 1	; reserve space on stack for chr_cnt = 1
 	cmp     DWORD [rbp - 36], 0	; n < 0?
 	jns     .cast_n_to_temp		;
-	mov     edi, 45			;
+	mov     edi, 45			; '-'
 	call    asm_putc		;
-	add     QWORD [rbp - 16], 1	;
-	add     QWORD [rbp - 24], 1	;
+	add     QWORD [rbp - 16], 1	; i++
+	add     QWORD [rbp - 24], 1	; chr_cnt++
 	mov     eax, DWORD [rbp - 36]	;
-	neg     eax			;
-	mov     DWORD [rbp - 8], eax	;
+	neg     eax			; negates n with 2's complement
+	mov     DWORD [rbp - 8], eax	; reserve space on stack for temp = -n
 	jmp     .pow_10_loop_test	;
 .cast_n_to_temp:			;
 	mov     eax, DWORD [rbp - 36]	;
-	mov     DWORD [rbp - 8], eax	; cast n to temp
+	mov     DWORD [rbp - 8], eax	; reserve space on stack for temp = n
 	jmp     .pow_10_loop_test	;
 .pow_10_loop:				;
-	mov     edx, DWORD [rbp - 4]	;
-	mov     eax, edx		;
-	sal     eax, 2			;
-	add     eax, edx		;
-	add     eax, eax		;
-	mov     DWORD [rbp - 4], eax	;
+	mov     eax, DWORD [rbp - 4]	;
+	imul    eax, 10			; pow_10 * 10
+	mov     DWORD [rbp - 4], eax	; result is new pow_10
 	add     QWORD [rbp - 24], 1	; chr_cnt++
 .pow_10_loop_test:			;
 	mov     eax, DWORD [rbp - 8]	;
-	mov     edx, -858993459		;
-	mul     edx			;
-	mov     eax, edx		;
-	shr     eax, 3			;
-	cmp     eax, DWORD [rbp - 4]	;
+	mov     edx, 0			; init div return register edx
+	mov	rcx, 10			; div needs register operand
+	div     rcx			; temp / 10
+	cmp     eax, DWORD [rbp - 4]	; >= pow_10
 	jnb     .pow_10_loop		;
 	jmp     .print_loop_test	;
 .print_loop:				;
 	mov     eax, DWORD [rbp - 8]	;
-	mov     edx, 0			;
-	div     DWORD [rbp - 4]		;
-	add     eax, 48			;
-	mov     edi, eax		;
+	mov     edx, 0			; init div return register edx
+	div     DWORD [rbp - 4]		; temp / pow_10
+	add     eax, 48			; + '0'
+	mov     edi, eax		; result into edi for call param
 	call    asm_putc		;
 	mov     eax, DWORD [rbp - 8]	;
-	mov     edx, 0			;
-	div     DWORD [rbp - 4]		;
-	mov     DWORD [rbp - 8], edx	;
+	mov     edx, 0			; init div return register edx
+	div     DWORD [rbp - 4]		; temp % pow_10
+	mov     DWORD [rbp - 8], edx	; remainder (edx) is new temp
 	mov     eax, DWORD [rbp - 4]	;
-	mov     edx, -858993459		;
-	mul     edx			;
-	mov     eax, edx		;
-	shr     eax, 3			;
-	mov     DWORD [rbp - 4], eax	;
+	mov     edx, 0			; init div return register edx
+	mov	rcx, 10			; div needs register operand
+	div 	rcx			; pow_10 / 10
+	mov     DWORD [rbp - 4], eax	; quotient (rax) is new pow_10
 	add     QWORD [rbp - 16], 1	; i++
 .print_loop_test:			;
 	mov     rax, QWORD [rbp - 16]	;
