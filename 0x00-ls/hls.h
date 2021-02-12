@@ -107,9 +107,16 @@ char *modeString(mode_t mode);
 char *dateTimeString(time_t time);
 int longFormatPrint(file_list_t *node);
 bool stringExactMatch(const char *s1, char *s2);
+
 int criteriaSort(file_list_t *node1, file_list_t *node2);
 void insertion_sort_list(file_list_t **list);
-int _strcmp(const char *str1, const char *str2);
+int _strcmp(const char *s1, const char *s2);
+int _tolower(char c);
+int _strcasecmp(const char *s1, const char *s2);
+int aAbBcCmp(const char *a, const char *b);
+
+void dll_adj_swap(file_list_t **list, file_list_t *left, file_list_t *right);
+void cocktail_sort_list(file_list_t **list);
 
 /* helpers4.c */
 void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs);
