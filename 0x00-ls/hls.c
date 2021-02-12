@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 	int i, nonFlagArgs = 0;
 	file_list_t *file_list = NULL;
 	file_list_t *dir_list = NULL;
+	file_list_t *temp = NULL;
 	bool cmdLineArgs = true;
 
 	/* first pass through argv to set option flags */
@@ -36,24 +37,43 @@ int main(int argc, char *argv[])
 
 	/* sort lists based on flags (default alpha lowercase first) */
 	/* no hidden file screen on files from args, only on files from dirs */
-	/*
-	insertion_sort_list(&file_list);
-	insertion_sort_list(&dir_list);
-	*/
 
 	if (file_list)
+	{
+		cocktail_sort_list(&file_list);
 		printFileList(file_list, cmdLineArgs);
+
+	}
 
 	if (dir_list)
 	{
 		/* populates dir profiles with file profile list of contents*/
 		parseDirs(dir_list, cmdLineArgs);
+/*
+		testPrintList(dir_list);
+*/
+		cocktail_sort_list(&dir_list);
+
+		temp = dir_list;
+		while (temp)
+		{
+			cocktail_sort_list(&(temp->dir_files));
+/*
+		printf("\tbefore cocktail_sort_list:"\
+		       "temp->dir_files:%p &(temp->dir_files):%p *(&(temp->dir_files)):%p\n",
+		       (void *)temp->dir_files, (void *)&(temp->dir_files), (void *)*(&(temp->dir_files)));
+*/
+			temp = temp->next;
+		}
+
 		printDirs(dir_list, cmdLineArgs, nonFlagArgs);
 	}
-
+/*
+	printf("-----file_list:\n");
 	testPrintList(file_list);
+	printf("-----dir_list:\n");
 	testPrintList(dir_list);
-
+*/
 	/* cleanup lists and buffers */
 	if (file_list)
 		freeList(file_list);

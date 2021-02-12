@@ -16,12 +16,14 @@ void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs)
 	char *path = NULL;
 
 	path = malloc(sizeof(char) * 256);
+
 	while (temp)
 	{
 		if (dirParseAllowed(temp->f_name, cmdLineArgs))
 		{
 			file_list_head = NULL;
 			dir = opendir(temp->f_path);
+
 			if (dir)
 			{
 				while ((read = readdir(dir)) != NULL)
@@ -74,9 +76,9 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 	else
 		if (nonFlagArgs > dir_list_len)
 			firstDir = false;
-
-	insertion_sort_list(&dir_list_head);
-
+/*
+	cocktail_sort_list(&dir_list_head);
+*/
 	/* if reverse flag is on, advance temp to tail for reversed traversal */
 	if (reverseOrder)
 		while (temp->next)

@@ -1,6 +1,7 @@
 #include "hls.h"
 #include "flags.h"
 
+
 /**
  * addListNode - adds a new node at the beginning of a file_list_t list
  * @head: double pointer to first member of a file_list_t list
@@ -59,6 +60,7 @@ file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 	return (new);
 }
 
+
 /**
  * freeList - frees all node members and nodes of a file_list_t list
  * @head: double pointer to first member of a file_list_t list
@@ -90,6 +92,7 @@ void freeList(file_list_t *head)
 	}
 }
 
+
 /**
  * parseArgs - parses command line arguments and populates linked lists of
  * files and directories accordingly
@@ -113,9 +116,11 @@ int parseArgs(int argc, char *argv[], file_list_t **file_list,
 			if (lstat(argv[i], &file_stat) == 0) /* read success */
 			{
 				if (S_ISDIR(file_stat.st_mode))
-					addListNode(dir_list, argv[i], argv[i], file_stat);
+					addListNode(dir_list, argv[i],
+						    argv[i], file_stat);
 				else
-					addListNode(file_list, argv[i], argv[i], file_stat);
+					addListNode(file_list, argv[i],
+						    argv[i], file_stat);
 			}
 			else
 				fileError(argv[i]);
@@ -124,6 +129,7 @@ int parseArgs(int argc, char *argv[], file_list_t **file_list,
 
 	/* lists are built by adding at the head, to be sorted later */
 	/* but by default, args should be printed in arg order */
+/*
 	if (!fileSizeSort && !modTimeSort)
 	{
 		if (file_list)
@@ -131,7 +137,7 @@ int parseArgs(int argc, char *argv[], file_list_t **file_list,
 		if (dir_list)
 			reverseList(dir_list);
 	}
-
+*/
 	/* if no args, or only flag args, defaults to `.` contents */
 	if (nonFlagArgs == 0)
 	{
@@ -140,8 +146,10 @@ int parseArgs(int argc, char *argv[], file_list_t **file_list,
 		else
 			fileError(".");
 	}
+
 	return (nonFlagArgs);
 }
+
 
 /**
  * testPrintFlags - easy reference for flag toggles
@@ -157,6 +165,7 @@ void testPrintFlags(void)
 	printf("modTimeSort    = %s\n", modTimeSort ? "true" : "false");
 	printf("Recursive      = %s\n", Recursive ? "true" : "false");
 }
+
 
 /**
  * testPrintList - reference printing for doubly linked lists
@@ -188,6 +197,7 @@ size_t testPrintList(file_list_t *head)
 	}
 	return (nodes);
 }
+
 
 void reverseList(file_list_t **head)
 {
