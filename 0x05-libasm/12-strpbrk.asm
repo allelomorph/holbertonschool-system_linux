@@ -17,7 +17,7 @@ section .text
 	;; 		s++;
 	;; 	}
 	;;
-	;; 	if (*temp)
+	;; 	if (temp)
 	;; 		return ((char *)s);
 	;; 	else
 	;; 		return (NULL);
@@ -61,9 +61,7 @@ asm_strpbrk:
 	test    al, al			;
 	jne     .cast_accept_to_temp	;
 .select_return:				;
-	mov     rax, QWORD [rbp - 8]	;
-	movzx   eax, BYTE [rax]		;
-	test    al, al			; *temp == '\0'?
+        cmp     QWORD [rbp - 8], 0	;
 	je      .return_null		;
 	mov     rax, QWORD [rbp - 24]	;
 	jmp     .return_s		;

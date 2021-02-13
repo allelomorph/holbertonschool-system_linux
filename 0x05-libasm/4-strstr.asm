@@ -8,6 +8,9 @@ section .text
 	;; 	char *hs = (char *)haystack, *ndl = (char *)needle,
 	;; 		*temp = NULL;
 	;;
+	;; 	if (!*hs)
+	;; 		return (NULL);
+	;;
 	;;	for (; *hs; hs++)
 	;; 	{
 	;;		for (temp = ndl; *temp; temp++)
@@ -33,7 +36,11 @@ asm_strstr:
 	mov     rax, QWORD [rbp - 48]	; cast needle
 	mov     QWORD [rbp - 24], rax	; reserve space on stack for ndl
 	mov     QWORD [rbp - 16], 0	; reserve space on stack for temp == NULL
-	jmp     .hs_loop_test		;
+        mov     rax, QWORD [rbp - 8] 	;
+	movzx   eax, BYTE [rax]	     	;
+	test    al, al		     	; *hs == '\0'?
+	jne     .hs_loop_test		;
+        jmp     .return_null		;
 .temp_loop_setup:			;
 	mov     rax, QWORD [rbp - 24]	;
 	mov     QWORD [rbp - 16], rax	; temp = ndl
@@ -73,7 +80,8 @@ asm_strstr:
 	movzx   eax, BYTE [rax]		;
 	test    al, al			; *hs == '\0'?
 	jne     .temp_loop_setup	;
-	mov     eax, 0			;
+.return_null:				;
+	mov     eax, 0			; return NULL
 .return:				;
 	pop     rbp			; epilogue
 	ret				;
