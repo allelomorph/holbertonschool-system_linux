@@ -14,6 +14,9 @@ section .text
 	;; 		temp++;
 	;;	}
 	;;
+	;; 	if (c == 0)
+	;; 		return (temp);
+	;;
 	;; 	return (NULL);
 	;; }
 
@@ -29,7 +32,7 @@ asm_strchr:
 	mov     rax, QWORD [rbp - 8]	;
 	movzx   eax, BYTE [rax]		;
 	movsx   eax, al			;
-	cmp     eax, DWORD [rbp - 28]	;
+	cmp     eax, DWORD [rbp - 28]	; *temp == c?
 	jne     .inc_temp		;
 	mov     rax, QWORD [rbp - 8]	;
 	jmp     .return			;
@@ -40,6 +43,11 @@ asm_strchr:
 	movzx   eax, BYTE [rax]		;
 	test    al, al			; *temp == '\0'?
 	jne     .temp_loop		;
+	cmp     DWORD [rbp - 28], 0	; c == 0?
+	jne     .return_null		;
+	mov     rax, QWORD [rbp - 8]	;
+	jmp     .return			;
+.return_null:				;
 	mov     eax, 0			;
 .return:				;
 	pop     rbp			; epilogue
