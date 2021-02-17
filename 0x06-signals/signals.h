@@ -1,6 +1,9 @@
 #ifndef SIGNALS_H
 #define SIGNALS_H
 
+/* siginfo_t */
+#include <signal.h>
+
 /* from man 2 signal */
 typedef void (*sighandler_t)(int);
 
@@ -20,6 +23,7 @@ int handle_sigaction(void);
 void (*current_handler_sigaction(void))(int);
 
 /* 4. Who said that?! */
+void SIGQUIT_handler(int signum, siginfo_t *si, void *ucontext);
 int trace_signal_sender(void);
 
 /* 10. Does it exist? */
