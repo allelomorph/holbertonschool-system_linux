@@ -25,21 +25,19 @@ void all_signal_handler(int signum, siginfo_t *si, void *ucontext)
 
 /**
  * all_in_one - sets the same handler for all interceptible signals
+ * notes: project limits function to 10 lines; SA_SIGINFO sets use of
+ * sa_sigaction over sa_handler
  */
 void all_in_one(void)
 {
 	struct sigaction sa;
 	int sig;
 
-	/* SA_SIGINFO set to use sa_sigaction and not sa_handler */
 	sa.sa_flags |= SA_SIGINFO;
-
 	sa.sa_sigaction = all_signal_handler;
-
 	for (sig = 1; sig < SIGRTMIN; sig++)
 	{
 		if (sig != SIGKILL && sig != SIGSTOP)
-			/* return: -1 and errno: EINVAL for sig: 32,33 */
 			sigaction(sig, &sa, NULL);
 	}
 }
