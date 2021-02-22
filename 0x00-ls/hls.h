@@ -26,6 +26,17 @@
 /* for flags */
 #include <stdbool.h>
 
+typedef struct coll_elem_s {
+	unsigned char weights[2];
+	bool variable;
+} coll_elem_t;
+
+typedef struct coll_key_s {
+	unsigned short int n;
+	struct coll_key_s *prev;
+	struct coll_key_s *next;
+} coll_key_t;
+
 /**
  * struct file_list_s - doubly linked list node
  *
@@ -40,6 +51,7 @@
 typedef struct file_list_s
 {
 	const char *f_name;
+	coll_key_t *f_ckey;
 	const char *f_slnk;
 	const char *f_path;
 	const struct stat *f_stat;
@@ -47,18 +59,6 @@ typedef struct file_list_s
 	struct file_list_s *prev;
 	struct file_list_s *next;
 } file_list_t;
-
-
-typedef struct coll_elem_s {
-	unsigned char weights[2];
-	bool variable;
-} coll_elem_t;
-
-typedef struct coll_key_s {
-	unsigned short int n;
-	struct coll_key_s *prev;
-	struct coll_key_s *next;
-} coll_key_t;
 
 
 /* make file struct f_path be full path: temp/folder1, f_name: folder1 */
@@ -69,7 +69,7 @@ void setFlags(char *flags);
 /* int main(int argc, char *argv[]) */
 
 /* collation_keys.c */
-int _strcoll(const char *s1, const char *s2);
+int _strcoll(coll_key_t *ckey_s1, coll_key_t *ckey_s2);
 coll_key_t *buildCollKey(const char *s);
 coll_key_t *addCollKeyNode(coll_key_t **head);
 void freeCollKey(coll_key_t **head);

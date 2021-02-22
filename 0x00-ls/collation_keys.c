@@ -5,15 +5,13 @@
 #include <stdbool.h>
 
 
-int _strcoll(const char *s1, const char *s2)
+int _strcoll(coll_key_t *ckey_s1, coll_key_t *ckey_s2)
 {
-	coll_key_t *ckey_s1 = NULL, *ckey_s2 = NULL,
-		*temp1 = NULL, *temp2 = NULL;
+	coll_key_t *temp1 = NULL, *temp2 = NULL;
 	int diff;
 
 	/* build collation keys */
-	ckey_s1 = buildCollKey(s1);
-	ckey_s2 = buildCollKey(s2);
+	/* optimized by building once and adding to file_list_s */
 
 	/* compare collation keys */
 	temp1 = ckey_s1;
@@ -33,8 +31,8 @@ int _strcoll(const char *s1, const char *s2)
 	else
 		diff = 0;
 
-	freeCollKey(&ckey_s1);
-	freeCollKey(&ckey_s2);
+	/* free collation keys */
+	/* optimized by freeing at same time as file_list_s nodes */
 
 	return (diff);
 }
@@ -50,8 +48,9 @@ coll_key_t *buildCollKey(const char *s)
 	/* file name can't be "" */
 	if (s == NULL || !s[0])
 		return (NULL);
-
+/*
 	printf("\tbuilding collation key for :%s\n", s);
+*/
 	len = _strlen(s);
         elems = malloc(sizeof(coll_elem_t) * len);
 	if (!elems)

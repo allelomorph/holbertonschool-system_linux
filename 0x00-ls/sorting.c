@@ -26,7 +26,7 @@ int criteriaSort(file_list_t *node1, file_list_t *node2)
 		diff = (node2->f_stat->st_size - node1->f_stat->st_size);
 
         if (diff == 0)
-		diff = _strcoll(node1->f_name, node2->f_name);
+		diff = _strcoll(node1->f_ckey, node2->f_ckey);
 /*
 	printf("\tcriteriaSort: diff: %i\n", diff);
 */
