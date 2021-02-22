@@ -1,5 +1,5 @@
 #include "hls.h"
-#include "flags.h"
+
 
 /**
  * modeString - formats a string to represent a st_mode value for a file
@@ -48,6 +48,7 @@ char *modeString(mode_t mode)
 	return (_strcopy(mode_s));
 }
 
+
 /**
  * dateTimeString - selectively edits the output of `ctime`
  * @time: time_t time value from a stat struct
@@ -70,6 +71,7 @@ char *dateTimeString(time_t time)
 	/* Dec  4 02:49 - 13 chars incl. \0, no \n */
 	return (fmt_time_s);
 }
+
 
 /**
  * longFormatPrint - formats long-form output of file info based on stat struct
@@ -129,25 +131,3 @@ int longFormatPrint(file_list_t *node)
 	free(time_buf);
 	return (EXIT_SUCCESS);
 }
-
-/**
- * stringExactMatch - goes beyond strcmp to ensure that the two strings match to
- * the null bit
- * @s1: first string to compare
- * @s2: second string to compare
- * Return: boolean representing exact match
- */
-bool stringExactMatch(const char *s1, char *s2)
-{
-	while (s1 && s2)
-	{
-		if (*s1 != *s2)
-			return (false);
-		else if (*s1 == '\0' && *s2 == '\0')
-			return (true);
-		s1++;
-		s2++;
-	}
-	return (false);
-}
-

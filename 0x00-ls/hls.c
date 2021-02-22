@@ -13,6 +13,51 @@ bool Recursive      = false;
 /* error handling */
 int exitCode = EXIT_SUCCESS;
 
+
+/**
+ * setFlags - sets global booleans based on toggles in command line args
+ * @flags: single arg containing flags
+ */
+void setFlags(char *flags)
+{
+	int i;
+
+	for (i = 1; flags[i]; i++)
+	{
+		switch (flags[i])
+		{
+		case '1':
+			singleColumn   = true;
+			break;
+		case 'a':
+			allFiles       = true;
+			break;
+		case 'A':
+			almostAllFiles = true;
+			break;
+		case 'l':
+			longFormat     = true;
+			break;
+		case 'r':
+			reverseOrder   = true;
+			break;
+		case 'S':
+			fileSizeSort   = true;
+			break;
+		case 't':
+			modTimeSort    = true;
+			break;
+		case 'R':
+			Recursive      = true;
+			break;
+		default:
+			fprintf(stderr, "hls: invalid option -- '%c'\n", flags[i]);
+			exit(2);
+		}
+	}
+}
+
+
 /**
  * main - entry point into `hls`, a clone of tha bash function `ls`
  * @argc: number of command line arguments
