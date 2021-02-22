@@ -50,7 +50,7 @@ typedef struct file_list_s
 
 
 typedef struct coll_elem_s {
-	unsigned short int weights[3];
+	unsigned char weights[2];
 	bool variable;
 } coll_elem_t;
 

@@ -1,6 +1,7 @@
 #include "hls.h"
 #include "flags.h"
 
+
 /**
  * parseArgs - parses command line arguments and populates linked lists of
  * files and directories accordingly
