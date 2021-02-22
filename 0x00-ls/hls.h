@@ -48,6 +48,20 @@ typedef struct file_list_s
 	struct file_list_s *next;
 } file_list_t;
 
+
+
+typedef struct coll_elem_s {
+	unsigned short int weights[3];
+	bool variable;
+} coll_elem_t;
+
+typedef struct coll_key_s {
+	unsigned short int n;
+	struct coll_key_s *prev;
+	struct coll_key_s *next;
+} coll_key_t;
+
+
 /* make file struct f_path be full path: temp/folder1, f_name: folder1 */
 /* if cmdLineArgs, then f_name and f_path are copies of the same string */
 
@@ -108,16 +122,6 @@ char *dateTimeString(time_t time);
 int longFormatPrint(file_list_t *node);
 bool stringExactMatch(const char *s1, char *s2);
 
-int criteriaSort(file_list_t *node1, file_list_t *node2);
-void insertion_sort_list(file_list_t **list);
-int _strcmp(const char *s1, const char *s2);
-int _tolower(char c);
-int _strcasecmp(const char *s1, const char *s2);
-int aAbBcCmp(const char *a, const char *b);
-
-void dll_adj_swap(file_list_t **list, file_list_t *left, file_list_t *right);
-void cocktail_sort_list(file_list_t **list);
-
 /* helpers4.c */
 void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs);
 void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
@@ -125,5 +129,21 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 bool displayAllowed(const char *filename);
 bool dirParseAllowed(const char *dirname, bool cmdLineArgs);
 void fileError(const char *file);
+
+/* helpers5.c */
+int _strcoll(const char *s1, const char *s2);
+coll_key_t *buildCollKey(const char *s);
+coll_key_t *addCollKeyNode(coll_key_t **head);
+void freeCollKey(coll_key_t **head);
+void setCollElem(coll_elem_t *elem, char c);
+
+/* helpers6.c */
+int criteriaSort(file_list_t *node1, file_list_t *node2);
+void insertion_sort_list(file_list_t **list);
+unsigned int _strlen(const char *s);
+int _strcmp(const char *s1, const char *s2);
+void dll_adj_swap(file_list_t **list, file_list_t *left, file_list_t *right);
+void cocktail_sort_list(file_list_t **list);
+
 
 #endif /* HLS_H */
