@@ -24,6 +24,8 @@ void deleteListNode(file_list_t *node)
 
 	if (temp->f_name)
 		free((char *)temp->f_name);
+	if (temp->f_ckey)
+		freeCollKey(&(temp->f_ckey));
 	if (temp->f_slnk)
 		free((char *)temp->f_slnk);
 	if (temp->f_stat)
@@ -94,6 +96,7 @@ file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 
 	/* init contents */
 	new->f_name = _strcopy(filename);
+	new->f_ckey = buildCollKey(filename);
 	if (S_ISLNK(st.st_mode))
 	{
 		read_bytes = readlink(path, rl_buf, rl_bufSize - 1);
@@ -143,6 +146,8 @@ void freeList(file_list_t *head)
 		/* cast each to non-const to free */
 		if (temp->f_name)
 			free((char *)temp->f_name);
+		if (temp->f_ckey)
+			freeCollKey(&(temp->f_ckey));
 		if (temp->f_slnk)
 			free((char *)temp->f_slnk);
 		if (temp->f_path)
