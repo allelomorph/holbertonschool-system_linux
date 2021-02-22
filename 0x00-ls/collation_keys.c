@@ -48,9 +48,7 @@ coll_key_t *buildCollKey(const char *s)
 	/* file name can't be "" */
 	if (s == NULL || !s[0])
 		return (NULL);
-/*
-	printf("\tbuilding collation key for :%s\n", s);
-*/
+
 	len = _strlen(s);
         elems = malloc(sizeof(coll_elem_t) * len);
 	if (!elems)
@@ -257,7 +255,7 @@ void setCollElem(coll_elem_t *elem, char c)
 		break;
 		/* 002F  ; [*03A6.0020.0002] # SOLIDUS */
 	case '/':
-		/* ls cannot sort by this char as it is special in shell */
+		/* '/' is forbidden by POSIX in file names */
 		break;
 		/* 0030  ; [.1F98.0020.0002] # DIGIT ZERO */
 	case '0':
@@ -281,6 +279,7 @@ void setCollElem(coll_elem_t *elem, char c)
 	case '3':
 		elem->weights[0] = 0x73;
 		elem->weights[1] = 0x02;
+		elem->variable = false;
 		break;
 		/* 0034  ; [.1F9C.0020.0002] # DIGIT FOUR */
 	case '4':
