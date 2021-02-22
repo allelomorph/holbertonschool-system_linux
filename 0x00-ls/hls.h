@@ -49,7 +49,6 @@ typedef struct file_list_s
 } file_list_t;
 
 
-
 typedef struct coll_elem_s {
 	unsigned short int weights[3];
 	bool variable;
@@ -65,85 +64,57 @@ typedef struct coll_key_s {
 /* make file struct f_path be full path: temp/folder1, f_name: folder1 */
 /* if cmdLineArgs, then f_name and f_path are copies of the same string */
 
-/*
-* hls_main.c *
+/* hls.c */
 void setFlags(char *flags);
-void parseArgs(int argc, char *argv[], file_list_t **file_list,
-	       file_list_t **dir_list);
-void printFileList(file_list_t *head);
-void parseDirs(file_list_t *dir_list_head);
-void printDirs(file_list_t *dir_list_head);
+/* int main(int argc, char *argv[]) */
 
-* hls_printing.c *
-int longFormatPrint(file_list_t *node);
-char *modeString(mode_t mode);
-char *dateTimeString(time_t time);
-bool displayAllowed(const char *filename);
-
-* hls_lists.c *
-file_list_t *addListNode(file_list_t **head, char *f_name, struct stat f_stat);
-void freeList(file_list_t *head);
-void deleteListNode(file_list_t *node);
-
-* hls_errors.c *
-void accessError(const char *file);
-* perms error subr? *
-
-* hls_misc.c *
-struct stat *statCopy(struct stat st);
-char *_strcopy(char *string);
-bool stringExactMatch(const char *s1, char *s2);
-
-* hls_tests.c *
-void testPrintFlags(void);
-size_t testPrintList(file_list_t *head);
-*/
-
-/* helpers1.c */
-void setFlags(char *flags);
-struct stat *statCopy(struct stat st);
-char *_strcopy(char *string);
-void printFileList(file_list_t *head, bool cmdLineArgs);
-void deleteListNode(file_list_t *node);
-
-/* helpers2.c */
-file_list_t *addListNode(file_list_t **head, char *filename, char *path,
-			 struct stat f_stat);
-void freeList(file_list_t *head);
-int parseArgs(int argc, char *argv[], file_list_t **file_list,
-	       file_list_t **dir_list);
-void testPrintFlags(void);
-size_t testPrintList(file_list_t *head);
-void reverseList(file_list_t **head);
-
-/* helpers3.c */
-char *modeString(mode_t mode);
-char *dateTimeString(time_t time);
-int longFormatPrint(file_list_t *node);
-bool stringExactMatch(const char *s1, char *s2);
-
-/* helpers4.c */
-void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs);
-void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
-	       int nonFlagArgs);
-bool displayAllowed(const char *filename);
-bool dirParseAllowed(const char *dirname, bool cmdLineArgs);
-void fileError(const char *file);
-
-/* helpers5.c */
+/* collation_keys.c */
 int _strcoll(const char *s1, const char *s2);
 coll_key_t *buildCollKey(const char *s);
 coll_key_t *addCollKeyNode(coll_key_t **head);
 void freeCollKey(coll_key_t **head);
 void setCollElem(coll_elem_t *elem, char c);
 
-/* helpers6.c */
+/* file_lists.c */
+void deleteListNode(file_list_t *node);
+struct stat *statCopy(struct stat st);
+file_list_t *addListNode(file_list_t **head, char *filename, char *path,
+			 struct stat f_stat);
+void freeList(file_list_t *head);
+void reverseList(file_list_t **head);
+
+/* long_format_printing.c */
+char *modeString(mode_t mode);
+char *dateTimeString(time_t time);
+int longFormatPrint(file_list_t *node);
+
+/* parsing.c */
+int parseArgs(int argc, char *argv[], file_list_t **file_list,
+	       file_list_t **dir_list);
+void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs);
+bool dirParseAllowed(const char *dirname, bool cmdLineArgs);
+
+/* printing.c */
+bool displayAllowed(const char *filename);
+void printFileList(file_list_t *head, bool cmdLineArgs);
+void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
+	       int nonFlagArgs);
+void fileError(const char *file);
+
+/* sorting.c */
 int criteriaSort(file_list_t *node1, file_list_t *node2);
 void insertion_sort_list(file_list_t **list);
-unsigned int _strlen(const char *s);
-int _strcmp(const char *s1, const char *s2);
 void dll_adj_swap(file_list_t **list, file_list_t *left, file_list_t *right);
 void cocktail_sort_list(file_list_t **list);
+
+/* string_utils */
+bool stringExactMatch(const char *s1, char *s2);
+char *_strcopy(char *string);
+unsigned int _strlen(const char *s);
+
+/* test_printing.c */
+void testPrintFlags(void);
+size_t testPrintList(file_list_t *head);
 
 
 #endif /* HLS_H */

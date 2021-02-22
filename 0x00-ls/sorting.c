@@ -1,7 +1,5 @@
 #include "hls.h"
-
-extern bool modTimeSort;
-extern bool fileSizeSort;
+#include "flags.h"
 
 /**
  * criteriaSort - compares struct member values based on option flags,
@@ -79,55 +77,6 @@ void insertion_sort_list(file_list_t **list)
                         follow = lead->prev;
         }
 }
-
-
-/**
- * _strlen - counts char bytes in a string, not inlcuding null byte
- *
- * @s: string to be measured
- * Return: length of string
- */
-unsigned int _strlen(const char *s)
-{
-        unsigned int len;
-
-        if (!s)
-                return (0);
-
-        for (len = 0; *s; s++)
-                len++;
-
-        return (len);
-}
-
-
-/**
- * _strcmp - compares two strings by ASCII values (adds handling of NULL args,
- * which strcmp lacks)
- *
- * @s1: pointer to the first string
- * @s2: pointer to the second string
- * Return: the difference between the ASCII values of the first non-matching
- * characters, 0 if they match
- */
-int _strcmp(const char *s1, const char *s2)
-{
-	if (s1 == NULL && s2 == NULL)
-		return (0);
-	else if (s1 == NULL)
-		return (0 - s2[0]);
-	else if (s2 == NULL)
-		return (s1[0]);
-
-	while (*s1 && *s2 && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-        }
-
-	return (*s1 - *s2);
-}
-
 
 /**
  * dll_adj_swap - swaps two adjacent nodes of a doubly linked list
