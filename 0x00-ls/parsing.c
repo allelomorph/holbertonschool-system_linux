@@ -5,10 +5,12 @@
 /**
  * parseArgs - parses command line arguments and populates linked lists of
  * files and directories accordingly
+ *
  * @argc: argument count passed from main
  * @argv: array of args passed from main
  * @file_list: pointer to head of a doubly linked list of file info structs
  * @dir_list: pointer to head of a doubly linked list of directory info structs
+ * Return: number of non-flag command line args
  */
 int parseArgs(int argc, char *argv[], file_list_t **file_list,
 	       file_list_t **dir_list)
@@ -63,6 +65,7 @@ int parseArgs(int argc, char *argv[], file_list_t **file_list,
 /**
  * parseDirs - walks through a list of directories and populates their
  * `dir_files` list
+ *
  * @dir_list_head: head of doubly linked list of directory profiles
  * @cmdLineArgs: boolean indicating if directory was passed by user as arg
  */
@@ -91,7 +94,8 @@ void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs)
 						read->d_name);
 					if (lstat(path, &file_stat) == 0)
 						addListNode(&file_list_head,
-							    read->d_name, path, file_stat);
+							    read->d_name, path,
+							    file_stat);
 					else
 						fileError(path);
 					if (S_ISDIR(file_stat.st_mode) && Recursive)
@@ -115,6 +119,7 @@ void parseDirs(file_list_t *dir_list_head, bool cmdLineArgs)
 /**
  * dirParseAllowed - checks directory name against active flags to determine
  * if it needs to have its contents recorded by parseDirs
+ *
  * @dirname: name of directory to be parsed next
  * @cmdLineArgs: boolean indicating if directory was passed by user as arg
  * Return: boolean giving permission to store contents

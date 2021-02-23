@@ -4,6 +4,7 @@
 
 /**
  * printFileList - prints each member of a file_list_t list, according to flags
+ *
  * @head: pointer to first member of a file_list_t list
  * @cmdLineArgs: indicates whether or not acting upon file lists created
  * from initial args
@@ -12,9 +13,7 @@ void printFileList(file_list_t *head, bool cmdLineArgs)
 {
 	file_list_t *temp = head;
 	bool filesPrinted = false;
-/*
-	cocktail_sort_list(&head);
-*/
+
 	/* if reverse flag is on, advance to tail for reversed traversal */
 	if (reverseOrder)
 		while (temp->next)
@@ -56,6 +55,7 @@ void printFileList(file_list_t *head, bool cmdLineArgs)
 /**
  * displayAllowed - checks filename against active flags to determine
  * if it can be displayed
+ *
  * @filename: name of file to be diplayed next
  * Return: boolean giving permission to print
  */
@@ -74,9 +74,10 @@ bool displayAllowed(const char *filename)
 /**
  * printDirs - prints any directories found in a file_list_t list,
  * and their contents
+ *
  * @dir_list_head: head of doubly linked list of directory profiles
  * @cmdLineArgs: indicates whether dirs in list were named as args
- * @fileArgsEmpty: indicates whether or not command line args contained files
+ * @nonFlagArgs: number of non-flag command line args
  */
 void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 	       int nonFlagArgs)
@@ -94,9 +95,7 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 	else
 		if (nonFlagArgs > dir_list_len)
 			firstDir = false;
-/*
-	cocktail_sort_list(&dir_list_head);
-*/
+
 	/* if reverse flag is on, advance temp to tail for reversed traversal */
 	if (reverseOrder)
 		while (temp->next)
@@ -134,6 +133,7 @@ void printDirs(file_list_t *dir_list_head, bool cmdLineArgs,
 
 /**
  * fileError - prints errors to stderr based on errno value, sets exit code
+ *
  * @file: name of file that caused access error
  */
 void fileError(const char *file)

@@ -26,21 +26,38 @@
 /* for flags */
 #include <stdbool.h>
 
+/**
+ * struct coll_elem_s - collation element for a given char
+ * note: simplifed from Unicode standard in two ways:
+ * - unsigned char vs unsigned short int
+ * - two weights instead of three
+ *
+ * @weights: array of unsigned values to drive sorting at 3 levels
+ * @variable: if true, special collation behavior at level 3
+ */
 typedef struct coll_elem_s {
 	unsigned char weights[2];
 	bool variable;
 } coll_elem_t;
 
+/**
+ * struct coll_key_s - doubly linked list node containing collation key
+ *
+ * @n: one of two weighted values from the collation element for a char
+ * @prev: pointer to next node
+ * @next: pointer to previous node
+ */
 typedef struct coll_key_s {
-	unsigned short int n;
+	unsigned char n;
 	struct coll_key_s *prev;
 	struct coll_key_s *next;
 } coll_key_t;
 
 /**
- * struct file_list_s - doubly linked list node
+ * struct file_list_s - doubly linked list node containing file/dir info
  *
  * @f_name: file or dir name
+ * @f_ckey: SLL of file name collation key for sorting
  * @f_slnk: symlink target name
  * @f_path: full path relative to working directory
  * @f_stat: pointer to stat struct with lstat output
@@ -59,7 +76,6 @@ typedef struct file_list_s
 	struct file_list_s *prev;
 	struct file_list_s *next;
 } file_list_t;
-
 
 /* make file struct f_path be full path: temp/folder1, f_name: folder1 */
 /* if cmdLineArgs, then f_name and f_path are copies of the same string */
@@ -118,3 +134,6 @@ size_t testPrintList(file_list_t *head);
 
 
 #endif /* HLS_H */
+
+
+	/* no hidden file screen on files from args, only on files from dirs */
