@@ -15,6 +15,7 @@
 void SIGINT_handler(int signum)
 {
 	printf("Gotcha! [%i]\n", signum);
+	fflush(stdout);
 }
 
 
