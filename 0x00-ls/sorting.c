@@ -166,3 +166,34 @@ void cocktail_sort_list(file_list_t **list)
 			temp = temp->next;
 	} while (swapped_f || swapped_b);
 }
+
+
+/**
+ * sortDirs - recursively sorts contents of directories; since sorting can
+ * change value of head, need to make pass at current level before recursing
+ *
+ * @file_list: potentially mixed list of files and directories
+ */
+void sortDirs(file_list_t *file_list)
+{
+	file_list_t *temp = NULL;
+
+	if (!file_list)
+		return;
+
+	temp = file_list;
+	while (temp)
+	{
+		if (temp->dir_files)
+			cocktail_sort_list(&(temp->dir_files));
+		temp = temp->next;
+	}
+
+	temp = file_list;
+	while (temp)
+	{
+		if (temp->dir_files)
+			sortDirs(temp->dir_files);
+		temp = temp->next;
+	}
+}

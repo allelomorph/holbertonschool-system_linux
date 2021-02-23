@@ -122,6 +122,7 @@ int criteriaSort(file_list_t *node1, file_list_t *node2);
 void insertion_sort_list(file_list_t **list);
 void dll_adj_swap(file_list_t **list, file_list_t *left, file_list_t *right);
 void cocktail_sort_list(file_list_t **list);
+void sortDirs(file_list_t *dir_list);
 
 /* string_utils */
 bool stringExactMatch(const char *s1, char *s2);
@@ -136,4 +137,4 @@ size_t testPrintList(file_list_t *head);
 #endif /* HLS_H */
 
 
-	/* no hidden file screen on files from args, only on files from dirs */
+/* no hidden file screen on files from args, only on files from dirs */
