@@ -58,8 +58,6 @@ coll_key_t *buildCollKey(const char *s)
 	int len, level, i;
 	bool variable_elem_found = false;
 
-	printf("\tbuildCollKey(%s)\n", s);
-
 	/* file name can't be "" */
 	if (s == NULL || !s[0])
 		return (NULL);
