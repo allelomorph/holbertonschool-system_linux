@@ -58,6 +58,8 @@ coll_key_t *buildCollKey(const char *s)
 	int len, level, i;
 	bool variable_elem_found = false;
 
+	printf("\tbuildCollKey(%s)\n", s);
+
 	/* file name can't be "" */
 	if (s == NULL || !s[0])
 		return (NULL);
@@ -85,7 +87,7 @@ coll_key_t *buildCollKey(const char *s)
 
 		for (i = 0; i < len; i++)
 		{
-			if (level == 3)
+			if (level == 3 && elems[i].weights[0] != 0x00)
 			{
 				temp = addCollKeyNode(&key);
 				if (elems[i].variable)
@@ -95,7 +97,8 @@ coll_key_t *buildCollKey(const char *s)
 			}
 			else
 			{
-				if (!elems[i].variable)
+				if (!elems[i].variable &&
+				    elems[i].weights[level - 1] != 0x00)
 				{
 					temp = addCollKeyNode(&key);
 					temp->n = elems[i].weights[level - 1];
@@ -293,7 +296,12 @@ void setCollElem(coll_elem_t *elem, char c)
 		break;
 		/* 002F  ; [*03A6.0020.0002] # SOLIDUS */
 	case '/':
-		/* '/' is forbidden by POSIX in file names */
+		/*
+		 * '/' is forbidden by POSIX in file names, but appears here if
+		 * full paths are given as command line args. Ignored as 0.
+		 */
+		elem->weights[0] = elem->weights[1] = 0x00;
+		elem->variable = true;
 		break;
 		/* 0030  ; [.1F98.0020.0002] # DIGIT ZERO */
 	case '0':
