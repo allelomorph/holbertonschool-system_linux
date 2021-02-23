@@ -72,7 +72,6 @@ int main(int argc, char *argv[])
 	int i, nonFlagArgs = 0;
 	file_list_t *file_list = NULL;
 	file_list_t *dir_list = NULL;
-	file_list_t *temp = NULL;
 	bool cmdLineArgs = true;
 
 	/* first pass through argv to set option flags */
@@ -94,14 +93,9 @@ int main(int argc, char *argv[])
 	{
 		/* populates dir profiles with file profile list of contents*/
 		parseDirs(dir_list, cmdLineArgs);
-		cocktail_sort_list(&dir_list);
 
-		temp = dir_list;
-		while (temp)
-		{
-			cocktail_sort_list(&(temp->dir_files));
-			temp = temp->next;
-		}
+		cocktail_sort_list(&dir_list);
+		sortDirs(dir_list);
 
 		printDirs(dir_list, cmdLineArgs, nonFlagArgs);
 	}
