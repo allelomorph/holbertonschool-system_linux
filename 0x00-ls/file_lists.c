@@ -66,6 +66,8 @@ struct stat *statCopy(struct stat st)
 	new->st_blocks = st.st_blocks;
 	new->st_atime = st.st_atime;
 	new->st_mtime = st.st_mtime;
+	/* struct containing both sec and nanosec resolution */
+	new->st_mtim = st.st_mtim;
 	new->st_ctime = st.st_ctime;
 
 	return (new);

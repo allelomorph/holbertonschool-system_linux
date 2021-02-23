@@ -13,13 +13,28 @@
 int criteriaSort(file_list_t *node1, file_list_t *node2)
 {
 	int diff = 0;
+	unsigned long nsec1, nsec2;
 
 	/* currently no protections against NULL structs or members */
 	/* if ((!node1 || !node2) || (!node1->f_stat || !node2->f_stat)) */
 
 	if (modTimeSort)
+	{
 		/* newest file first */
+		/* check down to 00:00:01 resolution */
 		diff = (node2->f_stat->st_mtime - node1->f_stat->st_mtime);
+		/* check down to 00:00:00.000000001 resolution */
+		if (diff == 0)
+		{
+			/* AKA st_mtime_nsec, st_mtimensec */
+			nsec1 = (unsigned long)node1->f_stat->st_mtim.tv_nsec;
+			nsec2 = (unsigned long)node2->f_stat->st_mtim.tv_nsec;
+			if (nsec2 > nsec1)
+			        return (1);
+			else if (nsec2 < nsec1)
+				return (-1);
+		}
+	}
 
 	if (fileSizeSort)
 		/* largest size file first; -tS defaults to -S */
