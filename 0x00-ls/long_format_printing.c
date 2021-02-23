@@ -3,6 +3,7 @@
 
 /**
  * modeString - formats a string to represent a st_mode value for a file
+ *
  * @mode: mode_t value for bitmasking from a stat struct
  * Return: formatted string with file type and permissions
  */
@@ -51,6 +52,7 @@ char *modeString(mode_t mode)
 
 /**
  * dateTimeString - selectively edits the output of `ctime`
+ *
  * @time: time_t time value from a stat struct
  * Return: formatted string with shortened time format
  */
@@ -75,6 +77,7 @@ char *dateTimeString(time_t time)
 
 /**
  * longFormatPrint - formats long-form output of file info based on stat struct
+ *
  * @node: node in a linked list of file profiles
  * Return: exit macros for success and failure
  */

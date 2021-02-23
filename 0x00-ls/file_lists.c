@@ -4,6 +4,7 @@
 
 /**
  * deleteListNode - removes a node from a doubly linked list
+ *
  * @node: pointer to a member of a file_list_t list
  */
 void deleteListNode(file_list_t *node)
@@ -39,6 +40,7 @@ void deleteListNode(file_list_t *node)
 
 /**
  * statCopy - duplicates a stat struct and its contents
+ *
  * @st: original stat struct to copy
  * Return: pointer to copied struct, or NULL on failure
  */
@@ -72,6 +74,7 @@ struct stat *statCopy(struct stat st)
 
 /**
  * addListNode - adds a new node at the beginning of a file_list_t list
+ *
  * @head: double pointer to first member of a file_list_t list
  * @filename: name of file corresponding to this position in the list
  * @path: full path of file relative to working directory
@@ -132,6 +135,7 @@ file_list_t *addListNode(file_list_t **head, char *filename, char *path,
 
 /**
  * freeList - frees all node members and nodes of a file_list_t list
+ *
  * @head: double pointer to first member of a file_list_t list
  */
 void freeList(file_list_t *head)
@@ -164,6 +168,11 @@ void freeList(file_list_t *head)
 }
 
 
+/**
+ * reverseList - reverses order of a file_list_t list
+ *
+ * @head: double pointer to first member of a file_list_t list
+ */
 void reverseList(file_list_t **head)
 {
 	file_list_t *temp, *swap;

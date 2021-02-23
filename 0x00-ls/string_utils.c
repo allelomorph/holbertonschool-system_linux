@@ -4,6 +4,7 @@
 /**
  * stringExactMatch - goes beyond strcmp to ensure that the two strings match to
  * the null bit
+ *
  * @s1: first string to compare
  * @s2: second string to compare
  * Return: boolean representing exact match
@@ -25,6 +26,7 @@ bool stringExactMatch(const char *s1, char *s2)
 
 /**
  * _strcopy - copies a string
+ *
  * @string: original string
  * Return: copied string, or NULL on failure
  */
@@ -64,13 +66,13 @@ char *_strcopy(char *string)
  */
 unsigned int _strlen(const char *s)
 {
-        unsigned int len;
+	unsigned int len;
 
-        if (!s)
-                return (0);
+	if (!s)
+		return (0);
 
-        for (len = 0; *s; s++)
-                len++;
+	for (len = 0; *s; s++)
+		len++;
 
-        return (len);
+	return (len);
 }

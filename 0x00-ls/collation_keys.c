@@ -1,10 +1,15 @@
 #include "hls.h"
 
-/* malloc free */
-#include <stdlib.h>
-#include <stdbool.h>
 
-
+/**
+ * _strcoll - compare two collation keys
+ * note: originally two strings and built collation keys for each comparison.
+ * here optimized so that keys are only built once per file name.
+ *
+ * @ckey_s1: collated DLL of unsigned chars to compare order
+ * @ckey_s2: collated DLL of unsigned chars to compare order
+ * Return: 1 if first key comes first, -1 if second, 0 if same
+ */
 int _strcoll(coll_key_t *ckey_s1, coll_key_t *ckey_s2)
 {
 	coll_key_t *temp1 = NULL, *temp2 = NULL;
@@ -38,6 +43,14 @@ int _strcoll(coll_key_t *ckey_s1, coll_key_t *ckey_s2)
 }
 
 
+/**
+ * buildCollKey - builds a collation key for a given string
+ * note: follows observed behavior of ls in Ubuntu 14.04 with LANG=en-US.UTF-8;
+ * which is a Unicode collation algo with shift-trimming for variable keys
+ *
+ * @s: string to compare
+ * Return: completed key, shift-trimmed
+ */
 coll_key_t *buildCollKey(const char *s)
 {
 	coll_elem_t *elems = NULL;
@@ -50,7 +63,7 @@ coll_key_t *buildCollKey(const char *s)
 		return (NULL);
 
 	len = _strlen(s);
-        elems = malloc(sizeof(coll_elem_t) * len);
+	elems = malloc(sizeof(coll_elem_t) * len);
 	if (!elems)
 		return (NULL);
 
@@ -90,7 +103,7 @@ coll_key_t *buildCollKey(const char *s)
 				else if (!variable_elem_found)
 					variable_elem_found = true;
 			}
- 		}
+		}
 	}
 
 	free(elems);
@@ -111,6 +124,12 @@ coll_key_t *buildCollKey(const char *s)
 }
 
 
+/**
+ * addCollKeyNode - adds node to end of collation key DLL for new unsigned char
+ *
+ * @head: head of collation key DLL
+ * Return: address of newly added node
+ */
 coll_key_t *addCollKeyNode(coll_key_t **head)
 {
 	coll_key_t *new = NULL, *temp = NULL;
@@ -138,7 +157,11 @@ coll_key_t *addCollKeyNode(coll_key_t **head)
 	return (new);
 }
 
-
+/**
+ * freeCollKey - frees a doubly linked list containing collation key
+ *
+ * @head: head of collation key DLL
+ */
 void freeCollKey(coll_key_t **head)
 {
 	coll_key_t *temp1 = NULL, *temp2 = NULL;
@@ -156,6 +179,21 @@ void freeCollKey(coll_key_t **head)
 }
 
 
+/**
+ * setCollElem - set collation elements for a given char
+ * note: default Unicode weighting in comments. the following revisions
+ * were made to the Unicode algo:
+ * - removed secondary weights (all same in this range)
+ * - changed to unsigned chars to halve bit depth
+ * -'$' now acts as a variable key
+ * - changed from order by Unicode collation keys level 1 weights:
+ * { _-,;:!?.'"()[]{}*\&#%@/`^+<=>|~$0..9aA..zZ}
+ * to order observed in ls under LANG=en-US.UTF-8:
+ * {`^~<=>| _-,;:!?.'"()[]{}@$*\&#%+0..9aA..zZ}
+ *
+ * @elem: collation element struct to populate
+ * @c: character to select elements
+ */
 void setCollElem(coll_elem_t *elem, char c)
 {
 	if (!elem)
