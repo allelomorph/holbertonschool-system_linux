@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "hnm.h"
 
 /* fprintf rewind fclose fopen */
 #include <stdio.h>
@@ -14,7 +14,8 @@
 /* free */
 #include <stdlib.h>
 
-/* stat S_ISREG fopen rewind */
+
+/* stat S_ISREG fopen rewind memcmp */
 /**
  * openELF - attempts to open an ELF for parsing and printing
  *
@@ -35,15 +36,13 @@ int openELF(re_state *state)
 			errorMsg("%s: %s\n", strerror(errno), state);
 		return (1);
 	}
-
 	if (!S_ISREG(statbuf.st_mode))
 	{
 		errorMsg("Warning: '%s' is not an ordinary file\n",
 			 NULL, state);
 		return (1);
 	}
-
-	/* nm skips files with size 0 but still sets exit code of 1 */
+	/* nm skips files of size 0 with an exit code of 1 */
 	if (statbuf.st_size == 0)
 		return (1);
 	state->f_size = statbuf.st_size;
@@ -54,11 +53,9 @@ int openELF(re_state *state)
 		errorMsg("%s: %s\n", strerror(errno), state);
 		return (1);
 	}
-
 	/* initial check of ELF magic in first 8 bytes */
 	if (fread(magic, (EI_NIDENT / 2), 1, state->f_stream) != 1 ||
-	    magic[EI_MAG0] != ELFMAG0 || magic[EI_MAG1] != ELFMAG1 ||
-	    magic[EI_MAG2] != ELFMAG2 || magic[EI_MAG3] != ELFMAG3)
+	    memcmp(ELFMAG, magic, SELFMAG) != 0)
 	{
 		errorMsg("%s: File format not recognized\n",
 			 NULL, state);

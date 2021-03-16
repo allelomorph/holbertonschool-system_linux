@@ -29,7 +29,8 @@
  * various functions to ensure consistent error messages and format output.
  * (Note: if ELF is 32 bit, stucts read from file are cast into 64 bit vers.)
  */
-typedef struct readelf_state {
+typedef struct readelf_state
+{
 	char *exec_name;
 	char *f_name;
 	FILE *f_stream;

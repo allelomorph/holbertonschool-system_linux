@@ -1,5 +1,6 @@
 #include "hnm.h"
 
+/* fread */
 /**
  * getFileHeader - reads ELF and stores file header in state
  *
@@ -17,7 +18,7 @@ int getFileHeader(re_state *state)
 		state->big_endian = true;
 
 	/* For now we only support 32 bit and 64 bit ELF files.  */
-        if (state->f_header.e_ident[EI_CLASS] != ELFCLASS64)
+	if (state->f_header.e_ident[EI_CLASS] != ELFCLASS64)
 		state->ELF_32bit = true;
 
 	/* Read in the rest of the header. */
@@ -28,9 +29,9 @@ int getFileHeader(re_state *state)
 }
 
 
-/* malloc fseek fread */
+/* fread */
 /**
- * get64bitSecHeaders - reads ELF and stores section headers in state
+ * get64bitFileHeader - reads ELF and stores file header in state
  *
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
@@ -65,7 +66,7 @@ int get64bitFileHeader(re_state *state)
 }
 
 
-/* malloc lseek fread */
+/* fread */
 /**
  * get32bitFileHeader - reads ELF and stores file headers in state
  *
