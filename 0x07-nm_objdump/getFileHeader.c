@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "hnm.h"
 
 /**
  * getFileHeader - reads ELF and stores file header in state
@@ -20,59 +20,83 @@ int getFileHeader(re_state *state)
         if (state->f_header.e_ident[EI_CLASS] != ELFCLASS64)
 		state->ELF_32bit = true;
 
-	/* Read in the rest of the header.  */
+	/* Read in the rest of the header. */
 	if (state->ELF_32bit)
-	{
-		Elf32_Ehdr ehdr32;
+		return (get32bitFileHeader(state));
 
-		if (fread(&(ehdr32.e_type), (sizeof(ehdr32) - EI_NIDENT),
-			  1, state->f_stream) != 1)
-			return (1);
+	return (get64bitFileHeader(state));
+}
 
-		if (state->big_endian)
-			bswapElf32_Ehdr(&ehdr32);
 
-		/* state->f_header 64 bit by default */
-		state->f_header.e_type      = (Elf64_Half)ehdr32.e_type;
-		state->f_header.e_machine   = (Elf64_Half)ehdr32.e_machine;
-		state->f_header.e_version   = (Elf64_Word)ehdr32.e_version;
-		state->f_header.e_entry     = (Elf64_Addr)ehdr32.e_entry;
-		state->f_header.e_phoff     = (Elf64_Off)ehdr32.e_phoff;
-		state->f_header.e_shoff     = (Elf64_Off)ehdr32.e_shoff;
-		state->f_header.e_flags     = (Elf64_Word)ehdr32.e_flags;
-		state->f_header.e_ehsize    = (Elf64_Half)ehdr32.e_ehsize;
-		state->f_header.e_phentsize = (Elf64_Half)ehdr32.e_phentsize;
-		state->f_header.e_phnum     = (Elf64_Half)ehdr32.e_phnum;
-		state->f_header.e_shentsize = (Elf64_Half)ehdr32.e_shentsize;
-		state->f_header.e_shnum     = (Elf64_Half)ehdr32.e_shnum;
-		state->f_header.e_shstrndx  = (Elf64_Half)ehdr32.e_shstrndx;
-	}
-	else
-	{
-		Elf64_Ehdr ehdr64;
+/* malloc fseek fread */
+/**
+ * get64bitSecHeaders - reads ELF and stores section headers in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
+int get64bitFileHeader(re_state *state)
+{
+	Elf64_Ehdr ehdr64;
 
-		if (fread(&(ehdr64.e_type), (sizeof(ehdr64) - EI_NIDENT),
-			  1, state->f_stream) != 1)
-			return (1);
+	if (fread(&(ehdr64.e_type), (sizeof(ehdr64) - EI_NIDENT),
+		  1, state->f_stream) != 1)
+		return (1);
 
-		if (state->big_endian)
-			bswapElf64_Ehdr(&ehdr64);
+	if (state->big_endian)
+		bswapElf64_Ehdr(&ehdr64);
 
-		/* state->f_header 64 bit by default */
-		state->f_header.e_type      = ehdr64.e_type;
-		state->f_header.e_machine   = ehdr64.e_machine;
-		state->f_header.e_version   = ehdr64.e_version;
-		state->f_header.e_entry     = ehdr64.e_entry;
-		state->f_header.e_phoff     = ehdr64.e_phoff;
-		state->f_header.e_shoff     = ehdr64.e_shoff;
-		state->f_header.e_flags     = ehdr64.e_flags;
-		state->f_header.e_ehsize    = ehdr64.e_ehsize;
-		state->f_header.e_phentsize = ehdr64.e_phentsize;
-		state->f_header.e_phnum     = ehdr64.e_phnum;
-		state->f_header.e_shentsize = ehdr64.e_shentsize;
-		state->f_header.e_shnum     = ehdr64.e_shnum;
-		state->f_header.e_shstrndx  = ehdr64.e_shstrndx;
-	}
+	/* state->f_header 64 bit by default */
+	state->f_header.e_type      = ehdr64.e_type;
+	state->f_header.e_machine   = ehdr64.e_machine;
+	state->f_header.e_version   = ehdr64.e_version;
+	state->f_header.e_entry     = ehdr64.e_entry;
+	state->f_header.e_phoff     = ehdr64.e_phoff;
+	state->f_header.e_shoff     = ehdr64.e_shoff;
+	state->f_header.e_flags     = ehdr64.e_flags;
+	state->f_header.e_ehsize    = ehdr64.e_ehsize;
+	state->f_header.e_phentsize = ehdr64.e_phentsize;
+	state->f_header.e_phnum     = ehdr64.e_phnum;
+	state->f_header.e_shentsize = ehdr64.e_shentsize;
+	state->f_header.e_shnum     = ehdr64.e_shnum;
+	state->f_header.e_shstrndx  = ehdr64.e_shstrndx;
+
+	return (0);
+}
+
+
+/* malloc lseek fread */
+/**
+ * get32bitFileHeader - reads ELF and stores file headers in state
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
+int get32bitFileHeader(re_state *state)
+{
+	Elf32_Ehdr ehdr32;
+
+	if (fread(&(ehdr32.e_type), (sizeof(ehdr32) - EI_NIDENT),
+		  1, state->f_stream) != 1)
+		return (1);
+
+	if (state->big_endian)
+		bswapElf32_Ehdr(&ehdr32);
+
+	/* state->f_header 64 bit by default */
+	state->f_header.e_type      = (Elf64_Half)ehdr32.e_type;
+	state->f_header.e_machine   = (Elf64_Half)ehdr32.e_machine;
+	state->f_header.e_version   = (Elf64_Word)ehdr32.e_version;
+	state->f_header.e_entry     = (Elf64_Addr)ehdr32.e_entry;
+	state->f_header.e_phoff     = (Elf64_Off)ehdr32.e_phoff;
+	state->f_header.e_shoff     = (Elf64_Off)ehdr32.e_shoff;
+	state->f_header.e_flags     = (Elf64_Word)ehdr32.e_flags;
+	state->f_header.e_ehsize    = (Elf64_Half)ehdr32.e_ehsize;
+	state->f_header.e_phentsize = (Elf64_Half)ehdr32.e_phentsize;
+	state->f_header.e_phnum     = (Elf64_Half)ehdr32.e_phnum;
+	state->f_header.e_shentsize = (Elf64_Half)ehdr32.e_shentsize;
+	state->f_header.e_shnum     = (Elf64_Half)ehdr32.e_shnum;
+	state->f_header.e_shstrndx  = (Elf64_Half)ehdr32.e_shstrndx;
 
 	return (0);
 }

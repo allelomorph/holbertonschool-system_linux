@@ -14,14 +14,14 @@
  * @exec_name: name of hreadelf executable, for error return
  * @f_name: ELF name
  * @f_stream: ELF file stream
- * @f_size: signed due to being derived from off_t
+ * @f_size: file size, signed due to being derived from off_t
  * @big_endian: endianness of ELF, false by default
  * @ELF_32bit: ELF is for 32 bit architecture, false by default
- * @f_header: file header read from ELF
- * @s_headers: section headers read from ELF
+ * @f_header: file header read from ELF; 64 bit by default
+ * @s_headers: section headers read from ELF, 64 bit by default
  * @sh_strtab: full section header string table as one buffer
  * @prog_interp: contents of .interp section, if present
- * @p_headers: program headers (segments) read from ELF
+ * @p_headers: program headers (segments) read from ELF, 64 bit by default
  * @dyn_sym: symbol table from .dynsym section, if present
  * @sym_tab: symbol table from .symtab section, if present
  *
@@ -33,16 +33,16 @@ typedef struct readelf_state {
 	char *exec_name;
 	char *f_name;
 	FILE *f_stream;
-	int f_size; /* signed due to being derived from off_t */
-	bool big_endian; /* false by default */
-	bool ELF_32bit; /* false by default */
-	Elf64_Ehdr f_header; /* 64 by default, 32 bit values cast into 64 */
-	Elf64_Shdr *s_headers; /* 64 by default, 32 bit values cast into 64 */
-	char *sh_strtab; /* full section header string table as one buffer */
-	char *prog_interp; /* contents of .interp section, if present */
-	Elf64_Phdr *p_headers; /* 64 by default, 32 bit values cast into 64 */
-	Elf64_Sym *dyn_sym; /* from .dynsym section, if present */
-	Elf64_Sym *sym_tab; /* from .symtab section, if present */
+	int f_size;
+	bool big_endian;
+	bool ELF_32bit;
+	Elf64_Ehdr f_header;
+	Elf64_Shdr *s_headers;
+	char *sh_strtab;
+	char *prog_interp;
+	Elf64_Phdr *p_headers;
+	Elf64_Sym *dyn_sym;
+	Elf64_Sym *sym_tab;
 } re_state;
 
 
@@ -57,6 +57,8 @@ void closeState(re_state *state);
 
 /* getFileHeader.c */
 int getFileHeader(re_state *state);
+int get32bitFileHeader(re_state *state);
+int get64bitFileHeader(re_state *state);
 void bswapElf64_Ehdr(Elf64_Ehdr *ehdr64);
 void bswapElf32_Ehdr(Elf32_Ehdr *ehdr32);
 
