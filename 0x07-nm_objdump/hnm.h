@@ -98,6 +98,7 @@ void bswapElf64_Vernaux(Elf64_Vernaux *vernaux64);
 
 /* printSymTables.c */
 int printSymTables(re_state *state);
+char getSymNMType(re_state *state, Elf64_Sym *symbol);
 
 
 #endif /* HNM_H */

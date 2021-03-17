@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "hnm.h"
 
 /* fseek fread */
 #include <stdio.h>
@@ -47,7 +47,8 @@ int get64bitSymTables(re_state *state)
 			if (!sym_tab)
 				return (1);
 
-			if (fseek(state->f_stream, section.sh_offset, SEEK_SET) == -1)
+			if (fseek(state->f_stream, section.sh_offset,
+				  SEEK_SET) == -1)
 				return (1);
 
 			if (fread(sym_tab, sizeof(Elf64_Sym), num_sym,
@@ -127,7 +128,6 @@ int get32bitSymTables(re_state *state)
 			}
 
 			free(sym_tab32);
-			sym_tab32 = NULL;
 			if (section.sh_type == SHT_DYNSYM)
 				state->dyn_sym = sym_tab64;
 			else

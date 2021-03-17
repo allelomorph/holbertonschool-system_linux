@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -Wall -Werror -Wextra -pedantic
 
 
-# task 0. nm 
+# task 0. nm
 0-hnm.o: 0-hnm.c
 	$(CC) -c $(CFLAGS) 0-hnm.c
 
@@ -25,21 +25,15 @@ getSecHeadStrTab.o: getSecHeadStrTab.c
 getSymTables.o: getSymTables.c
 	$(CC) -c $(CFLAGS) getSymTables.c
 
-st_strings.o: st_strings.c
-	$(CC) -c $(CFLAGS) st_strings.c
-
-get_sym_vers.o: get_sym_vers.c
-	$(CC) -c $(CFLAGS) get_sym_vers.c
-
 printSymTables.o: printSymTables.c
 	$(CC) -c $(CFLAGS) printSymTables.c
 
 hnm: hnm.h 0-hnm.o main_help.o getFileHeader.o \
 	getSecHeaders.o getSecHeadStrTab.o \
-	getSymTables.o st_strings.o get_sym_vers.o printSymTables.o 
+	getSymTables.o printSymTables.o
 	$(CC) $(CFLAGS) 0-hnm.o main_help.o getFileHeader.o \
 	getSecHeaders.o getSecHeadStrTab.o \
-	getSymTables.o st_strings.o get_sym_vers.o printSymTables.o \
+	getSymTables.o printSymTables.o \
 	-o hnm
 
 

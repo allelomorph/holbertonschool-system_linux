@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "hnm.h"
 
 /* rewind fseek fread */
 #include <stdio.h>
@@ -36,13 +36,14 @@ int getSecHeadStrTab(re_state *state)
 	return (0);
 }
 
+
 /*
-	printf("\n\ttest printing state->sh_strtab\n");
-	for (i = 0; i < st_shdr.sh_size; i++)
-	{
-		printf("%c", state->sh_strtab[i] == '\0' ? '.' : state->sh_strtab[i]);
-		if ((i + 1) % 16 == 0)
-			putchar('\n');
-	}
-	printf("\ni at loop exit: %lu\n", i);
-*/
+ * 	printf("\n\ttest printing state->sh_strtab\n");
+ *	for (i = 0; i < st_shdr.sh_size; i++)
+ *	{
+ *		printf("%c", state->sh_strtab[i] == '\0' ? '.' : state->sh_strtab[i]);
+ *		if ((i + 1) % 16 == 0)
+ *			putchar('\n');
+ *	}
+ *	printf("\ni at loop exit: %lu\n", i);
+ */
