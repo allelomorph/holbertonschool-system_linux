@@ -22,7 +22,7 @@
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int openELF(re_state *state)
+int openELF(nm_state *state)
 {
 	struct stat statbuf;
 	char magic[(EI_NIDENT / 2)];
@@ -74,7 +74,7 @@ int openELF(re_state *state)
  * @err_str: optional second string containing errno string
  * @state: struct containing file data and info for error printing
  */
-void errorMsg(char *format, char *err_str, re_state *state)
+void errorMsg(char *format, char *err_str, nm_state *state)
 {
 	fprintf(stderr, "%s: ", state->exec_name);
 	if (err_str == NULL)
@@ -89,10 +89,9 @@ void errorMsg(char *format, char *err_str, re_state *state)
  *
  * @state: struct containing file data and info for error printing
  */
-void initState(re_state *state)
+void initState(nm_state *state)
 {
 	state->exec_name = NULL;
-	state->f_name = NULL;
 	state->f_stream = NULL;
 	state->f_size = 0;
 	state->big_endian = false;
@@ -100,10 +99,9 @@ void initState(re_state *state)
 	memset(&(state->f_header), 0, sizeof(Elf64_Ehdr));
 	state->s_headers = NULL;
 	state->sh_strtab = NULL;
-	state->prog_interp = NULL;
 	state->p_headers = NULL;
-	state->dyn_sym = NULL;
-	state->sym_tab = NULL;
+	state->symtab_sh = NULL;
+ 	state->symtab_st = NULL;
 }
 
 /* fclose free */
@@ -112,7 +110,7 @@ void initState(re_state *state)
  *
  * @state: struct containing file data and info for error printing
  */
-void closeState(re_state *state)
+void closeState(nm_state *state)
 {
 	if (state->f_stream != NULL)
 		fclose(state->f_stream);
@@ -123,15 +121,11 @@ void closeState(re_state *state)
 	if (state->sh_strtab != NULL)
 		free(state->sh_strtab);
 
-	if (state->prog_interp != NULL)
-		free(state->prog_interp);
-
 	if (state->p_headers != NULL)
 		free(state->p_headers);
 
-	if (state->dyn_sym != NULL)
-		free(state->dyn_sym);
+	/* state->symtab_sh freed as part of state->s_headers */
 
-	if (state->sym_tab != NULL)
-		free(state->sym_tab);
+	if (state->symtab_st != NULL)
+		free(state->symtab_st);
 }

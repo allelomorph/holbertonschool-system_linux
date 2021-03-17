@@ -13,46 +13,36 @@
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int printSymTables(re_state *state)
+int printSymTables(nm_state *state)
 {
-	Elf64_Shdr *sym_shdr = state->s_headers, *st_shdr = NULL;
+	Elf64_Shdr *symtab_sh = state->symtab_sh, *st_shdr = NULL;
 	Elf64_Sym *symbol = NULL;
         char *fmt = NULL, *empty_fmt = NULL, *strtab = NULL;
 	unsigned int i;
 
-	for (i = 0; i < state->f_header.e_shnum && sym_shdr &&
-		    sym_shdr->sh_type != SHT_SYMTAB; i++)
-		sym_shdr++;
-
-	if (i == state->f_header.e_shnum || !sym_shdr ||
-	    (sym_shdr && sym_shdr->sh_entsize == 0))
+	if (!symtab_sh || (symtab_sh && symtab_sh->sh_entsize == 0))
 	{
 		errorMsg("%s: no symbols\n", NULL, state);
 		return (0);
 	}
-
 	fmt = state->ELF_32bit ? "%08x %c %s\n" : "%016x %c %s\n";
 	empty_fmt = state->ELF_32bit ? "         %c %s\n" :
 				       "                 %c %s\n";
 
 	/* get symbol name string table - always next section ? */
-	st_shdr = sym_shdr + 1;
-
+	st_shdr = symtab_sh + 1;
 	if (fseek(state->f_stream, st_shdr->sh_offset, SEEK_SET) == -1)
 		return (1);
-
 	strtab = malloc(sizeof(char) * (st_shdr->sh_size));
 	if (!strtab)
 		return (1);
-
 	if (fread(strtab, sizeof(char), st_shdr->sh_size,
 		  state->f_stream) != st_shdr->sh_size)
 		return (1);
 
-	for (i = 1; i < sym_shdr->sh_size / sym_shdr->sh_entsize; i++)
+	for (i = 1; i < symtab_sh->sh_size / symtab_sh->sh_entsize; i++)
 	{
-		symbol = state->sym_tab + i;
-
+		symbol = state->symtab_st + i;
 		if (ELF64_ST_TYPE(symbol->st_info) != STT_SECTION &&
 		    ELF64_ST_TYPE(symbol->st_info) != STT_FILE)
 		{
@@ -68,18 +58,19 @@ int printSymTables(re_state *state)
 	}
 
 	free(strtab);
-
 	return (0);
 }
 
-char getSymNMType(re_state *state, Elf64_Sym *symbol)
+char getSymNMType(nm_state *state, Elf64_Sym *symbol)
 {
-	Elf64_Shdr *section = NULL;
+	if (!state || !symbol)
+		return ('?');
 
-	/* A: symbol is absolute (Ndx of ABS); 'a' not used */
+	/* A: symbol is absolute; 'a' not used */
 	if (symbol->st_shndx == SHN_ABS)
 		return ('A');
-	/* C: symbol is common (uninitialized data) (Ndx of COM); 'c' not used */
+
+	/* C: symbol is common (uninitialized data); 'c' not used */
 	if (symbol->st_shndx == SHN_COMMON)
 		return ('C');
 
@@ -87,58 +78,71 @@ char getSymNMType(re_state *state, Elf64_Sym *symbol)
 	{
 		if (ELF64_ST_BIND(symbol->st_info) == STB_WEAK)
 		{
-			/* vV: symbol is a weak object (Bind:WEAK readelf-type:OBJECT); */
-			/* (uppercase indicates that a default value has been specified (Ndx not UND?) */
+			/* v: symbol is a weak object */
 			if (ELF64_ST_TYPE(symbol->st_info) == STT_OBJECT)
 				return ('v');
-
-			/* wW: weak symbol that has not been specifically tagged as a weak object symbol (Bind:WEAK readelf-type != OBJECT); */
-			/* (w == Ndx UND? or readelf-type of NOTYPE?) */
+			/* w: weak symbol not tagged as a weak object */
 			return ('w');
 		}
-		/* U: symbol is undefined (Ndx of UND, Bind != WEAK); */
+		/* U: symbol is undefined */
 		return ('U');
 	}
 
 	if (ELF64_ST_BIND(symbol->st_info) == STB_WEAK)
 	{
-		/* vV: symbol is a weak object (Bind:WEAK readelf-type:OBJECT); */
-		/* (uppercase indicates that a default value has been specified (Ndx not UND?) */
+		/* V: symbol is a weak object */
 		if (ELF64_ST_TYPE(symbol->st_info) == STT_OBJECT)
 			return ('V');
-		/* wW: weak symbol that has not been specifically tagged as a weak object symbol (Bind:WEAK readelf-type != OBJECT); */
-			/* (w == Ndx UND? or readelf-type of NOTYPE?) */
-			/* (W == Ndx not UND? or readelf-type of not NOTYPE?) */
+		/* W: weak symbol not tagged as a weak object */
 		return ('W');
 	}
 
-	section = state->s_headers + symbol->st_shndx;
-	/* bB: symbol is in the uninitialized data section (known as BSS) flags WA type NOBITS */
-		/* b == Bind:LOCAL B == Bind:GLOBAL */
+	return (getSymNMTypeBySec(state->s_headers + symbol->st_shndx,
+				       symbol));
+}
+
+
+char getSymNMTypeBySec(Elf64_Shdr *section, Elf64_Sym *symbol)
+{
+	if (!section || !symbol)
+		return ('?');
+
 	if ((section->sh_flags & SHF_WRITE) == SHF_WRITE &&
-	    (section->sh_flags & SHF_ALLOC) == SHF_ALLOC &&
-	    section->sh_type == SHT_NOBITS)
-	    	return (ELF32_ST_BIND(symbol->st_info) == STB_LOCAL ? 'b' : 'B');
-	/* dD: symbol is in the initialized data section; flag WA and type PROGBITS or DYNAMIC */
-		/* d ==Bind:LOCAL D == Bind:GLOBAL */
-	if ((section->sh_flags & SHF_WRITE) == SHF_WRITE &&
-	    (section->sh_flags & SHF_ALLOC) == SHF_ALLOC &&
-	    (section->sh_type == SHT_PROGBITS || section->sh_type == SHT_DYNAMIC))
-	    	return (ELF32_ST_BIND(symbol->st_info) == STB_LOCAL ? 'd' : 'D');
-	/* rR: symbol is in a read only data section; flags no X, no W type PROGBITS */
-		/* r == Bind:LOCAL R == Bind:GLOBAL */
-	if ((section->sh_flags & SHF_WRITE) != SHF_WRITE &&
+	     section->sh_type == SHT_NOBITS)
+	{	/* bB: symbol in uninitialized data section (known as BSS) */
+		if (ELF32_ST_BIND(symbol->st_info) == STB_LOCAL)
+			return ('b');
+		if (ELF32_ST_BIND(symbol->st_info) == STB_GLOBAL)
+			return ('B');
+	}
+    	if ((section->sh_flags & SHF_WRITE) == SHF_WRITE &&
+	    (section->sh_type == SHT_PROGBITS ||
+	     section->sh_type == SHT_DYNAMIC))
+    	{	/* dD: symbol in initialized data section */
+		if (ELF32_ST_BIND(symbol->st_info) == STB_LOCAL)
+			return ('d');
+		if (ELF32_ST_BIND(symbol->st_info) == STB_GLOBAL)
+			return ('D');
+	}
+    	if ((section->sh_flags & SHF_WRITE) != SHF_WRITE &&
 	    (section->sh_flags & SHF_EXECINSTR) != SHF_EXECINSTR &&
 	    section->sh_type == SHT_PROGBITS)
-	    	return (ELF32_ST_BIND(symbol->st_info) == STB_LOCAL ? 'r' : 'R');
-	/* tT: symbol in text (code) section; flag X and type PROGBITS or type INIT_ARRAY or type FINI_ARRAY */
-		/* t ==Bind:LOCAL T == Bind:GLOBAL */
+	{	/* rR: symbol in read only data section */
+		if (ELF32_ST_BIND(symbol->st_info) == STB_LOCAL)
+			return ('r');
+		if (ELF32_ST_BIND(symbol->st_info) == STB_GLOBAL)
+			return ('R');
+	}
 	if (section->sh_type == SHT_INIT_ARRAY ||
-	    section->sh_type == SHT_FINI_ARRAY ||
-	    ((section->sh_flags & SHF_EXECINSTR) == SHF_EXECINSTR &&
+    	    section->sh_type == SHT_FINI_ARRAY ||
+    	    ((section->sh_flags & SHF_EXECINSTR) == SHF_EXECINSTR &&
 	     section->sh_type == SHT_PROGBITS))
-	    	return (ELF32_ST_BIND(symbol->st_info) == STB_LOCAL ? 't' : 'T');
-
+	{ 	/* tT: symbol in text (code) section */
+		if (ELF32_ST_BIND(symbol->st_info) == STB_LOCAL)
+			return ('t');
+		if (ELF32_ST_BIND(symbol->st_info) == STB_GLOBAL)
+			return ('T');
+	}
 	return ('?');
 }
 

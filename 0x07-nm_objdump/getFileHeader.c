@@ -7,7 +7,7 @@
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int getFileHeader(re_state *state)
+int getFileHeader(nm_state *state)
 {
 	/* read full identity array */
 	if (fread(state->f_header.e_ident, EI_NIDENT, 1, state->f_stream) != 1)
@@ -36,7 +36,7 @@ int getFileHeader(re_state *state)
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int get64bitFileHeader(re_state *state)
+int get64bitFileHeader(nm_state *state)
 {
 	Elf64_Ehdr ehdr64;
 
@@ -73,7 +73,7 @@ int get64bitFileHeader(re_state *state)
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int get32bitFileHeader(re_state *state)
+int get32bitFileHeader(nm_state *state)
 {
 	Elf32_Ehdr ehdr32;
 

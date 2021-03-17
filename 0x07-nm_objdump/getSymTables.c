@@ -14,7 +14,7 @@
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int getSymTables(re_state *state)
+int getSymTables(nm_state *state)
 {
 	if (state->ELF_32bit)
 		return (get32bitSymTables(state));
@@ -30,24 +30,25 @@ int getSymTables(re_state *state)
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int get64bitSymTables(re_state *state)
+int get64bitSymTables(nm_state *state)
 {
         Elf64_Sym *sym_tab = NULL;
-	Elf64_Shdr section;
+	Elf64_Shdr *section = NULL;
 	unsigned int i, j, num_sym;
 
 	for (i = 0; i < state->f_header.e_shnum; i++)
 	{
-		section = state->s_headers[i];
-		if (section.sh_type == SHT_DYNSYM ||
-		    section.sh_type == SHT_SYMTAB)
+		section = state->s_headers + i;
+		if (section->sh_type == SHT_SYMTAB)
 		{
-			num_sym = section.sh_size / section.sh_entsize;
+			state->symtab_sh = section;
+
+			num_sym = section->sh_size / section->sh_entsize;
 			sym_tab = malloc(sizeof(Elf64_Sym) * num_sym);
 			if (!sym_tab)
 				return (1);
 
-			if (fseek(state->f_stream, section.sh_offset,
+			if (fseek(state->f_stream, section->sh_offset,
 				  SEEK_SET) == -1)
 				return (1);
 
@@ -61,11 +62,8 @@ int get64bitSymTables(re_state *state)
 					bswapElf64_Sym(sym_tab + j);
 			}
 
-			/* state->dyn_sym and ->sym_tab 64 bit by default */
-			if (section.sh_type == SHT_DYNSYM)
-				state->dyn_sym = sym_tab;
-			else
-				state->sym_tab = sym_tab;
+			/* state->symtab_st 64 bit by default */
+			state->symtab_st = sym_tab;
 		}
 	}
 
@@ -79,27 +77,28 @@ int get64bitSymTables(re_state *state)
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int get32bitSymTables(re_state *state)
+int get32bitSymTables(nm_state *state)
 {
         Elf32_Sym *sym_tab32 = NULL, *curr32 = NULL;
         Elf64_Sym *sym_tab64 = NULL, *curr64 = NULL;
-	Elf64_Shdr section;
+	Elf64_Shdr *section = NULL;
 	unsigned int i, j, num_sym;
 
 	for (i = 0; i < state->f_header.e_shnum; i++)
 	{
-		section = state->s_headers[i];
-		if (section.sh_type == SHT_DYNSYM ||
-		    section.sh_type == SHT_SYMTAB)
+		section = state->s_headers + i;
+		if (section->sh_type == SHT_SYMTAB)
 		{
-			num_sym = section.sh_size / section.sh_entsize;
+			state->symtab_sh = section;
 
+			num_sym = section->sh_size / section->sh_entsize;
 			sym_tab32 = malloc(sizeof(Elf32_Sym) * num_sym);
 			sym_tab64 = malloc(sizeof(Elf64_Sym) * num_sym);
 			if (!sym_tab32 || !sym_tab64)
 				return (1);
 
-			if (fseek(state->f_stream, section.sh_offset, SEEK_SET) == -1)
+			if (fseek(state->f_stream, section->sh_offset,
+				  SEEK_SET) == -1)
 				return (1);
 
 			if (fread(sym_tab32, sizeof(Elf32_Sym), num_sym,
@@ -128,10 +127,8 @@ int get32bitSymTables(re_state *state)
 			}
 
 			free(sym_tab32);
-			if (section.sh_type == SHT_DYNSYM)
-				state->dyn_sym = sym_tab64;
-			else
-				state->sym_tab = sym_tab64;
+
+			state->symtab_st = sym_tab64;
 		}
 	}
 

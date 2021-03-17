@@ -13,7 +13,7 @@
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int getSecHeadStrTab(re_state *state)
+int getSecHeadStrTab(nm_state *state)
 {
         Elf64_Shdr st_shdr;
         char *buff = NULL;

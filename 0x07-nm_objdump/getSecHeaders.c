@@ -14,7 +14,7 @@
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int getSecHeaders(re_state *state)
+int getSecHeaders(nm_state *state)
 {
 	if (state->f_header.e_shoff)
 	{
@@ -36,7 +36,7 @@ int getSecHeaders(re_state *state)
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int get64bitSecHeaders(re_state *state)
+int get64bitSecHeaders(nm_state *state)
 {
 	Elf64_Shdr *s_headers = NULL;
 	int i;
@@ -71,7 +71,7 @@ int get64bitSecHeaders(re_state *state)
  * @state: struct containing file data and info for error printing
  * Return: 1 on failure, 0 on success
  */
-int get32bitSecHeaders(re_state *state)
+int get32bitSecHeaders(nm_state *state)
 {
 	Elf32_Shdr *s_headers32 = NULL, *curr32 = NULL;
 	Elf64_Shdr *s_headers64 = NULL, *curr64 = NULL;

@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "hnm.h"
 
 /* fprintf */
 #include <stdio.h>
@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 {
 	char *default_args[] = {"a.out"};
 	char **args = argc > 1 ? argv + 1 : default_args;
-	re_state state;
+	nm_state state;
 	int i, retval, ac = argc > 1 ? argc - 1 : 1;
 
 	/* nm takes multiple files as args */
