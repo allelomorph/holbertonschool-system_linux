@@ -1,8 +1,6 @@
 #include "hnm.h"
-
 /* fseek fread */
 #include <stdio.h>
-
 /* malloc free */
 #include <stdlib.h>
 
@@ -20,16 +18,16 @@ int getSecHeaders(nm_state *state)
 	{
 		/* There may be some extensions in the first section header. */
 		if (state->ELF_32bit)
-		        return (get32bitSecHeaders(state));
+			return (get32bitSecHeaders(state));
 		else
-		        return (get64bitSecHeaders(state));
+			return (get64bitSecHeaders(state));
 	}
 
 	return (0);
 }
 
 
-/* malloc lseek fread */
+/* malloc fseek fread */
 /**
  * get64bitSecHeaders - reads ELF and stores section headers in state
  *
@@ -64,7 +62,8 @@ int get64bitSecHeaders(nm_state *state)
 	return (0);
 }
 
-/* malloc lseek fread free */
+
+/* malloc fseek fread free */
 /**
  * get32bitSecHeaders - reads ELF and stores section headers in state
  *
@@ -84,11 +83,9 @@ int get32bitSecHeaders(nm_state *state)
 
 	if (fseek(state->f_stream, state->f_header.e_shoff, SEEK_SET) == -1)
 		return (1);
-
 	if (fread(s_headers32, sizeof(Elf32_Shdr), state->f_header.e_shnum,
 		  state->f_stream) != state->f_header.e_shnum)
 		return (1);
-
 	if (state->big_endian)
 	{
 		for (i = 0; i < state->f_header.e_shnum; i++)
@@ -114,9 +111,9 @@ int get32bitSecHeaders(nm_state *state)
 
 	free(s_headers32);
 	state->s_headers = s_headers64;
-
 	return (0);
 }
+
 
 /**
  * bswapElf64_Shdr - byte swaps all little endian values in a Elf64_Shdr
@@ -137,6 +134,7 @@ void bswapElf64_Shdr(Elf64_Shdr *shdr64)
 	shdr64->sh_addralign = __builtin_bswap64(shdr64->sh_addralign);
 	shdr64->sh_entsize   = __builtin_bswap64(shdr64->sh_entsize);
 }
+
 
 /**
  * bswapElf32_Shdr - byte swaps all little endian values in a Elf32_Shdr

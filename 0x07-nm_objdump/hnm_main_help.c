@@ -99,7 +99,7 @@ void initState(nm_state *state)
 	memset(&(state->f_header), 0, sizeof(Elf64_Ehdr));
 	state->s_headers = NULL;
 	state->symtab_sh = NULL;
- 	state->symtab_st = NULL;
+	state->symtab_st = NULL;
 }
 
 /* fclose free */

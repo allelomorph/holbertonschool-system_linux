@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 /**
- * struct nm_state - ELF information needed globally by most subroutines
+ * struct nm_state_s - ELF information needed globally by most subroutines
  * @exec_name: name of hreadelf executable, for error return
  * @f_name: ELF name
  * @f_stream: ELF file stream
@@ -37,7 +37,7 @@ typedef struct nm_state_s
 	Elf64_Ehdr f_header;
 	Elf64_Shdr *s_headers;
 	Elf64_Shdr *symtab_sh;
- 	Elf64_Sym *symtab_st;
+	Elf64_Sym *symtab_st;
 } nm_state;
 
 

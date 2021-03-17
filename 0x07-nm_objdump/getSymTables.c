@@ -1,8 +1,6 @@
 #include "hnm.h"
-
 /* fseek fread */
 #include <stdio.h>
-
 /* malloc free */
 #include <stdlib.h>
 
@@ -23,7 +21,7 @@ int getSymTables(nm_state *state)
 }
 
 
-/* malloc lseek fread */
+/* malloc fseek fread */
 /**
  * get64bitSymTables - reads ELF and stores symbol tables in state
  *
@@ -32,7 +30,7 @@ int getSymTables(nm_state *state)
  */
 int get64bitSymTables(nm_state *state)
 {
-        Elf64_Sym *sym_tab = NULL;
+	Elf64_Sym *sym_tab = NULL;
 	Elf64_Shdr *section = NULL;
 	unsigned int i, j, num_sym;
 
@@ -70,7 +68,8 @@ int get64bitSymTables(nm_state *state)
 	return (0);
 }
 
-/* malloc lseek fread free */
+
+/* malloc fseek fread free */
 /**
  * get32bitSymTables - reads ELF and stores symbol tables in state
  *
@@ -79,8 +78,8 @@ int get64bitSymTables(nm_state *state)
  */
 int get32bitSymTables(nm_state *state)
 {
-        Elf32_Sym *sym_tab32 = NULL, *curr32 = NULL;
-        Elf64_Sym *sym_tab64 = NULL, *curr64 = NULL;
+	Elf32_Sym *sym_tab32 = NULL, *curr32 = NULL;
+	Elf64_Sym *sym_tab64 = NULL, *curr64 = NULL;
 	Elf64_Shdr *section = NULL;
 	unsigned int i, j, num_sym;
 
@@ -111,7 +110,7 @@ int get32bitSymTables(nm_state *state)
 					bswapElf32_Sym(sym_tab32 + j);
 			}
 
-			/* state->dyn_sym and ->sym_tab 64 bit by default, need to promote values */
+			/* state->sym_tab 64 bit by default, need to promote values */
 			for (j = 0; j < num_sym; j++)
 			{
 				curr32 = sym_tab32 + j;
