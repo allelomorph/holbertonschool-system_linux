@@ -31,7 +31,6 @@ int main(int argc, char **argv)
 			if (getFileHeader(&state) == 0)
 			{
 				if (!(getSecHeaders(&state) == 0 &&
-				      getSecHeadStrTab(&state) == 0 &&
 				      getSymTables(&state) == 0 &&
 				      printSymTables(&state) == 0))
 					retval = 1;

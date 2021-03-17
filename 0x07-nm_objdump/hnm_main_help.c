@@ -98,8 +98,6 @@ void initState(nm_state *state)
 	state->ELF_32bit = false;
 	memset(&(state->f_header), 0, sizeof(Elf64_Ehdr));
 	state->s_headers = NULL;
-	state->sh_strtab = NULL;
-	state->p_headers = NULL;
 	state->symtab_sh = NULL;
  	state->symtab_st = NULL;
 }
@@ -118,14 +116,9 @@ void closeState(nm_state *state)
 	if (state->s_headers != NULL)
 		free(state->s_headers);
 
-	if (state->sh_strtab != NULL)
-		free(state->sh_strtab);
-
-	if (state->p_headers != NULL)
-		free(state->p_headers);
-
 	/* state->symtab_sh freed as part of state->s_headers */
 
 	if (state->symtab_st != NULL)
 		free(state->symtab_st);
+
 }

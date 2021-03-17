@@ -10,8 +10,8 @@ CFLAGS = -Wall -Werror -Wextra -pedantic
 0-hnm.o: 0-hnm.c
 	$(CC) -c $(CFLAGS) 0-hnm.c
 
-main_help.o: main_help.c
-	$(CC) -c $(CFLAGS) main_help.c
+hnm_main_help.o: hnm_main_help.c
+	$(CC) -c $(CFLAGS) hnm_main_help.c
 
 getFileHeader.o: getFileHeader.c
 	$(CC) -c $(CFLAGS) getFileHeader.c
@@ -19,21 +19,16 @@ getFileHeader.o: getFileHeader.c
 getSecHeaders.o: getSecHeaders.c
 	$(CC) -c $(CFLAGS) getSecHeaders.c
 
-getSecHeadStrTab.o: getSecHeadStrTab.c
-	$(CC) -c $(CFLAGS) getSecHeadStrTab.c
-
 getSymTables.o: getSymTables.c
 	$(CC) -c $(CFLAGS) getSymTables.c
 
 printSymTables.o: printSymTables.c
 	$(CC) -c $(CFLAGS) printSymTables.c
 
-hnm: hnm.h 0-hnm.o main_help.o getFileHeader.o \
-	getSecHeaders.o getSecHeadStrTab.o \
-	getSymTables.o printSymTables.o
-	$(CC) $(CFLAGS) 0-hnm.o main_help.o getFileHeader.o \
-	getSecHeaders.o getSecHeadStrTab.o \
-	getSymTables.o printSymTables.o \
+hnm: hnm.h 0-hnm.o hnm_main_help.o getFileHeader.o \
+	getSecHeaders.o getSymTables.o printSymTables.o
+	$(CC) $(CFLAGS) 0-hnm.o hnm_main_help.o getFileHeader.o \
+	getSecHeaders.o getSymTables.o printSymTables.o \
 	-o hnm
 
 
