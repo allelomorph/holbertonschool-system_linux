@@ -1,5 +1,4 @@
 #include "hnm.h"
-
 /* fprintf */
 #include <stdio.h>
 
@@ -30,6 +29,8 @@ int main(int argc, char **argv)
 		{
 			if (getFileHeader(&state) == 0)
 			{
+				if (ac > 1)
+					printf("\n%s:\n", state.f_name);
 				if (!(getSecHeaders(&state) == 0 &&
 				      getSymTables(&state) == 0 &&
 				      printSymTables(&state) == 0))
@@ -44,7 +45,6 @@ int main(int argc, char **argv)
 		}
 		else
 			retval = 1;
-
 		closeState(&state);
 	}
 

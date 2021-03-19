@@ -22,13 +22,16 @@ getSecHeaders.o: getSecHeaders.c
 getSymTables.o: getSymTables.c
 	$(CC) -c $(CFLAGS) getSymTables.c
 
+E32SymToE64Sym.o: E32SymToE64Sym.c
+	$(CC) -c $(CFLAGS) E32SymToE64Sym.c
+
 printSymTables.o: printSymTables.c
 	$(CC) -c $(CFLAGS) printSymTables.c
 
 hnm: hnm.h 0-hnm.o hnm_main_help.o getFileHeader.o \
-	getSecHeaders.o getSymTables.o printSymTables.o
+	getSecHeaders.o getSymTables.o E32SymToE64Sym.o printSymTables.o
 	$(CC) $(CFLAGS) 0-hnm.o hnm_main_help.o getFileHeader.o \
-	getSecHeaders.o getSymTables.o printSymTables.o \
+	getSecHeaders.o getSymTables.o E32SymToE64Sym.o printSymTables.o \
 	-o hnm
 
 

@@ -1,4 +1,7 @@
 #include "hnm.h"
+/* fread */
+#include <stdio.h>
+
 
 /* fread */
 /**

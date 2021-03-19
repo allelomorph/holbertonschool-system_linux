@@ -44,11 +44,11 @@ int printSymTables(nm_state *state)
 		{
 			if (symbol->st_shndx == SHN_UNDEF)
 				printf(empty_fmt,
-					getSymNMType(state, symbol),
+				       getSymNMType(state, symbol),
 				       strtab + symbol->st_name);
 			else
 				printf(fmt, symbol->st_value,
-					getSymNMType(state, symbol),
+				       getSymNMType(state, symbol),
 				       strtab + symbol->st_name);
 		}
 	}

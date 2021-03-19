@@ -78,8 +78,8 @@ int get64bitSymTables(nm_state *state)
  */
 int get32bitSymTables(nm_state *state)
 {
-	Elf32_Sym *sym_tab32 = NULL, *curr32 = NULL;
-	Elf64_Sym *sym_tab64 = NULL, *curr64 = NULL;
+	Elf32_Sym *sym_tab32 = NULL;
+	Elf64_Sym *sym_tab64 = NULL;
 	Elf64_Shdr *section = NULL;
 	unsigned int i, j, num_sym;
 
@@ -99,7 +99,6 @@ int get32bitSymTables(nm_state *state)
 			if (fseek(state->f_stream, section->sh_offset,
 				  SEEK_SET) == -1)
 				return (1);
-
 			if (fread(sym_tab32, sizeof(Elf32_Sym), num_sym,
 				  state->f_stream) != num_sym)
 				return (1);
@@ -110,29 +109,16 @@ int get32bitSymTables(nm_state *state)
 					bswapElf32_Sym(sym_tab32 + j);
 			}
 
-			/* state->sym_tab 64 bit by default, need to promote values */
+			/* state->symtab_st is 64 bit, need to promote values */
 			for (j = 0; j < num_sym; j++)
-			{
-				curr32 = sym_tab32 + j;
-				curr64 = sym_tab64 + j;
-				curr64->st_name  = (Elf64_Word)curr32->st_name;
-				/* 64 and 32 both unsigned char */
-				curr64->st_info  = curr32->st_info;
-				/* 64 and 32 both unsigned char */
-				curr64->st_other = curr32->st_other;
-				curr64->st_shndx = (Elf64_Section)curr32->st_shndx;
-				curr64->st_value = (Elf64_Addr)curr32->st_value;
-				curr64->st_size  = (Elf64_Xword)curr32->st_size;
-			}
-
+				E32SymToE64Sym(sym_tab32 + j, sym_tab64 + j);
 			free(sym_tab32);
-
 			state->symtab_st = sym_tab64;
 		}
 	}
-
 	return (0);
 }
+
 
 /**
  * bswapElf64_Sym - byte swaps all little endian values in a Elf64_Sym
@@ -149,6 +135,7 @@ void bswapElf64_Sym(Elf64_Sym *sym64)
 	sym64->st_value = __builtin_bswap64(sym64->st_value);
 	sym64->st_size  = __builtin_bswap64(sym64->st_size);
 }
+
 
 /**
  * bswapElf32_Sym - byte swaps all little endian values in a Elf32_Sym

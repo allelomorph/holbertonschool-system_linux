@@ -5,7 +5,6 @@
 #include <elf.h>
 #include <errno.h>
 #include <stdbool.h>
-
 /* FILE stream typedef */
 #include <stdio.h>
 
@@ -40,7 +39,6 @@ typedef struct nm_state_s
 	Elf64_Sym *symtab_st;
 } nm_state;
 
-
 /* 0-hnm.c */
 /* int main(int argc, char **argv) */
 
@@ -70,6 +68,9 @@ int get64bitSymTables(nm_state *state);
 int get32bitSymTables(nm_state *state);
 void bswapElf64_Sym(Elf64_Sym *sym64);
 void bswapElf32_Sym(Elf32_Sym *sym32);
+
+/* E32SymToE64Sym.c */
+void E32SymToE64Sym(Elf32_Sym *Sym32, Elf64_Sym *Sym64);
 
 /* printSymTables.c */
 int printSymTables(nm_state *state);

@@ -1,21 +1,17 @@
 #include "hnm.h"
-
-/* fprintf rewind fclose fopen */
+/* fopen fread rewind fprintf fclose */
 #include <stdio.h>
-
-/* memset */
+/* memcmp strerror memset */
 #include <string.h>
-
 /* stat S_ISREG */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
 /* free */
 #include <stdlib.h>
 
 
-/* stat S_ISREG fopen rewind memcmp */
+/* stat strerror S_ISREG fopen fread memcmp rewind */
 /**
  * openELF - attempts to open an ELF for parsing and printing
  *
@@ -66,6 +62,7 @@ int openELF(nm_state *state)
 	return (0);
 }
 
+
 /* fprintf */
 /**
  * errorMsg - formats error printing
@@ -82,6 +79,7 @@ void errorMsg(char *format, char *err_str, nm_state *state)
 	else
 		fprintf(stderr, format, state->f_name, err_str);
 }
+
 
 /* memset */
 /**
@@ -101,6 +99,7 @@ void initState(nm_state *state)
 	state->symtab_sh = NULL;
 	state->symtab_st = NULL;
 }
+
 
 /* fclose free */
 /**
