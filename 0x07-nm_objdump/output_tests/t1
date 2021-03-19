@@ -1,0 +1,14 @@
+#!/bin/bash
+# task 1: objdump -sf testing
+
+for file in ELF_examples/*; do
+    echo "-->ELF: $file"
+    objdump -sf $file | cat -e
+    echo "-->$?"
+    ./hobjdump $file | cat -e
+    echo "-->$?"
+    diff <(objdump -sf $file | cat -e) <(./hobjdump $file | cat -e)
+
+    echo "-->return or ctrl+d to continue"
+    read
+done;

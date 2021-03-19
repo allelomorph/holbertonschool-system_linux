@@ -1,0 +1,14 @@
+#!/bin/bash
+# task 0: nm -p testing
+
+for file in ELF_examples/*; do
+    echo "-->ELF: $file"
+    nm -p $file | cat -e
+    echo "-->$?"
+    ./hnm $file | cat -e
+    echo "-->$?"
+    diff <(nm -p $file | cat -e) <(./hnm $file | cat -e)
+
+    echo "-->return or ctrl+d to continue"
+    read
+done;
