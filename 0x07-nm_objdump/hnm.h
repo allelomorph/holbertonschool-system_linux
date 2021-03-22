@@ -39,40 +39,40 @@ typedef struct nm_state_s
 	Elf64_Sym *symtab_st;
 } nm_state;
 
-/* 0-hnm.c */
+/* hnm.c */
 /* int main(int argc, char **argv) */
 
-/* main_help.c */
+/* hnm_main_help.c */
 int openELF(nm_state *state);
 void errorMsg(char *format, char *err_str, nm_state *state);
 void initState(nm_state *state);
 void closeState(nm_state *state);
 
-/* getFileHeader.c */
+/* hnm_getFileHeader.c */
 int getFileHeader(nm_state *state);
 int get32bitFileHeader(nm_state *state);
 int get64bitFileHeader(nm_state *state);
 void bswapElf64_Ehdr(Elf64_Ehdr *ehdr64);
 void bswapElf32_Ehdr(Elf32_Ehdr *ehdr32);
 
-/* getSecHeaders.c */
+/* hnm_getSecHeaders.c */
 int getSecHeaders(nm_state *state);
 int get64bitSecHeaders(nm_state *state);
 int get32bitSecHeaders(nm_state *state);
 void bswapElf64_Shdr(Elf64_Shdr *shdr64);
 void bswapElf32_Shdr(Elf32_Shdr *shdr32);
 
-/* getSymTables.c */
+/* hnm_getSymTables.c */
 int getSymTables(nm_state *state);
 int get64bitSymTables(nm_state *state);
 int get32bitSymTables(nm_state *state);
 void bswapElf64_Sym(Elf64_Sym *sym64);
 void bswapElf32_Sym(Elf32_Sym *sym32);
 
-/* E32SymToE64Sym.c */
+/* hnm_E32SymToE64Sym.c */
 void E32SymToE64Sym(Elf32_Sym *Sym32, Elf64_Sym *Sym64);
 
-/* printSymTables.c */
+/* hnm_printSymTables.c */
 int printSymTables(nm_state *state);
 char getSymNMType(nm_state *state, Elf64_Sym *symbol);
 char getSymNMTypeBySec(Elf64_Shdr *section, Elf64_Sym *symbol);

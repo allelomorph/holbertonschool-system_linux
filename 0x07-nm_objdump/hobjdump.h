@@ -44,7 +44,7 @@ typedef struct objdump_state_s
 #define DYNAMIC                    0x40 /* BFD is a dynamic object. */
 #define D_PAGED                   0x100 /* BFD is dynamically paged. */
 
-/* 1-hobjdump.c */
+/* hobjdump.c */
 /* int main(int argc, char **argv) */
 
 /* hobjdump_main_help.c */
@@ -78,8 +78,9 @@ void printFileFlags(uint32_t flags);
 int printFileInfo(objdump_state *state);
 
 /* hobjdump_printSections.c */
+unsigned char *getSecBuff(objdump_state *state, Elf64_Shdr *section);
+void printSecBuff(unsigned char *buff, Elf64_Shdr *section);
+void printSecBuffRow(unsigned char *buff, uint32_t row, uint32_t bytes);
 int printSections(objdump_state *state);
-void printSecBuffer(unsigned char *buff, Elf64_Shdr *section);
-unsigned char *getSecBuffer(objdump_state *state, Elf64_Shdr *section);
 
 #endif /* HOBJDUMP_H */

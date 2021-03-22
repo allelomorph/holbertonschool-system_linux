@@ -7,8 +7,8 @@ CFLAGS = -Wall -Werror -Wextra -pedantic
 
 
 # task 0. nm -p
-0-hnm.o: 0-hnm.c
-	$(CC) -c $(CFLAGS) 0-hnm.c
+hnm.o: hnm.c
+	$(CC) -c $(CFLAGS) hnm.c
 
 hnm_main_help.o: hnm_main_help.c
 	$(CC) -c $(CFLAGS) hnm_main_help.c
@@ -28,17 +28,17 @@ hnm_E32SymToE64Sym.o: hnm_E32SymToE64Sym.c
 hnm_printSymTables.o: hnm_printSymTables.c
 	$(CC) -c $(CFLAGS) hnm_printSymTables.c
 
-hnm: hnm.h 0-hnm.o hnm_main_help.o hnm_getFileHeader.o hnm_getSecHeaders.o \
+hnm: hnm.h hnm.o hnm_main_help.o hnm_getFileHeader.o hnm_getSecHeaders.o \
 	hnm_getSymTables.o hnm_E32SymToE64Sym.o hnm_printSymTables.o
-	$(CC) $(CFLAGS) 0-hnm.o hnm_main_help.o hnm_getFileHeader.o \
+	$(CC) $(CFLAGS) hnm.o hnm_main_help.o hnm_getFileHeader.o \
 	hnm_getSecHeaders.o hnm_getSymTables.o hnm_E32SymToE64Sym.o \
 	hnm_printSymTables.o \
 	-o hnm
 
 
 # task 1. objdump -sf
-1-hobjdump.o: 1-hobjdump.c
-	$(CC) -c $(CFLAGS) 1-hobjdump.c
+hobjdump.o: hobjdump.c
+	$(CC) -c $(CFLAGS) hobjdump.c
 
 hobjdump_main_help.o: hobjdump_main_help.c
 	$(CC) -c $(CFLAGS) hobjdump_main_help.c
@@ -58,11 +58,11 @@ hobjdump_printFileInfo.o: hobjdump_printFileInfo.c
 hobjdump_printSections.o: hobjdump_printSections.c
 	$(CC) -c $(CFLAGS) hobjdump_printSections.c
 
-hobjdump: hobjdump.h 1-hobjdump.o hobjdump_main_help.o \
+hobjdump: hobjdump.h hobjdump.o hobjdump_main_help.o \
 	hobjdump_getFileHeader.o hobjdump_getSecHeaders.o \
 	hobjdump_getSecHeadStrTab.o \
 	hobjdump_printFileInfo.o hobjdump_printSections.o
-	$(CC) $(CFLAGS) 1-hobjdump.o hobjdump_main_help.o \
+	$(CC) $(CFLAGS) hobjdump.o hobjdump_main_help.o \
 	hobjdump_getFileHeader.o hobjdump_getSecHeaders.o \
 	hobjdump_getSecHeadStrTab.o \
 	hobjdump_printFileInfo.o hobjdump_printSections.o \
