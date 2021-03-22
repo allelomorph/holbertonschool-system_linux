@@ -1,7 +1,15 @@
 #include "hobjdump.h"
+/* printf */
+#include <stdio.h>
 
-#include <string.h>
 
+/**
+ * fileMachString - returns string corresponding to ELF machine type
+ * note: only 2 EM_* values handled in sample set of inputs
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: machine type string, or NULL on failure
+ */
 char *fileMachString(objdump_state *state)
 {
 	char *ELF_mach = NULL;
@@ -25,6 +33,14 @@ char *fileMachString(objdump_state *state)
 	return (ELF_mach);
 }
 
+
+/**
+ * fileArchString - returns string corresponding to ELF architecture type
+ * note: only 2 EM_* values handled in sample set of inputs
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: architecture type string, or NULL on failure
+ */
 char *fileArchString(objdump_state *state)
 {
 	if (!state)
@@ -41,6 +57,13 @@ char *fileArchString(objdump_state *state)
 	}
 }
 
+
+/**
+ * setFileFlags - returns set of bfd-style ELF flags
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: flag set bitwise OR'd into one uint32_t, or 0 on failure or no flags
+ */
 uint32_t setFileFlags(objdump_state *state)
 {
 	uint32_t i, flags = 0;
@@ -82,14 +105,21 @@ uint32_t setFileFlags(objdump_state *state)
 	return (flags);
 }
 
+
+/* printf */
+/**
+ * printFileFlags - formatted printing of bfd-style ELF flags
+ *
+ * @flags: flag set bitwise OR'd into one uint32_t
+ */
 void printFileFlags(uint32_t flags)
 {
-	uint32_t flag_set[] = {HAS_RELOC, EXEC_P, HAS_SYMS, DYNAMIC, D_PAGED};
-	char *flag_names[] = {"HAS_RELOC", "EXEC_P", "HAS_SYMS",
-		"DYNAMIC", "D_PAGED"};
-	uint32_t i;
+	uint32_t flag_set[] = { HAS_RELOC, EXEC_P, HAS_SYMS, DYNAMIC, D_PAGED };
+	char *flag_names[] = { "HAS_RELOC", "EXEC_P", "HAS_SYMS",
+		"DYNAMIC", "D_PAGED" };
+	int i, flag_ct = 5;
 
-	for (i = 0; i < 5; i++)
+	for (i = 0; i < flag_ct; i++)
 	{
 		if (flags & flag_set[i])
 		{
@@ -99,39 +129,37 @@ void printFileFlags(uint32_t flags)
 	}
 }
 
+
+/* printf */
+/**
+ * printFileInfo - `objdump -f` formatted printing of ELF file information
+ *
+ * @state: struct containing file data and info for error printing
+ * Return: 1 on failure, 0 on success
+ */
 int printFileInfo(objdump_state *state)
 {
-	Elf64_Shdr *section = NULL;
 	uint32_t flags = setFileFlags(state);
-	int i;
-	Elf64_Addr start_addr = 0;
-	char *ELF_data = NULL;
 
 	if (!state)
 		return (1);
 
-	ELF_data = state->ELF_32bit ? "elf32" : "elf64";
-
-	for (i = 0; i < state->f_header.e_shnum; i++)
-	{
-		section = state->s_headers + i;
-		if (strcmp(state->sh_strtab + section->sh_name, ".text") == 0 &&
-		    strlen(state->sh_strtab + section->sh_name) == 5)
-		{
-			start_addr = section->sh_addr;
-			break;
-		}
-	}
-
-	printf("\n%s:     file format %s-%s\n", state->f_name, ELF_data,
+	printf("\n%s:     file format %s-%s\n",
+	       state->f_name,
+	       state->ELF_32bit ? "elf32" : "elf64",
 	       fileMachString(state));
+
 	printf("architecture: %s, flags 0x%08x:\n",
-		fileArchString(state), flags);
+	       fileArchString(state), flags);
+
 	printFileFlags(flags);
+
 	if (state->ELF_32bit)
-		printf("start address 0x%08lx\n\n", start_addr);
+		printf("start address 0x%08lx\n\n",
+		       state->f_header.e_entry);
 	else
-		printf("start address 0x%016lx\n\n", start_addr);
+		printf("start address 0x%016lx\n\n",
+		       state->f_header.e_entry);
 
 	return (0);
 }
