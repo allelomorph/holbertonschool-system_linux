@@ -29,10 +29,11 @@ int main(int argc, char **argv)
 		{
 			if (getFileHeader(&state) == 0)
 			{
-				if (getSecHeaders(&state) != 0)
+				if (!(getSecHeaders(&state) == 0 &&
+				      getSecHeadStrTab(&state) == 0 &&
+				      printFileInfo(&state) == 0 &&
+				      printSections(&state) == 0))
 					retval = 1;
-                                printf("\nwill print file info here\n\n");
-                                printf("will print sections here\n");
 			}
 			else
 			{

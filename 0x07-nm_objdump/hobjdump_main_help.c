@@ -96,6 +96,7 @@ void initState(objdump_state *state)
 	state->ELF_32bit = false;
 	memset(&(state->f_header), 0, sizeof(Elf64_Ehdr));
 	state->s_headers = NULL;
+	state->sh_strtab = NULL;
 }
 
 
@@ -112,4 +113,7 @@ void closeState(objdump_state *state)
 
 	if (state->s_headers != NULL)
 		free(state->s_headers);
+
+	if (state->sh_strtab != NULL)
+		free(state->sh_strtab);
 }

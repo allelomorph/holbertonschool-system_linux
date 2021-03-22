@@ -49,10 +49,23 @@ hobjdump_getFileHeader.o: hobjdump_getFileHeader.c
 hobjdump_getSecHeaders.o: hobjdump_getSecHeaders.c
 	$(CC) -c $(CFLAGS) hobjdump_getSecHeaders.c
 
+hobjdump_getSecHeadStrTab.o: hobjdump_getSecHeadStrTab.c
+	$(CC) -c $(CFLAGS) hobjdump_getSecHeadStrTab.c
+
+hobjdump_printFileInfo.o: hobjdump_printFileInfo.c
+	$(CC) -c $(CFLAGS) hobjdump_printFileInfo.c
+
+hobjdump_printSections.o: hobjdump_printSections.c
+	$(CC) -c $(CFLAGS) hobjdump_printSections.c
+
 hobjdump: hobjdump.h 1-hobjdump.o hobjdump_main_help.o \
-	hobjdump_getFileHeader.o hobjdump_getSecHeaders.o
+	hobjdump_getFileHeader.o hobjdump_getSecHeaders.o \
+	hobjdump_getSecHeadStrTab.o \
+	hobjdump_printFileInfo.o hobjdump_printSections.o
 	$(CC) $(CFLAGS) 1-hobjdump.o hobjdump_main_help.o \
 	hobjdump_getFileHeader.o hobjdump_getSecHeaders.o \
+	hobjdump_getSecHeadStrTab.o \
+	hobjdump_printFileInfo.o hobjdump_printSections.o \
 	-o hobjdump
 
 
