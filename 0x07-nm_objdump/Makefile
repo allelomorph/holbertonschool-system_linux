@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -Wall -Werror -Wextra -pedantic
 
 
-# task 0. nm
+# task 0. nm -p
 0-hnm.o: 0-hnm.c
 	$(CC) -c $(CFLAGS) 0-hnm.c
 
@@ -38,7 +38,7 @@ hnm: hnm.h 0-hnm.o hnm_main_help.o hnm_getFileHeader.o hnm_getSecHeaders.o \
 
 # task 1. objdump -sf
 1-hobjdump.o: 1-hobjdump.c
-	$(CC) -c $(CFLAGS) 0-hnm.c
+	$(CC) -c $(CFLAGS) 1-hobjdump.c
 
 hobjdump_main_help.o: hobjdump_main_help.c
 	$(CC) -c $(CFLAGS) hobjdump_main_help.c
@@ -50,7 +50,7 @@ hobjdump_getSecHeaders.o: hobjdump_getSecHeaders.c
 	$(CC) -c $(CFLAGS) hobjdump_getSecHeaders.c
 
 hobjdump: hobjdump.h 1-hobjdump.o hobjdump_main_help.o \
-	hobjdump_getFileHeader.o hobjdump_getSecHeaders.o \
+	hobjdump_getFileHeader.o hobjdump_getSecHeaders.o
 	$(CC) $(CFLAGS) 1-hobjdump.o hobjdump_main_help.o \
 	hobjdump_getFileHeader.o hobjdump_getSecHeaders.o \
 	-o hobjdump
