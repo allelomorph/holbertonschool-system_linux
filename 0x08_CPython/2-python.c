@@ -5,8 +5,8 @@
 
 
 /**
- * print_python_bytes - prints member count, allocated spaces, and member
- * element types for python lists
+ * print_python_bytes - prints the size, string representation, and hex
+ * representation of a Python bytes object
  *
  * Macros/functions prohibited by project task instructions, and their
  * respective definitions in Python3.4-dev or cpython source v3.10:
