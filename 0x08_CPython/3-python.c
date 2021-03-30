@@ -10,12 +10,7 @@
  * print_python_bytes - prints the size, string representation, and hex
  * representation of a Python bytes object
  *
- * Macros/functions prohibited by project task instructions:
- * Py_SIZE  Py_TYPE  PyList_Size  PyList_GetItem
- * PyBytes_AS_STRING  PyBytes_GET_SIZE  PyBytes_AsString
- * PyFloat_AS_DOUBLE
- * PySequence_GetItem  PySequence_Fast_GET_SIZE  PySequence_Fast_GET_ITEM
- * PySequence_ITEM PySequence_Fast_ITEMS
+ * Some cpython macros/functions prohibited by project task instructions.
  *
  * @p: PyObject *-castable struct pointer
  */
@@ -53,12 +48,7 @@ void print_python_bytes(PyObject *p)
  * print_python_float - prints value of a Python float object: at least one
  * place of precision, no trailing zeroes
  *
- * Macros/functions prohibited by project task instructions:
- * Py_SIZE  Py_TYPE  PyList_Size  PyList_GetItem
- * PyBytes_AS_STRING  PyBytes_GET_SIZE  PyBytes_AsString
- * PyFloat_AS_DOUBLE
- * PySequence_GetItem  PySequence_Fast_GET_SIZE  PySequence_Fast_GET_ITEM
- * PySequence_ITEM PySequence_Fast_ITEMS
+ * Some cpython macros/functions prohibited by project task instructions.
  *
  * @p: PyObject *-castable struct pointer
  */
@@ -92,12 +82,7 @@ void print_python_float(PyObject *p)
  * print_python_list - prints member count, allocated spaces, and member
  * element types for python lists
  *
- * Macros/functions prohibited by project task instructions:
- * Py_SIZE  Py_TYPE  PyList_Size  PyList_GetItem
- * PyBytes_AS_STRING  PyBytes_GET_SIZE  PyBytes_AsString
- * PyFloat_AS_DOUBLE
- * PySequence_GetItem  PySequence_Fast_GET_SIZE  PySequence_Fast_GET_ITEM
- * PySequence_ITEM PySequence_Fast_ITEMS
+ * Some cpython macros/functions prohibited by project task instructions.
  *
  * @p: PyObject *-castable struct pointer
  */

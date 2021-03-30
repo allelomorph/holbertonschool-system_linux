@@ -8,15 +8,7 @@
  * print_python_bytes - prints the size, string representation, and hex
  * representation of a Python bytes object
  *
- * Macros/functions prohibited by project task instructions, and their
- * respective definitions in Python3.4-dev or cpython source v3.10:
- *
- *  Py_SIZE(ob) - (((PyVarObject *)(ob))->ob_size)
- *  Py_TYPE(ob) - (((PyObject *)(ob))->ob_type)
- *  PyList_GetItem - ((PyListObject *)op)->ob_item[i] + error checking
- *  PyBytes_AS_STRING(op) - (assert(PyBytes_Check(op)),
- * (((PyBytesObject *)(op))->ob_sval))
- *  PyBytes_GET_SIZE - (assert(PyBytes_Check(op)), Py_SIZE(op))
+ * Some cpython macros/functions prohibited by project task instructions.
  *
  * @p: PyObject *-castable struct pointer
  */
@@ -51,15 +43,7 @@ void print_python_bytes(PyObject *p)
  * print_python_list - prints member count, allocated spaces, and member
  * element types for python lists
  *
- * Macros/functions prohibited by project task instructions, and their
- * respective definitions in Python3.4-dev or cpython source v3.10:
- *
- *  Py_SIZE(ob) - (((PyVarObject*)(ob))->ob_size)
- *  Py_TYPE(ob) - (((PyObject*)(ob))->ob_type)
- *  PyList_GetItem - ((PyListObject *)op)->ob_item[i] + error checking
- *  PyBytes_AS_STRING(op) - (assert(PyBytes_Check(op)),
- * (((PyBytesObject *)(op))->ob_sval))
- *  PyBytes_GET_SIZE - (assert(PyBytes_Check(op)), Py_SIZE(op))
+ * Some cpython macros/functions prohibited by project task instructions.
  *
  * @p: PyObject *-castable struct pointer
  */
