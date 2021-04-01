@@ -8,8 +8,8 @@
 #define _ABS(x) ((x) < 0 ? -(x) : (x))
 
 /**
- * print_python_int - prints the value Python 3 int object with an absolute
- * value less than ULONG_MAX
+ * print_python_int - prints the value of a Python 3 int object with an
+ * absolute value less than ULONG_MAX
  *
  * @p: PyObject *-castable struct pointer
  */
