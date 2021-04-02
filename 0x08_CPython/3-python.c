@@ -92,14 +92,14 @@ void print_python_list(PyObject *p)
 	Py_ssize_t size;
 	PyObject *list_member;
 
+	printf("[*] Python list info\n");
+
 	if (!PyList_Check(p))
 	{
 		printf("  [ERROR] Invalid List Object\n");
 		fflush(stdout);
 		return;
 	}
-
-	printf("[*] Python list info\n");
 
 	size = ((PyVarObject *)(p))->ob_size;
 	printf("[*] Size of the Python List = %li\n", size);
