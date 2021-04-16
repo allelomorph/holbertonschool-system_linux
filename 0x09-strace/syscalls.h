@@ -9,6 +9,8 @@
  */
 #define MAX_PARAMS	6
 
+#define ABSENT_ARG     -1
+
 /**
  * enum type_e - enumerates the data types that appear in syscall parameters
  * and returns
@@ -44,7 +46,7 @@
  * @INT:                         int
  * @INT_P:                       int *
  * @KEY_SERIAL_T:                key_serial_t
- *      (keyutils.h not found)
+ *      (keyutils.h not found, type used by add_key(2) and request_key(2))
  * @KEY_T:                       key_t                     <sys/types.h> or
  *                                                         <sys/ipc.h>
  * @LOFF_T_P:                    loff_t *                  <sys/types.h>
@@ -93,7 +95,7 @@
  * @STACK_T_P:                   stack_t *                 <signal.h>
  * @STRUCT_EPOLL_EVENT_P:        struct epoll_event *      <linux/eventpoll.h>
  * @STRUCT_GETCPU_CACHE_P:       struct getcpu_cache *
- *     (linux/getcpu.h not found)
+ *     (linux/getcpu.h not found, type only used by getcpu(2))
  * @STRUCT_IOCB_P:               struct iocb *             <linux/aio_abi.h>
  * @STRUCT_IOCB_PP:              struct iocb **            <linux/aio_abi.h>
  * @STRUCT_IOVEC_P:              struct iovec *            <sys/uio.h>
@@ -101,7 +103,7 @@
  * @STRUCT_ITIMERSPEC_P:         struct itimerspec *       <time.h>
  * @STRUCT_ITIMERVAL_P:          struct itimerval          <time.h>
  * @STRUCT_KERNEL_SYM_P:         struct kernel_sym *
- *     (module.h not found)
+ *     (module.h not found, type only used by get_kernel_syms(2))
  * @STRUCT_KEXEC_SEGMENT_P:      struct kexec_segment *    <linux/kexec.h>
  * @STRUCT_LINUX_DIRENT_P:       struct linux_dirent *
  *     (No definition found for linux_dirent, but readdir(3) uses the similar
@@ -111,12 +113,12 @@
  * @STRUCT_MSGHDR_P:             struct msghdr *           <sys/socket.h>
  * @STRUCT_MSQID_DS_P:           struct msqid_ds *         <sys/msg.h>
  * @STRUCT_NFSCTL_ARG_P:         struct nfsctl_arg *
- *     (linux/nfsd/syscall.h not found. Only used with nfsservctl. From man 2
- *      nfsservctl: Since Linux 3.1, this system call no longer exists.)
+ *     (linux/nfsd/syscall.h not found, type only used with nfsservctl(2).
+ *      man 2 nfsservctl "Since Linux 3.1, this system call no longer exists.")
  * @STRUCT_OLD_LINUX_DIRENT_P: struct old_linux_dirent *
  *     (No definition found for old_linux_dirent, superseded by getdents(2)
- *      use of linux_dirent, which in turn is apparently superseded by struct
- *      dirent, defined in dirent.h)
+ *      use of struct linux_dirent, which in turn is apparently superseded by
+ *      struct dirent, defined in dirent.h)
  * @STRUCT_PERF_EVENT_ATTR_P:    struct perf_event_attr *  <linux/perf_event.h>
  * @STRUCT_POLLFD_P:             struct pollfd *           <poll.h>
  * @STRUCT_RLIMIT_P:             struct rlimit *           <sys/resource.h>
@@ -153,8 +155,7 @@
  * @U64:                         u64
  *     (Only used by lookup_dcookie(2), no definition found - seems to be a
  *      kernel space name. The closest was __u64 defined with <linux/types.h>.
- *      https://stackoverflow.com/questions/30896489/why-is-u8-u16-u32-u64-\
- *      used-instead-of-unsigned-int-in-kernel-programming for more info.)
+ *      https://stackoverflow.com/q/30896489/ for more info.)
  * @UID_T:                       uid_t                     <pwd.h> or
  *                                                         <stropts.h> or
  *                                                         <signal.h> or
@@ -162,48 +163,15 @@
  * @UID_T_P:                     uit_t *                   (see uid_t)
  * @UINT32_T:                    uint32_t                  <stdint.h>
  * @UNION_NFSCTL_RES_P:          union nfsctl_res *
- *     (linux/nfsd/syscall.h not found. Only used with nfsservctl. man 2
- *      nfsservctl "Since Linux 3.1, this system call no longer exists.")
+ *     (linux/nfsd/syscall.h not found, type only used with nfsservctl(2).
+ *      man 2 nfsservctl "Since Linux 3.1, this system call no longer exists.")
  * @UNSIGNED_CHAR_P:             unsigned char *
- * @UNSIGNED_FLAGS:
- *     (Result of a likely man page scraping error of mbind(2) in the original
- *      version of this header. Final parameter of mbind is an unsigned int,
- *      not a unique data type. mbind entries in arrays below have been
- *      amended. In any case, numaif.h and thus mbind is not avaialble in
- *      Ubuntu 14.04.)
  * @UNSIGNED_INT:                unsigned int
+ * @UNSIGNED_INT_P:              unsigned int *
+ *     (Not in the original version of this header. Added to replace
+ *      UNSIGNED_PMSG_PRIO, UNSIGNED_PCPU, and UNSIGNED_PNODE.)
  * @UNSIGNED_LONG:               unsigned long
  * @UNSIGNED_LONG_P:             unsigned long *
- * @UNSIGNED_MSG_PRIO:
- *     (Result of a likely man page scraping error of mq_timedsend(2) in the
- *      original version of this header. Fourth parameter of mq_timedsend is an
- *      unsigned int, not a unique data type. mq_timedsend entries in arrays
- *      below have been amended.)
- * @UNSIGNED_NR_EVENTS:
- *     (Result of a likely man page scraping error of io_setup(2) in the
- *      original version of this header. First parameter of io_setup is an
- *      unsigned int, not a unique data type. io_setup entries in arrays
- *      below have been amended.)
- * @UNSIGNED_NSOPS:
- *     (Result of a likely man page scraping error of semop(2)/semtimedop(2)
- *      in the original version of this header. Third parameter of
- *      semop/semtimedop is an unsigned int, not a unique data type. semop/
- *      semtimedop entries in arrays below have been amended.)
- * @UNSIGNED_PCPU:
- *     (Result of a likely man page scraping error of getcpu(2) in the
- *      original version of this header. First parameter of getcpu is an
- *      unsigned int *, not a unique data type. getcpu entries in arrays below
- *      have been amended.)
- * @UNSIGNED_PMSG_PRIO:
- *     (Result of a likely man page scraping error of mq_timedreceive(2) in the
- *      original version of this header. Fourth parameter of mq_timedreceive is
- *      an unsigned int *, not a unique data type. mq_timedreceive entries in
- *      arrays below have been amended.)
- * @UNSIGNED_PNODE:
- *     (Result of a likely man page scraping error of getcpu(2) in the
- *      original version of this header. Second parameter of getcpu is an
- *      unsigned int, not a unique data type. getcpu entries in arrays below
- *      have been amended.)
  * @VARARGS:                     ...                       <stdarg.h>
  *     (va_arg, va_copy, va_end, and va_start are enabled by including
  *      stdarg.h, which gcc seems to interpret as including
@@ -211,9 +179,6 @@
  * @VOID:                        void
  * @VOID_P:                      void *
  * @VOID_PP:                     void **
- * @UNSIGNED_INT_P:              unsigned int *
- *     (Not in the original version of this header. Added to replace
- *      UNSIGNED_PMSG_PRIO, UNSIGNED_PCPU, and UNSIGNED_PNODE.)
  */
 typedef enum type_e
 {
@@ -311,22 +276,54 @@ typedef enum type_e
 	UINT32_T,
 	UNION_NFSCTL_RES_P,
 	UNSIGNED_CHAR_P,
-	UNSIGNED_FLAGS,
 	UNSIGNED_INT,
+	UNSIGNED_INT_P,
 	UNSIGNED_LONG,
 	UNSIGNED_LONG_P,
-	UNSIGNED_MSG_PRIO,
-	UNSIGNED_NR_EVENTS,
-	UNSIGNED_NSOPS,
-	UNSIGNED_PCPU,
-	UNSIGNED_PMSG_PRIO,
-	UNSIGNED_PNODE,
 	VARARGS,
 	VOID,
 	VOID_P,
-	VOID_PP,
-	UNSIGNED_INT_P
+	VOID_PP
 } type_t;
+
+/*
+ * @UNSIGNED_FLAGS:
+ *     (Result of a likely man page scraping error of mbind(2) in the original
+ *      version of this header. Final parameter of mbind is an unsigned int,
+ *      not a unique data type. mbind entries in arrays below have been
+ *      amended. In any case, numaif.h and thus mbind is not avaialble in
+ *      Ubuntu 14.04.)
+ * @UNSIGNED_MSG_PRIO:
+ *     (Result of a likely man page scraping error of mq_timedsend(2) in the
+ *      original version of this header. Fourth parameter of mq_timedsend is an
+ *      unsigned int, not a unique data type. mq_timedsend entries in arrays
+ *      below have been amended.)
+ * @UNSIGNED_NR_EVENTS:
+ *     (Result of a likely man page scraping error of io_setup(2) in the
+ *      original version of this header. First parameter of io_setup is an
+ *      unsigned int, not a unique data type. io_setup entries in arrays
+ *      below have been amended.)
+ * @UNSIGNED_NSOPS:
+ *     (Result of a likely man page scraping error of semop(2)/semtimedop(2)
+ *      in the original version of this header. Third parameter of
+ *      semop/semtimedop is an unsigned int, not a unique data type. semop/
+ *      semtimedop entries in arrays below have been amended.)
+ * @UNSIGNED_PCPU:
+ *     (Result of a likely man page scraping error of getcpu(2) in the
+ *      original version of this header. First parameter of getcpu is an
+ *      unsigned int *, not a unique data type. getcpu entries in arrays below
+ *      have been amended.)
+ * @UNSIGNED_PMSG_PRIO:
+ *     (Result of a likely man page scraping error of mq_timedreceive(2) in the
+ *      original version of this header. Fourth parameter of mq_timedreceive is
+ *      an unsigned int *, not a unique data type. mq_timedreceive entries in
+ *      arrays below have been amended.)
+ * @UNSIGNED_PNODE:
+ *     (Result of a likely man page scraping error of getcpu(2) in the
+ *      original version of this header. Second parameter of getcpu is an
+ *      unsigned int, not a unique data type. getcpu entries in arrays below
+ *      have been amended.)
+ */
 
 
 /**
