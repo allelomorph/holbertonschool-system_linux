@@ -12,6 +12,208 @@
 /**
  * enum type_e - enumerates the data types that appear in syscall parameters
  * and returns
+ *
+ * Listed includes are from Ubuntu 14.04. If given a choice in the man page,
+ * POSIX.1-2001 include is listed. Some types are defined in multiple headers.
+ * Sometimes actual definition will be in a wrapped header like those in bits/,
+ * in which case the highest-level wrapper found is named.
+ *
+ *  type_t                       data type                 include to define
+ *
+ * @AIO_CONTEXT_T:               aio_context_t             <linux/aio_abi.h>
+ * @AIO_CONTEXT_T_P:             aio_context_t *           <linux/aio_abi.h>
+ * @CADDR_T:                     caddr_t                   <sys/types.h>
+ * @CAP_USER_DATA_T:             cap_user_data_t           <linux/capability.h>
+ * @CAP_USER_HEADER_T:           cap_user_header_t         <linux/capability.h>
+ * @CHAR_P:                      char *
+ * @CLOCKID_T:                   clockid_t                 <linux/time.h>
+ * @CLOCK_T:                     clock_t                   <linux/time.h>
+ * @CPU_SET_T_P:                 cpu_set_t *               <sched.h>
+ * @DEV_T:                       dev_t                     <sys/types.h> or
+ *                                                         <sys/stat.h>
+ * @ENUM___PTRACE_REQUEST:       enum __ptrace_request     <sys/ptrace.h>
+ * @FD_SET_P:                    fd_set *                  <sys/select.h>
+ * @GID_T:                       gid_t                     <sys/types.h> or
+ *                                                         <sys/stat.h>
+ * @GID_T_P:                     gid_t *                   <sys/types.h> or
+ *                                                         <sys/stat.h>
+ * @IDTYPE_T:                    idtype_t                  <sys/wait.h>
+ * @ID_T:                        id_t                      <sys/types.h> or
+ *                                                         <sys/resource.h> or
+ *                                                         <sys/wait.h>
+ * @INT:                         int
+ * @INT_P:                       int *
+ * @KEY_SERIAL_T:                key_serial_t
+ *      (keyutils.h not found)
+ * @KEY_T:                       key_t                     <sys/types.h> or
+ *                                                         <sys/ipc.h>
+ * @LOFF_T_P:                    loff_t *                  <sys/types.h>
+ * @LONG:                        long
+ * @LONG_P:                      long *
+ * @MODE_T:                      mode_t                    <sys/types.h> or
+ *                                                         <sys/mman.h> or
+ *                                                         <sys/stat.h> or
+ *                                                         <sys/ipc.h> or
+ *                                                         <fcntl.h>
+ * @MQD_T:                       mqd_t                     <mqueue.h>
+ * @NFDS_T:                      nfds_t                    <sys/poll.h>
+ * @OFF64_T:                     off64_t                   <stdio.h> or
+ *                                                         <sys/types.h> or
+ *                                                         <unistd.h> or
+ *                                                         <fcntl.h>
+ * @OFF_T:                       off_t                     <stdio.h> or
+ *                                                         <sys/types.h> or
+ *                                                         <sys/mman.h> or
+ *                                                         <sys/stat.h> or
+ *                                                         <unistd.h> or
+ *                                                         <fcntl.h>
+ * @OFF_T_P:                     off_t *                   (see off_t)
+ * @PID_T:                       pid_t                     <sched.h> or
+ *                                                         <termios.h> or
+ *                                                         <utmpx.h> or
+ *                                                         <time.h> or
+ *                                                         <sys/types.h> or
+ *                                                         <sys/shm.h> or
+ *                                                         <sys/msg.h> or
+ *                                                         <signal.h> or
+ *                                                         <unistd.h> or
+ *                                                         <fcntl.h>
+ * @SIGHANDLER_T:                sighandler_t              <signal.h>
+ * @SIGINFO_T_P:                 siginfo_t                 <signal.h>
+ * @SIGSET_T_P:                  sigset_t *                <signal.h>
+ * @SIZE_T:                      size_t                    <typedef.h> or
+ *                                                         <unistd.h>
+ * @SIZE_T_P:                    size_t *                  <typedef.h> or
+ *                                                         <unistd.h>
+ * @SOCKLEN_T:                   socklen_t                 <unistd.h>
+ * @SOCKLEN_T_P:                 socklen_t *               <unistd.h>
+ * @SSIZE_T:                     ssize_t                   <stdio.h> or
+ *                                                         <sys/types.h> or
+ *                                                         <unistd.h>
+ * @STACK_T_P:                   stack_t *                 <signal.h>
+ * @STRUCT_EPOLL_EVENT_P:        struct epoll_event *      <linux/eventpoll.h>
+ * @STRUCT_GETCPU_CACHE_P:       struct getcpu_cache *
+ *     (linux/getcpu.h not found)
+ * @STRUCT_IOCB_P:               struct iocb *             <linux/aio_abi.h>
+ * @STRUCT_IOCB_PP:              struct iocb **            <linux/aio_abi.h>
+ * @STRUCT_IOVEC_P:              struct iovec *            <sys/uio.h>
+ * @STRUCT_IO_EVENT_P:           struct io_event *         <linux/aio_abi.h>
+ * @STRUCT_ITIMERSPEC_P:         struct itimerspec *       <time.h>
+ * @STRUCT_ITIMERVAL_P:          struct itimerval          <time.h>
+ * @STRUCT_KERNEL_SYM_P:         struct kernel_sym *
+ *     (module.h not found)
+ * @STRUCT_KEXEC_SEGMENT_P:      struct kexec_segment *    <linux/kexec.h>
+ * @STRUCT_LINUX_DIRENT_P:       struct linux_dirent *
+ *     (No definition found for linux_dirent, but readdir(3) uses the similar
+ *      struct dirent, defined in dirent.h)
+ * @STRUCT_MMSGHDR_P:            struct mmsghdr *          <sys/socket.h>
+ * @STRUCT_MQ_ATTR_P:            struct mq_attr *          <mqueue.h>
+ * @STRUCT_MSGHDR_P:             struct msghdr *           <sys/socket.h>
+ * @STRUCT_MSQID_DS_P:           struct msqid_ds *         <sys/msg.h>
+ * @STRUCT_NFSCTL_ARG_P:         struct nfsctl_arg *
+ *     (linux/nfsd/syscall.h not found. Only used with nfsservctl. From man 2
+ *      nfsservctl: Since Linux 3.1, this system call no longer exists.)
+ * @STRUCT_OLD_LINUX_DIRENT_P: struct old_linux_dirent *
+ *     (No definition found for old_linux_dirent, superseded by getdents(2)
+ *      use of linux_dirent, which in turn is apparently superseded by struct
+ *      dirent, defined in dirent.h)
+ * @STRUCT_PERF_EVENT_ATTR_P:    struct perf_event_attr *  <linux/perf_event.h>
+ * @STRUCT_POLLFD_P:             struct pollfd *           <poll.h>
+ * @STRUCT_RLIMIT_P:             struct rlimit *           <sys/resource.h>
+ * @STRUCT_ROBUST_LIST_HEAD_P:   struct robust_list_head * <linux/futex.h>
+ * @STRUCT_ROBUST_LIST_HEAD_PP:  struct robust_list_head **<linux/futex.h>
+ * @STRUCT_RUSAGE_P:             struct rusage *           <linux/resource.h>
+ * @STRUCT_SCHED_PARAM_P:        struct sched_param        <sched.h>
+ * @STRUCT_SEMBUF_P:             struct sembuf *           <sys/sem.h>
+ * @STRUCT_SHMID_DS_P:           struct shmid_ds *         <sys/shm.h>
+ * @STRUCT_SIGACTION_P:          struct sigaction *        <signal.h>
+ * @STRUCT_SIGEVENT_P:           struct sigevent *         <signal.h>
+ * @STRUCT_SOCKADDR_P:           struct sockaddr *         <sys/socket.h>
+ * @STRUCT_STATFS_P:             struct statfs *           <sys/statfs.h>
+ * @STRUCT_STAT_P:               struct stat *             <sys/stat.h>
+ * @STRUCT_SYSINFO_P:            struct sysinfo *          <sys/sysinfo.h>
+ * @STRUCT_TIMESPEC:             struct timespec           <time.h>
+ * @STRUCT_TIMESPEC_P:           struct timespec *         <time.h>
+ * @STRUCT_TIMEVAL:              struct timeval            <time.h>
+ * @STRUCT_TIMEVAL_P:            struct timeval *          <time.h>
+ * @STRUCT_TIMEX_P:              struct timex *            <sys/timex.h>
+ * @STRUCT_TIMEZONE_P:           struct timezone *         <sys/time.h>
+ * @STRUCT_TMS_P:                struct tms *              <sys/times.h>
+ * @STRUCT_USER_DESC_P:          struct user_desc *        <asm/ldt.h>
+ * @STRUCT_USTAT_P:              struct ustat *            <sys/ustat>
+ * @STRUCT_UTIMBUF_P:            struct utimbuf *          <utime.h>
+ * @STRUCT_UTSNAME_P:            struct utsname *          <sys/utsname.h>
+ * @STRUCT_VM86_STRUCT_P:        struct vm86_struct *      <sys/vm86.h>
+ *     (sys/vm86.h is unsupported on x86-64)
+ * @STRUCT___SYSCTL_ARGS_P:      struct __sysctl_args *    <sys/sysctl.h>
+ * @TIMER_T:                     timer_t                   <time.h>
+ * @TIMER_T_P:                   timer_t *                 <time.h>
+ * @TIME_T:                      time_t *                  <time.h>
+ * @TIME_T_P:                    time_t *                  <time.h>
+ * @U64:                         u64
+ *     (Only used by lookup_dcookie(2), no definition found - seems to be a
+ *      kernel space name. The closest was __u64 defined with <linux/types.h>.
+ *      https://stackoverflow.com/questions/30896489/why-is-u8-u16-u32-u64-\
+ *      used-instead-of-unsigned-int-in-kernel-programming for more info.)
+ * @UID_T:                       uid_t                     <pwd.h> or
+ *                                                         <stropts.h> or
+ *                                                         <signal.h> or
+ *                                                         <unistd.h>
+ * @UID_T_P:                     uit_t *                   (see uid_t)
+ * @UINT32_T:                    uint32_t                  <stdint.h>
+ * @UNION_NFSCTL_RES_P:          union nfsctl_res *
+ *     (linux/nfsd/syscall.h not found. Only used with nfsservctl. man 2
+ *      nfsservctl "Since Linux 3.1, this system call no longer exists.")
+ * @UNSIGNED_CHAR_P:             unsigned char *
+ * @UNSIGNED_FLAGS:
+ *     (Result of a likely man page scraping error of mbind(2) in the original
+ *      version of this header. Final parameter of mbind is an unsigned int,
+ *      not a unique data type. mbind entries in arrays below have been
+ *      amended. In any case, numaif.h and thus mbind is not avaialble in
+ *      Ubuntu 14.04.)
+ * @UNSIGNED_INT:                unsigned int
+ * @UNSIGNED_LONG:               unsigned long
+ * @UNSIGNED_LONG_P:             unsigned long *
+ * @UNSIGNED_MSG_PRIO:
+ *     (Result of a likely man page scraping error of mq_timedsend(2) in the
+ *      original version of this header. Fourth parameter of mq_timedsend is an
+ *      unsigned int, not a unique data type. mq_timedsend entries in arrays
+ *      below have been amended.)
+ * @UNSIGNED_NR_EVENTS:
+ *     (Result of a likely man page scraping error of io_setup(2) in the
+ *      original version of this header. First parameter of io_setup is an
+ *      unsigned int, not a unique data type. io_setup entries in arrays
+ *      below have been amended.)
+ * @UNSIGNED_NSOPS:
+ *     (Result of a likely man page scraping error of semop(2)/semtimedop(2)
+ *      in the original version of this header. Third parameter of
+ *      semop/semtimedop is an unsigned int, not a unique data type. semop/
+ *      semtimedop entries in arrays below have been amended.)
+ * @UNSIGNED_PCPU:
+ *     (Result of a likely man page scraping error of getcpu(2) in the
+ *      original version of this header. First parameter of getcpu is an
+ *      unsigned int *, not a unique data type. getcpu entries in arrays below
+ *      have been amended.)
+ * @UNSIGNED_PMSG_PRIO:
+ *     (Result of a likely man page scraping error of mq_timedreceive(2) in the
+ *      original version of this header. Fourth parameter of mq_timedreceive is
+ *      an unsigned int *, not a unique data type. mq_timedreceive entries in
+ *      arrays below have been amended.)
+ * @UNSIGNED_PNODE:
+ *     (Result of a likely man page scraping error of getcpu(2) in the
+ *      original version of this header. Second parameter of getcpu is an
+ *      unsigned int, not a unique data type. getcpu entries in arrays below
+ *      have been amended.)
+ * @VARARGS:                     ...                       <stdarg.h>
+ *     (va_arg, va_copy, va_end, and va_start are enabled by including
+ *      stdarg.h, which gcc seems to interpret as including
+ *      /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h)
+ * @VOID:                        void
+ * @VOID_P:                      void *
+ * @VOID_PP:                     void **
+ * @UNSIGNED_INT_P:              unsigned int *
+ *     (Not in the original version of this header. Added to replace
+ *      UNSIGNED_PMSG_PRIO, UNSIGNED_PCPU, and UNSIGNED_PNODE.)
  */
 typedef enum type_e
 {
@@ -122,7 +324,8 @@ typedef enum type_e
 	VARARGS,
 	VOID,
 	VOID_P,
-	VOID_PP
+	VOID_PP,
+	UNSIGNED_INT_P
 } type_t;
 
 
@@ -222,7 +425,7 @@ static syscall_t const syscalls_64_g[] = {
 	{62,  "kill", INT, 2, {PID_T, INT, -1, -1, -1, -1}},
 	{63,  "uname", INT, 1, {STRUCT_UTSNAME_P, -1, -1, -1, -1, -1}},
 	{64,  "semget", INT, 3, {KEY_T, INT, INT, -1, -1, -1}},
-	{65,  "semop", INT, 3, {INT, STRUCT_SEMBUF_P, UNSIGNED_NSOPS, -1, -1,
+	{65,  "semop", INT, 3, {INT, STRUCT_SEMBUF_P, UNSIGNED_INT, -1, -1,
 		-1}},
 	{66,  "semctl", INT, 4, {INT, INT, INT, VARARGS, -1, -1}},
 	{67,  "shmdt", INT, 1, {VOID_P, -1, -1, -1, -1, -1}},
@@ -386,7 +589,7 @@ static syscall_t const syscalls_64_g[] = {
 		-1, -1}},
 	{205, "set_thread_area", INT, 1, {STRUCT_USER_DESC_P, -1, -1, -1, -1,
 		-1}},
-	{206, "io_setup", INT, 2, {UNSIGNED_NR_EVENTS, AIO_CONTEXT_T_P, -1,
+	{206, "io_setup", INT, 2, {UNSIGNED_INT, AIO_CONTEXT_T_P, -1,
 		-1, -1, -1}},
 	{207, "io_destroy", INT, 1, {AIO_CONTEXT_T, -1, -1, -1, -1, -1}},
 	{208, "io_getevents", INT, 5, {AIO_CONTEXT_T, LONG, LONG,
@@ -407,7 +610,7 @@ static syscall_t const syscalls_64_g[] = {
 		UNSIGNED_INT, -1, -1, -1}},
 	{218, "set_tid_address", LONG, 1, {INT_P, -1, -1, -1, -1, -1}},
 	{219, "restart_syscall", INT, 1, {VOID, -1, -1, -1, -1, -1}},
-	{220, "semtimedop", INT, 4, {INT, STRUCT_SEMBUF_P, UNSIGNED_NSOPS,
+	{220, "semtimedop", INT, 4, {INT, STRUCT_SEMBUF_P, UNSIGNED_INT,
 		STRUCT_TIMESPEC_P, -1, -1}},
 	{221, "fadvise64", INT, 4, {INT, OFF_T, OFF_T, INT, -1, -1}},
 	{222, "timer_create", INT, 3, {CLOCKID_T, STRUCT_SIGEVENT_P,
@@ -435,16 +638,16 @@ static syscall_t const syscalls_64_g[] = {
 	{235, "utimes", INT, 2, {CHAR_P, STRUCT_TIMEVAL, -1, -1, -1, -1}},
 	{236, "vserver", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{237, "mbind", INT, 6, {VOID_P, UNSIGNED_LONG, INT, UNSIGNED_LONG_P,
-		UNSIGNED_LONG, UNSIGNED_FLAGS}},
+		UNSIGNED_LONG, UNSIGNED_INT}},
 	{238, "set_mempolicy", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{239, "get_mempolicy", INT, 5, {INT_P, UNSIGNED_LONG_P, UNSIGNED_LONG,
 		UNSIGNED_LONG, UNSIGNED_LONG, -1}},
 	{240, "mq_open", MQD_T, 2, {CHAR_P, INT, -1, -1, -1, -1}},
 	{241, "mq_unlink", INT, 1, {CHAR_P, -1, -1, -1, -1, -1}},
 	{242, "mq_timedsend", INT, 5, {MQD_T, CHAR_P, SIZE_T,
-		UNSIGNED_MSG_PRIO, STRUCT_TIMESPEC_P, -1}},
+		UNSIGNED_INT, STRUCT_TIMESPEC_P, -1}},
 	{243, "mq_timedreceive", SSIZE_T, 5, {MQD_T, CHAR_P, SIZE_T,
-		UNSIGNED_PMSG_PRIO, STRUCT_TIMESPEC_P, -1}},
+		UNSIGNED_INT_P, STRUCT_TIMESPEC_P, -1}},
 	{244, "mq_notify", INT, 2, {MQD_T, STRUCT_SIGEVENT_P, -1, -1, -1, -1}},
 	{245, "mq_getsetattr", INT, 3, {MQD_T, STRUCT_MQ_ATTR_P,
 		STRUCT_MQ_ATTR_P, -1, -1, -1}},
@@ -530,7 +733,7 @@ static syscall_t const syscalls_64_g[] = {
 	{307, "sendmmsg", INT, 4, {INT, STRUCT_MMSGHDR_P, UNSIGNED_INT,
 		UNSIGNED_INT, -1, -1}},
 	{308, "setns", INT, 2, {INT, INT, -1, -1, -1, -1}},
-	{309, "getcpu", INT, 3, {UNSIGNED_PCPU, UNSIGNED_PNODE,
+	{309, "getcpu", INT, 3, {UNSIGNED_INT_P, UNSIGNED_INT_P,
 		STRUCT_GETCPU_CACHE_P, -1, -1, -1}},
 	{310, "process_vm_readv", SSIZE_T, 6, {PID_T, STRUCT_IOVEC_P,
 		UNSIGNED_LONG, STRUCT_IOVEC_P, UNSIGNED_LONG, UNSIGNED_LONG}},
@@ -822,7 +1025,7 @@ static syscall_t const syscalls_32_g[] = {
 		-1}},
 	{244, "get_thread_area", INT, 1, {STRUCT_USER_DESC_P, -1, -1, -1, -1,
 		-1}},
-	{245, "io_setup", INT, 2, {UNSIGNED_NR_EVENTS, AIO_CONTEXT_T_P, -1, -1,
+	{245, "io_setup", INT, 2, {UNSIGNED_INT, AIO_CONTEXT_T_P, -1, -1,
 		-1, -1}},
 	{246, "io_destroy", INT, 1, {AIO_CONTEXT_T, -1, -1, -1, -1, -1}},
 	{247, "io_getevents", INT, 5, {AIO_CONTEXT_T, LONG, LONG,
@@ -865,16 +1068,16 @@ static syscall_t const syscalls_32_g[] = {
 	{272, "fadvise64_64", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{273, "vserver", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{274, "mbind", INT, 6, {VOID_P, UNSIGNED_LONG, INT, UNSIGNED_LONG_P,
-		UNSIGNED_LONG, UNSIGNED_FLAGS}},
+		UNSIGNED_LONG, UNSIGNED_INT}},
 	{275, "get_mempolicy", INT, 5, {INT_P, UNSIGNED_LONG_P, UNSIGNED_LONG,
 		UNSIGNED_LONG, UNSIGNED_LONG, -1}},
 	{276, "set_mempolicy", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{277, "mq_open", MQD_T, 2, {CHAR_P, INT, -1, -1, -1, -1}},
 	{278, "mq_unlink", INT, 1, {CHAR_P, -1, -1, -1, -1, -1}},
 	{279, "mq_timedsend", INT, 5, {MQD_T, CHAR_P, SIZE_T,
-		UNSIGNED_MSG_PRIO, STRUCT_TIMESPEC_P, -1}},
+		UNSIGNED_INT, STRUCT_TIMESPEC_P, -1}},
 	{280, "mq_timedreceive", SSIZE_T, 5, {MQD_T, CHAR_P, SIZE_T,
-		UNSIGNED_PMSG_PRIO, STRUCT_TIMESPEC_P, -1}},
+		UNSIGNED_INT_P, STRUCT_TIMESPEC_P, -1}},
 	{281, "mq_notify", INT, 2, {MQD_T, STRUCT_SIGEVENT_P, -1, -1, -1, -1}},
 	{282, "mq_getsetattr", INT, 3, {MQD_T, STRUCT_MQ_ATTR_P,
 		STRUCT_MQ_ATTR_P, -1, -1, -1}},
@@ -923,7 +1126,7 @@ static syscall_t const syscalls_32_g[] = {
 		UNSIGNED_INT, -1, -1}},
 	{317, "move_pages", LONG, 6, {INT, UNSIGNED_LONG, VOID_PP, INT_P,
 		INT_P, INT}},
-	{318, "getcpu", INT, 3, {UNSIGNED_PCPU, UNSIGNED_PNODE,
+	{318, "getcpu", INT, 3, {UNSIGNED_INT_P, UNSIGNED_INT_P,
 		STRUCT_GETCPU_CACHE_P, -1, -1, -1}},
 	{319, "epoll_pwait", INT, 5, {INT, STRUCT_EPOLL_EVENT_P, INT, INT,
 		SIGSET_T_P, -1}},
