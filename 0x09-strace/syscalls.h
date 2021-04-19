@@ -28,6 +28,7 @@
  * @CAP_USER_DATA_T:             cap_user_data_t           <linux/capability.h>
  * @CAP_USER_HEADER_T:           cap_user_header_t         <linux/capability.h>
  * @CHAR_P:                      char *
+ * @CHAR_PP:                     char **
  * @CLOCKID_T:                   clockid_t                 <linux/time.h>
  * @CLOCK_T:                     clock_t                   <linux/time.h>
  * @CPU_SET_T_P:                 cpu_set_t *               <sched.h>
@@ -188,6 +189,7 @@ typedef enum type_e
 	CAP_USER_DATA_T,
 	CAP_USER_HEADER_T,
 	CHAR_P,
+	CHAR_PP,
 	CLOCKID_T,
 	CLOCK_T,
 	CPU_SET_T_P,
@@ -345,7 +347,7 @@ typedef struct syscall_s
 } syscall_t;
 
 
-static syscall_t const syscalls_64_g[] = {
+static syscall_t const syscalls_64[] = {
 	{0,   "read", SSIZE_T, 3, {INT, VOID_P, SIZE_T, -1, -1, -1}},
 	{1,   "write", SSIZE_T, 3, {INT, VOID_P, SIZE_T, -1, -1, -1}},
 	{2,   "open", INT, 2, {CHAR_P, INT, -1, -1, -1, -1}},
@@ -370,7 +372,7 @@ static syscall_t const syscalls_64_g[] = {
 	{19,  "readv", SSIZE_T, 3, {INT, STRUCT_IOVEC_P, INT, -1, -1, -1}},
 	{20,  "writev", SSIZE_T, 3, {INT, STRUCT_IOVEC_P, INT, -1, -1, -1}},
 	{21,  "access", INT, 2, {CHAR_P, INT, -1, -1, -1, -1}},
-	{22,  "pipe", INT, 1, {INT, -1, -1, -1, -1, -1}},
+	{22,  "pipe", INT, 1, {INT_P, -1, -1, -1, -1, -1}},
 	{23,  "select", INT, 5, {INT, FD_SET_P, FD_SET_P, FD_SET_P,
 		STRUCT_TIMEVAL_P, -1}},
 	{24,  "sched_yield", INT, 1, {VOID, -1, -1, -1, -1, -1}},
@@ -410,13 +412,13 @@ static syscall_t const syscalls_64_g[] = {
 		-1, -1}},
 	{52,  "getpeername", INT, 3, {INT, STRUCT_SOCKADDR_P, SOCKLEN_T_P, -1,
 		-1, -1}},
-	{53,  "socketpair", INT, 4, {INT, INT, INT, INT, -1, -1}},
+	{53,  "socketpair", INT, 4, {INT, INT, INT, INT_P, -1, -1}},
 	{54,  "setsockopt", INT, 5, {INT, INT, INT, VOID_P, SOCKLEN_T, -1}},
 	{55,  "getsockopt", INT, 5, {INT, INT, INT, VOID_P, SOCKLEN_T_P, -1}},
 	{56,  "clone", INT, 5, {INT, VOID_P, INT, VOID_P, VARARGS, -1}},
 	{57,  "fork", PID_T, 1, {VOID, -1, -1, -1, -1, -1}},
 	{58,  "vfork", PID_T, 1, {VOID, -1, -1, -1, -1, -1}},
-	{59,  "execve", INT, 3, {CHAR_P, CHAR_P, CHAR_P, -1, -1, -1}},
+	{59,  "execve", INT, 3, {CHAR_P, CHAR_PP, CHAR_PP, -1, -1, -1}},
 	{60,  "exit", VOID, 1, {INT, -1, -1, -1, -1, -1}},
 	{61,  "wait4", PID_T, 4, {PID_T, INT_P, INT, STRUCT_RUSAGE_P, -1, -1}},
 	{62,  "kill", INT, 2, {PID_T, INT, -1, -1, -1, -1}},
@@ -476,7 +478,7 @@ static syscall_t const syscalls_64_g[] = {
 	{112, "setsid", PID_T, 1, {VOID, -1, -1, -1, -1, -1}},
 	{113, "setreuid", INT, 2, {UID_T, UID_T, -1, -1, -1, -1}},
 	{114, "setregid", INT, 2, {GID_T, GID_T, -1, -1, -1, -1}},
-	{115, "getgroups", INT, 2, {INT, GID_T, -1, -1, -1, -1}},
+	{115, "getgroups", INT, 2, {INT, GID_T_P, -1, -1, -1, -1}},
 	{116, "setgroups", INT, 2, {SIZE_T, GID_T_P, -1, -1, -1, -1}},
 	{117, "setresuid", INT, 3, {UID_T, UID_T, UID_T, -1, -1, -1}},
 	{118, "getresuid", INT, 3, {UID_T_P, UID_T_P, UID_T_P, -1, -1, -1}},
@@ -632,7 +634,7 @@ static syscall_t const syscalls_64_g[] = {
 	{233, "epoll_ctl", INT, 4, {INT, INT, INT, STRUCT_EPOLL_EVENT_P, -1,
 		-1}},
 	{234, "tgkill", INT, 3, {INT, INT, INT, -1, -1, -1}},
-	{235, "utimes", INT, 2, {CHAR_P, STRUCT_TIMEVAL, -1, -1, -1, -1}},
+	{235, "utimes", INT, 2, {CHAR_P, STRUCT_TIMEVAL_P, -1, -1, -1, -1}},
 	{236, "vserver", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{237, "mbind", INT, 6, {VOID_P, UNSIGNED_LONG, INT, UNSIGNED_LONG_P,
 		UNSIGNED_LONG, UNSIGNED_INT}},
@@ -667,7 +669,7 @@ static syscall_t const syscalls_64_g[] = {
 	{258, "mkdirat", INT, 3, {INT, CHAR_P, MODE_T, -1, -1, -1}},
 	{259, "mknodat", INT, 4, {INT, CHAR_P, MODE_T, DEV_T, -1, -1}},
 	{260, "fchownat", INT, 5, {INT, CHAR_P, UID_T, GID_T, INT, -1}},
-	{261, "futimesat", INT, 3, {INT, CHAR_P, STRUCT_TIMEVAL, -1, -1, -1}},
+	{261, "futimesat", INT, 3, {INT, CHAR_P, STRUCT_TIMEVAL_P, -1, -1, -1}},
 	{262, "newfstatat", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{263, "unlinkat", INT, 3, {INT, CHAR_P, INT, -1, -1, -1}},
 	{264, "renameat", INT, 4, {INT, CHAR_P, INT, CHAR_P, -1, -1}},
@@ -693,7 +695,8 @@ static syscall_t const syscalls_64_g[] = {
 		UNSIGNED_INT, -1, -1}},
 	{279, "move_pages", LONG, 6, {INT, UNSIGNED_LONG, VOID_PP, INT_P,
 		INT_P, INT}},
-	{280, "utimensat", INT, 4, {INT, CHAR_P, STRUCT_TIMESPEC, INT, -1, -1}},
+	{280, "utimensat", INT, 4, {INT, CHAR_P, STRUCT_TIMESPEC_P, INT,
+		-1, -1}},
 	{281, "epoll_pwait", INT, 5, {INT, STRUCT_EPOLL_EVENT_P, INT, INT,
 		SIGSET_T_P, -1}},
 	{282, "signalfd", INT, 3, {INT, SIGSET_T_P, INT, -1, -1, -1}},
@@ -710,7 +713,7 @@ static syscall_t const syscalls_64_g[] = {
 	{290, "eventfd2", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{291, "epoll_create1", INT, 1, {INT, -1, -1, -1, -1, -1}},
 	{292, "dup3", INT, 3, {INT, INT, INT, -1, -1, -1}},
-	{293, "pipe2", INT, 2, {INT, INT, -1, -1, -1, -1}},
+	{293, "pipe2", INT, 2, {INT_P, INT, -1, -1, -1, -1}},
 	{294, "inotify_init1", INT, 1, {INT, -1, -1, -1, -1, -1}},
 	{295, "preadv", SSIZE_T, 4, {INT, STRUCT_IOVEC_P, INT, OFF_T, -1, -1}},
 	{296, "pwritev", SSIZE_T, 4, {INT, STRUCT_IOVEC_P, INT, OFF_T, -1, -1}},
@@ -746,7 +749,7 @@ static syscall_t const syscalls_64_g[] = {
 };
 
 
-static syscall_t const syscalls_32_g[] = {
+static syscall_t const syscalls_32[] = {
 	{0,   "restart_syscall", INT, 1, {VOID, -1, -1, -1, -1, -1}},
 	{1,   "exit", VOID, 1, {INT, -1, -1, -1, -1, -1}},
 	{2,   "fork", PID_T, 1, {VOID, -1, -1, -1, -1, -1}},
@@ -758,7 +761,7 @@ static syscall_t const syscalls_32_g[] = {
 	{8,   "creat", INT, 2, {CHAR_P, MODE_T, -1, -1, -1, -1}},
 	{9,   "link", INT, 2, {CHAR_P, CHAR_P, -1, -1, -1, -1}},
 	{10,  "unlink", INT, 1, {CHAR_P, -1, -1, -1, -1, -1}},
-	{11,  "execve", INT, 3, {CHAR_P, CHAR_P, CHAR_P, -1, -1, -1}},
+	{11,  "execve", INT, 3, {CHAR_P, CHAR_PP, CHAR_PP, -1, -1, -1}},
 	{12,  "chdir", INT, 1, {CHAR_P, -1, -1, -1, -1, -1}},
 	{13,  "time", TIME_T, 1, {TIME_T_P, -1, -1, -1, -1, -1}},
 	{14,  "mknod", INT, 3, {CHAR_P, MODE_T, DEV_T, -1, -1, -1}},
@@ -791,7 +794,7 @@ static syscall_t const syscalls_32_g[] = {
 	{39,  "mkdir", INT, 2, {CHAR_P, MODE_T, -1, -1, -1, -1}},
 	{40,  "rmdir", INT, 1, {CHAR_P, -1, -1, -1, -1, -1}},
 	{41,  "dup", INT, 1, {INT, -1, -1, -1, -1, -1}},
-	{42,  "pipe", INT, 1, {INT, -1, -1, -1, -1, -1}},
+	{42,  "pipe", INT, 1, {INT_P, -1, -1, -1, -1, -1}},
 	{43,  "times", CLOCK_T, 1, {STRUCT_TMS_P, -1, -1, -1, -1, -1}},
 	{44,  "prof", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{45,  "brk", INT, 1, {VOID_P, -1, -1, -1, -1, -1}},
@@ -832,7 +835,7 @@ static syscall_t const syscalls_32_g[] = {
 		-1, -1, -1}},
 	{79,  "settimeofday", INT, 2, {STRUCT_TIMEVAL_P, STRUCT_TIMEZONE_P, -1,
 		-1, -1, -1}},
-	{80,  "getgroups", INT, 2, {INT, GID_T, -1, -1, -1, -1}},
+	{80,  "getgroups", INT, 2, {INT, GID_T_P, -1, -1, -1, -1}},
 	{81,  "setgroups", INT, 2, {SIZE_T, GID_T_P, -1, -1, -1, -1}},
 	{82,  "select", INT, 5, {INT, FD_SET_P, FD_SET_P, FD_SET_P,
 		STRUCT_TIMEVAL_P, -1}},
@@ -1061,7 +1064,7 @@ static syscall_t const syscalls_32_g[] = {
 	{268, "statfs64", INT, 2, {CHAR_P, STRUCT_STATFS_P, -1, -1, -1, -1}},
 	{269, "fstatfs64", INT, 2, {INT, STRUCT_STATFS_P, -1, -1, -1, -1}},
 	{270, "tgkill", INT, 3, {INT, INT, INT, -1, -1, -1}},
-	{271, "utimes", INT, 2, {CHAR_P, STRUCT_TIMEVAL, -1, -1, -1, -1}},
+	{271, "utimes", INT, 2, {CHAR_P, STRUCT_TIMEVAL_P, -1, -1, -1, -1}},
 	{272, "fadvise64_64", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{273, "vserver", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{274, "mbind", INT, 6, {VOID_P, UNSIGNED_LONG, INT, UNSIGNED_LONG_P,
@@ -1097,7 +1100,7 @@ static syscall_t const syscalls_32_g[] = {
 	{296, "mkdirat", INT, 3, {INT, CHAR_P, MODE_T, -1, -1, -1}},
 	{297, "mknodat", INT, 4, {INT, CHAR_P, MODE_T, DEV_T, -1, -1}},
 	{298, "fchownat", INT, 5, {INT, CHAR_P, UID_T, GID_T, INT, -1}},
-	{299, "futimesat", INT, 3, {INT, CHAR_P, STRUCT_TIMEVAL, -1, -1, -1}},
+	{299, "futimesat", INT, 3, {INT, CHAR_P, STRUCT_TIMEVAL_P, -1, -1, -1}},
 	{300, "fstatat64", INT, 4, {INT, CHAR_P, STRUCT_STAT_P, INT, -1, -1}},
 	{301, "unlinkat", INT, 3, {INT, CHAR_P, INT, -1, -1, -1}},
 	{302, "renameat", INT, 4, {INT, CHAR_P, INT, CHAR_P, -1, -1}},
@@ -1127,7 +1130,8 @@ static syscall_t const syscalls_32_g[] = {
 		STRUCT_GETCPU_CACHE_P, -1, -1, -1}},
 	{319, "epoll_pwait", INT, 5, {INT, STRUCT_EPOLL_EVENT_P, INT, INT,
 		SIGSET_T_P, -1}},
-	{320, "utimensat", INT, 4, {INT, CHAR_P, STRUCT_TIMESPEC, INT, -1, -1}},
+	{320, "utimensat", INT, 4, {INT, CHAR_P, STRUCT_TIMESPEC_P, INT,
+		-1, -1}},
 	{321, "signalfd", INT, 3, {INT, SIGSET_T_P, INT, -1, -1, -1}},
 	{322, "timerfd_create", INT, 2, {INT, INT, -1, -1, -1, -1}},
 	{323, "eventfd", INT, 2, {UNSIGNED_INT, INT, -1, -1, -1, -1}},
@@ -1140,7 +1144,7 @@ static syscall_t const syscalls_32_g[] = {
 	{328, "eventfd2", -1, 0, {-1, -1, -1, -1, -1, -1}},
 	{329, "epoll_create1", INT, 1, {INT, -1, -1, -1, -1, -1}},
 	{330, "dup3", INT, 3, {INT, INT, INT, -1, -1, -1}},
-	{331, "pipe2", INT, 2, {INT, INT, -1, -1, -1, -1}},
+	{331, "pipe2", INT, 2, {INT_P, INT, -1, -1, -1, -1}},
 	{332, "inotify_init1", INT, 1, {INT, -1, -1, -1, -1, -1}},
 	{333, "preadv", SSIZE_T, 4, {INT, STRUCT_IOVEC_P, INT, OFF_T, -1, -1}},
 	{334, "pwritev", SSIZE_T, 4, {INT, STRUCT_IOVEC_P, INT, OFF_T, -1, -1}},
