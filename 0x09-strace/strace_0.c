@@ -43,7 +43,7 @@ int tracer_loop(pid_t child_pid)
 				   NULL, &regs) == -1)
 				return (1);
 
-			fprintf(stderr, "%li\n", (unsigned long)regs.orig_rax);
+			printf("%li\n", (unsigned long)regs.orig_rax);
 			first_syscall = 0;
 		}
 
