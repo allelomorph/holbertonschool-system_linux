@@ -7,11 +7,11 @@ CFLAGS = -Wall -Werror -Wextra -pedantic
 
 
 # task 0. Step #0 - Syscall number
-#?.o: ?.c
-#	$(CC) -c $(CFLAGS) ?.c
+strace_0.o: strace_0.c
+	$(CC) -c $(CFLAGS) strace_0.c
 
-#strace_0: ?.o
-#	$(CC) $(CFLAGS) ?.o -o strace_0
+strace_0: strace_0.o
+	$(CC) $(CFLAGS) strace_0.o -o strace_0
 
 
 # task 1. Step #1 - Syscall name

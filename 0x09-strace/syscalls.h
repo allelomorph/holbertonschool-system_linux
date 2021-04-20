@@ -29,8 +29,8 @@
  * @CAP_USER_HEADER_T:           cap_user_header_t         <linux/capability.h>
  * @CHAR_P:                      char *
  * @CHAR_PP:                     char **
- * @CLOCKID_T:                   clockid_t                 <linux/time.h>
- * @CLOCK_T:                     clock_t                   <linux/time.h>
+ * @CLOCKID_T:                   clockid_t                 <time.h>
+ * @CLOCK_T:                     clock_t                   <time.h>
  * @CPU_SET_T_P:                 cpu_set_t *               <sched.h>
  * @DEV_T:                       dev_t                     <sys/types.h> or
  *                                                         <sys/stat.h>
@@ -151,7 +151,7 @@
  * @STRUCT___SYSCTL_ARGS_P:      struct __sysctl_args *    <sys/sysctl.h>
  * @TIMER_T:                     timer_t                   <time.h>
  * @TIMER_T_P:                   timer_t *                 <time.h>
- * @TIME_T:                      time_t *                  <time.h>
+ * @TIME_T:                      time_t                    <time.h>
  * @TIME_T_P:                    time_t *                  <time.h>
  * @U64:                         u64
  *     (Only used by lookup_dcookie(2), no definition found - seems to be a
