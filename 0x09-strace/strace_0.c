@@ -8,7 +8,7 @@
 #include <unistd.h>
 /* struct user_regs_struct */
 #include <sys/user.h>
-/* fprintf */
+/* printf */
 #include <stdio.h>
 
 
@@ -25,7 +25,7 @@ int tracer_loop(pid_t child_pid)
 	struct user_regs_struct regs;
 
 	syscall_returned = 1; /* first wait is after execve return in child */
-	first_syscall = 1; /* execve counts as first syscall of child */
+	first_syscall = 1; /* copied execve counts as first syscall of child */
 
 	while (1)
 	{
