@@ -45,7 +45,7 @@ void printParams(struct user_regs_struct *regs)
 			param = (unsigned long)regs->rdx;
 			break;
 		case 3:
-			param = (unsigned long)regs->rcx;
+			param = (unsigned long)regs->r10;
 			break;
 		case 4:
 			param = (unsigned long)regs->r8;
