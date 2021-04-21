@@ -24,15 +24,14 @@
  */
 void printParams(struct user_regs_struct *regs)
 {
-	size_t i, param_ct;
+	size_t i;
 	unsigned long param;
+	syscall_t syscall = syscalls_64[regs->orig_rax];
 
 	if (!regs)
 		return;
 
-	param_ct = syscalls_64[regs->orig_rax].n_params;
-
-	for (i = 0; i < param_ct; i++)
+	for (i = 0; i < syscall.n_params; i++)
 	{
 		switch (i)
 		{
@@ -58,7 +57,11 @@ void printParams(struct user_regs_struct *regs)
 			return;
 		}
 
-		printf("%#lx%s", param, (i < param_ct - 1) ? ", " : "");
+		if (syscall.params[i] == VARARGS)
+			printf("..."); /* never comma, always last parameter */
+		else
+			printf("%#lx%s", param,
+			       (i < syscall.n_params - 1) ? ", " : "");
 	}
 }
 
