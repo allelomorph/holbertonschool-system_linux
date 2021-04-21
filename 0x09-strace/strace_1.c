@@ -10,11 +10,14 @@
 #include <sys/user.h>
 /* printf */
 #include <stdio.h>
+/* syscalls_64 */
+#include "syscalls.h"
 
 
 /**
  * tracerLoop - queries registers after successful execve in child, and at
- *   every "syscall-enter-stop" to print syscall number.
+ *   every "syscall-enter-stop" to print syscall name. Assumes 64-bit
+ *   implementation.
  *
  * @child_pid: process ID of tracee/child
  * Return: 0 on success, 1 on failure
@@ -32,7 +35,10 @@ int tracerLoop(pid_t child_pid)
 		if (wait(&status) == -1)
 			return (1);
 		if (WIFEXITED(status))
+		{
+			putchar('\n');
 			break;
+		}
 
 		if (!syscall_return || first_syscall)
 		{
@@ -40,15 +46,18 @@ int tracerLoop(pid_t child_pid)
 				   NULL, &regs) == -1)
 				return (1);
 
-			printf("%lu\n", (unsigned long)regs.orig_rax);
+			printf("%s", syscalls_64[regs.orig_rax].name);
 			fflush(stdout);
 			first_syscall = 0;
 		}
 
+		if (syscall_return)
+			putchar('\n');
+
 		if (ptrace(PTRACE_SYSCALL, child_pid, NULL, NULL) == -1)
 			return (1);
 
-		/* wait will return after every syscall entry and exit */
+		/* wait will return after every syscall entry and return */
 		syscall_return = syscall_return ? 0 : 1;
 	}
 
@@ -57,7 +66,7 @@ int tracerLoop(pid_t child_pid)
 
 
 /**
- * main - entry point for strace_0
+ * main - entry point for strace_1
  *
  * @argc: count of command line parameters
  * @argv: array of command line parameters

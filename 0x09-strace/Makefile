@@ -15,27 +15,27 @@ strace_0: strace_0.o
 
 
 # task 1. Step #1 - Syscall name
-#?.o: ?.c
-#	$(CC) -c $(CFLAGS) ?.c
+strace_1.o: strace_1.c
+	$(CC) -c $(CFLAGS) strace_1.c
 
-#strace_1: ?.o
-#	$(CC) $(CFLAGS) ?.o -o strace_1
+strace_1: strace_1.o syscalls.h
+	$(CC) $(CFLAGS) strace_1.o -o strace_1
 
 
 # task 2. Step #2 - Return value
-#?.o: ?.c
-#	$(CC) -c $(CFLAGS) ?.c
+strace_2.o: strace_2.c
+	$(CC) -c $(CFLAGS) strace_2.c
 
-#strace_2: ?.o
-#	$(CC) $(CFLAGS) ?.o -o strace_2
+strace_2: strace_2.o syscalls.h
+	$(CC) $(CFLAGS) strace_2.o -o strace_2
 
 
 # task 3. Step #3 - Raw parameters
-#?.o: ?.c
-#	$(CC) -c $(CFLAGS) ?.c
+strace_3.o: strace_3.c
+	$(CC) -c $(CFLAGS) strace_3.c
 
-#strace_3: ?.o
-#	$(CC) $(CFLAGS) ?.o -o strace_3
+strace_3: strace_3.o syscalls.h
+	$(CC) $(CFLAGS) strace_3.o -o strace_3
 
 
 # task 4. Step #4 - Strings
