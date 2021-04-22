@@ -35,7 +35,6 @@ void printParams(struct user_regs_struct *regs)
 	{
 		if (syscall.params[i] == VOID)
 			continue;
-
 		switch (i)
 		{
 		case 0:
@@ -59,7 +58,6 @@ void printParams(struct user_regs_struct *regs)
 		default:
 			return;
 		}
-
 		if (syscall.params[i] == VARARGS)
 			printf("..."); /* never comma, always last parameter */
 		else
