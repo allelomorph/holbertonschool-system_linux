@@ -33,6 +33,9 @@ void printParams(struct user_regs_struct *regs)
 
 	for (i = 0; i < syscall.n_params; i++)
 	{
+		if (syscall.params[i] == VOID)
+			continue;
+
 		switch (i)
 		{
 		case 0:
