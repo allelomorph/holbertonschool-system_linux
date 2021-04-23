@@ -39,27 +39,27 @@ strace_3: strace_3.o syscalls.h
 
 
 # task 4. Step #4 - Strings
-#?.o: ?.c
-#	$(CC) -c $(CFLAGS) ?.c
-
-#strace_4: ?.o
-#	$(CC) $(CFLAGS) ?.o -o strace_4
+strace_4: syscalls.h hstrace.h \
+	7_strace.o 7_printParams.o 7_printFlagsInt.o \
+	7_printStrParam.o
+	$(CC) $(CFLAGS) syscalls.h 7_strace.o 7_printParams.o \
+	7_printFlagsInt.o 7_printStrParam.o -o strace_4
 
 
 # task 5. Step #5 - Integers
-#?.o: ?.c
-#	$(CC) -c $(CFLAGS) ?.c
-
-#strace_5: ?.o
-#	$(CC) $(CFLAGS) ?.o -o strace_5
+strace_5: syscalls.h hstrace.h \
+	7_strace.o 7_printParams.o 7_printFlagsInt.o \
+	7_printStrParam.o
+	$(CC) $(CFLAGS) syscalls.h 7_strace.o 7_printParams.o \
+	7_printFlagsInt.o 7_printStrParam.o -o strace_5
 
 
 # task 6. Step #6 - Macros
-#?.o: ?.c
-#	$(CC) -c $(CFLAGS) ?.c
-
-#strace_6: ?.o
-#	$(CC) $(CFLAGS) ?.o -o strace_6
+strace_6: syscalls.h hstrace.h \
+	7_strace.o 7_printParams.o 7_printFlagsInt.o \
+	7_printStrParam.o
+	$(CC) $(CFLAGS) syscalls.h 7_strace.o 7_printParams.o \
+	7_printFlagsInt.o 7_printStrParam.o -o strace_6
 
 
 # task 7. Step #7 - Buffer
