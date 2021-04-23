@@ -9,8 +9,6 @@
  */
 #define MAX_PARAMS	6
 
-#define ABSENT_ARG     -1
-
 /**
  * enum type_e - enumerates the data types that appear in syscall parameters
  * and returns

@@ -71,11 +71,26 @@ strace_3: strace_3.o syscalls.h
 
 
 # task 8. Step #8 - Structure
-#?.o: ?.c
-#	$(CC) -c $(CFLAGS) ?.c
+8_strace.o: 8_strace.c
+	$(CC) -c $(CFLAGS) 8_strace.c
 
-#strace_8: ?.o
-#	$(CC) $(CFLAGS) ?.o -o strace_8
+8_printParams.o: 8_printParams.c
+	$(CC) -c $(CFLAGS) 8_printParams.c
+
+8_printFlagsInt.o: 8_printFlagsInt.c
+	$(CC) -c $(CFLAGS) 8_printFlagsInt.c
+
+8_printStrParam.o: 8_printStrParam.c
+	$(CC) -c $(CFLAGS) 8_printStrParam.c
+
+8_printStatParam.o: 8_printStatParam.c
+	$(CC) -c $(CFLAGS) 8_printStatParam.c
+
+strace_8: syscalls.h hstrace.h \
+	8_strace.o 8_printParams.o 8_printFlagsInt.o \
+	8_printStrParam.o 8_printStatParam.o
+	$(CC) $(CFLAGS) syscalls.h 8_strace.o 8_printParams.o \
+	8_printFlagsInt.o 8_printStrParam.o 8_printStatParam.o -o strace_8
 
 
 .PHONY: all clean_all oclean_all fclean_all re_all
