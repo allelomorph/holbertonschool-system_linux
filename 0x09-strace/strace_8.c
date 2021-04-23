@@ -538,14 +538,14 @@ void printExecveParams(int argc, char *argv[], char *envp[])
 
 	printf("\"%.32s\"%s, [", argv[1], strlen(argv[1]) > 32 ? "..." : "");
 
-	for (i = 0; i < argc && i < 16; i++)
+	for (i = 1; i < argc && i < 17; i++)
 	{
 		printf("\"%.32s\"%s%s", argv[i],
 		       (strlen(argv[i]) > 32) ? "..." : "",
-		       (i < argc - 1) ? ", " : "");
+		       (i < argc - 1 && i < 16) ? ", " : "");
 
-		if (i == 15)
-			printf("...");
+		if (i == 16)
+			printf(", ...");
 	}
 
 	for (env_ct = 0; envp[env_ct]; env_ct++)
