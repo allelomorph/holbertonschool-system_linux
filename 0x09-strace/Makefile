@@ -63,11 +63,23 @@ strace_3: strace_3.o syscalls.h
 
 
 # task 7. Step #7 - Buffer
-#?.o: ?.c
-#	$(CC) -c $(CFLAGS) ?.c
+7_strace.o: 7_strace.c
+	$(CC) -c $(CFLAGS) 7_strace.c
 
-#strace_7: ?.o
-#	$(CC) $(CFLAGS) ?.o -o strace_7
+7_printParams.o: 7_printParams.c
+	$(CC) -c $(CFLAGS) 7_printParams.c
+
+7_printFlagsInt.o: 7_printFlagsInt.c
+	$(CC) -c $(CFLAGS) 7_printFlagsInt.c
+
+7_printStrParam.o: 7_printStrParam.c
+	$(CC) -c $(CFLAGS) 7_printStrParam.c
+
+strace_7: syscalls.h hstrace.h \
+	7_strace.o 7_printParams.o 7_printFlagsInt.o \
+	7_printStrParam.o
+	$(CC) $(CFLAGS) syscalls.h 7_strace.o 7_printParams.o \
+	7_printFlagsInt.o 7_printStrParam.o -o strace_7
 
 
 # task 8. Step #8 - Structure

@@ -1,6 +1,34 @@
 #ifndef HSTRACE_H
 #define HSTRACE_H
 
+/* 7_strace.c */
+void printReturn(struct user_regs_struct *regs);
+int lateParamRead(size_t syscall_n);
+void printExecveParams(int argc, char *argv[], char *envp[]);
+int tracerLoop(pid_t child_pid, int argc, char *argv[], char *envp[]);
+/* int main(int argc, char *argv[], char *envp[]) */
+
+/* 7_printParams.c */
+void printParams(struct user_regs_struct *regs, pid_t child_pid);
+void printParam(pid_t child_pid, struct user_regs_struct *regs,
+		unsigned long param, size_t i);
+int isPtrParam(type_t param_t);
+int printInt(size_t syscall_n, type_t param_t,
+	     size_t param_i, unsigned long value);
+
+/* 7_printFlagsInt.c */
+int printFlagsInt(size_t syscall_n, size_t param_i, int value);
+int mmapProtPrint(int prot);
+int mmapFlagsPrint(int flags);
+int openFlagsPrint(int flags);
+int accessModePrint(int mode);
+
+/* 7_printStrParam.c */
+void printStrParam(pid_t child_pid, size_t syscall_n,
+		   unsigned long param, size_t count);
+void printRWBuffChar(unsigned char uc);
+
+
 /* 8_strace.c */
 void printReturn(struct user_regs_struct *regs);
 int lateParamRead(size_t syscall_n);
