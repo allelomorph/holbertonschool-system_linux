@@ -90,7 +90,8 @@ int lateParamRead(size_t syscall_n)
  *	case SYS_lstat:
  */
 /* checker produces different addresses for rt_sigaction?? */
-	case SYS_rt_sigaction:
+
+/*	case SYS_rt_sigaction: */
 	case SYS_fstat:
 	case SYS_read:
 		return (1);
