@@ -1,6 +1,15 @@
 #ifndef HSTRACE_H
 #define HSTRACE_H
 
+/* syscalls_64 syscall_t */
+#include "syscalls.h"
+/* struct user_regs_struct */
+#include <sys/user.h>
+/* size_t */
+#include <stddef.h>
+/* mode_t */
+#include <sys/types.h>
+
 /* 7_strace.c */
 void printReturn(struct user_regs_struct *regs);
 int lateParamRead(size_t syscall_n);

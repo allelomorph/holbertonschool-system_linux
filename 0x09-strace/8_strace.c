@@ -1,30 +1,16 @@
+#include "hstrace.h"
+/* SYS_* syscall number macros */
+#include <syscall.h>
 /* ptrace */
 #include <sys/ptrace.h>
 /* wait */
 #include <sys/wait.h>
-/* pid_t major() minor() */
-#include <sys/types.h>
 /* execve */
 #include <unistd.h>
-/* struct user_regs_struct */
-#include <sys/user.h>
 /* printf */
 #include <stdio.h>
-/* syscalls_64 syscall_t */
-#include "syscalls.h"
-/* SYS_* syscall number macros */
-#include <syscall.h>
 /* strlen */
 #include <string.h>
-/* mmap(2) macros */
-#include <sys/mman.h>
-/* open(2) and access(2) macros */
-#include <fcntl.h>
-/* struct stat S_* macros */
-#include <sys/stat.h>
-/* getoffsetof */
-#include <stddef.h>
-#include "hstrace.h"
 
 
 /**
@@ -89,9 +75,6 @@ int lateParamRead(size_t syscall_n)
  *	case SYS_stat:
  *	case SYS_lstat:
  */
-/* checker produces different addresses for rt_sigaction?? */
-
-/*	case SYS_rt_sigaction: */
 	case SYS_fstat:
 	case SYS_read:
 		return (1);
@@ -153,17 +136,13 @@ int tracerLoop(pid_t child_pid, int argc, char *argv[], char *envp[])
 	int status, syscall_return, first_syscall;
 	struct user_regs_struct regs;
 
+	if (wait(&status) == -1)
+		return (1);
 	first_syscall = 1; /* copied execve counts as first syscall of child */
-	syscall_return = 1; /* first wait is after execve return in child */
-	while (1)
+	syscall_return = 1; /* first wait returns after execve return */
+
+	while (!WIFEXITED(status))
 	{
-		if (wait(&status) == -1)
-			return (1);
-		if (WIFEXITED(status))
-		{
-			printf(") = ?\n");
-			break;
-		}
 		if (ptrace(PTRACE_GETREGS, child_pid, NULL, &regs) == -1)
 			return (1);
 		if (first_syscall)
@@ -173,7 +152,7 @@ int tracerLoop(pid_t child_pid, int argc, char *argv[], char *envp[])
 			first_syscall = 0;
 		}
 		if (syscall_return)
-		{ /* retval of stat calls determines printing of stat struct */
+		{ /* syscalls with params passed by ref. print on exit-stop */
 			if (lateParamRead(syscalls_64[regs.orig_rax].table_n))
 				printParams(&regs, child_pid);
 			printReturn(&regs);
@@ -187,8 +166,12 @@ int tracerLoop(pid_t child_pid, int argc, char *argv[], char *envp[])
 		}
 		if (ptrace(PTRACE_SYSCALL, child_pid, NULL, NULL) == -1)
 			return (1);
+		/* PTRACE_SYSCALL returns on every syscall entry and exit */
 		syscall_return = syscall_return ? 0 : 1;
+		if (wait(&status) == -1)
+			return (1);
 	}
+	printf(") = ?\n"); /* syscall return after exit is inaccessible */
 	return (0);
 }
 

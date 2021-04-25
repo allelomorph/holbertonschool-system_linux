@@ -1,6 +1,7 @@
 #ifndef _SYSCALLS_H_
 #define _SYSCALLS_H_
 
+/* size_t */
 #include <stddef.h>
 
 /*

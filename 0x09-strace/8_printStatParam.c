@@ -1,31 +1,10 @@
-/* ptrace */
-#include <sys/ptrace.h>
-/* wait */
-#include <sys/wait.h>
-/* pid_t major() minor() */
-#include <sys/types.h>
-/* execve */
-#include <unistd.h>
-/* struct user_regs_struct */
-#include <sys/user.h>
-/* printf */
-#include <stdio.h>
-/* syscalls_64 syscall_t */
-#include "syscalls.h"
-/* SYS_* syscall number macros */
-#include <syscall.h>
-/* strlen */
-#include <string.h>
-/* mmap(2) macros */
-#include <sys/mman.h>
-/* open(2) and access(2) macros */
-#include <fcntl.h>
+#include "hstrace.h"
 /* struct stat S_* macros */
 #include <sys/stat.h>
-
-/* getoffsetof */
-#include <stddef.h>
-#include "hstrace.h"
+/* ptrace */
+#include <sys/ptrace.h>
+/* printf */
+#include <stdio.h>
 
 
 /**
