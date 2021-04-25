@@ -118,20 +118,17 @@ int mmapFlagsPrint(int flags)
 			      "MAP_NORESERVE", "MAP_POPULATE",
 			      "MAP_NONBLOCK", "MAP_STACK", "MAP_HUGETLB"};
 
-	if (flags == MAP_FILE) /* 0x0, ignored */
-		printf("MAP_FILE");
-	else
+	/* man 2 mmap: MAP_FILE is ignored */
+	for (i = 1; i < MAP_macro_ct; i++)
 	{
-		for (i = 1; i < MAP_macro_ct; i++)
+		if (flags & MAP_flags[i])
 		{
-			if (flags & MAP_flags[i])
-			{
-				printf("%s", MAP_macros[i]);
-				flags &= ~MAP_flags[i];
-				if (flags)
-					putchar('|');
-			}
+			printf("%s", MAP_macros[i]);
+			flags &= ~MAP_flags[i];
+			if (flags)
+				putchar('|');
 		}
+
 	}
 
 	return (1);
@@ -158,19 +155,18 @@ int openFlagsPrint(int flags)
 			    "O_DIRECTORY", "O_NOFOLLOW", "O_CLOEXEC",
 			    "O_SYNC"};
 
-	if (flags == O_RDONLY)
-		printf("O_RDONLY");
-	else
+	/* first 2 bits must be O_RDONLY 0, O_WRONLY 0x1, or O_RDWR 0x2 */
+	if ((flags & 0x3) == O_RDONLY)
+		printf("O_RDONLY%s", (flags & ~0x3) ? "|" : "");
+
+	for (i = 1; i < O_macro_ct; i++)
 	{
-		for (i = 1; i < O_macro_ct; i++)
+		if (flags & O_flags[i])
 		{
-			if (flags & O_flags[i])
-			{
-				printf("%s", O_macros[i]);
-				flags &= ~O_flags[i];
-				if (flags)
-					putchar('|');
-			}
+			printf("%s", O_macros[i]);
+			flags &= ~O_flags[i];
+			if (flags)
+				putchar('|');
 		}
 	}
 
@@ -190,7 +186,7 @@ int accessModePrint(int mode)
 	int mode_flags[] = {F_OK, X_OK, W_OK, R_OK};
 	char *mode_macros[] = {"F_OK", "X_OK", "W_OK", "R_OK"};
 
-	/* print F_OK 0x0 if no other flags set */
+	/* print F_OK 0 if no other flags set */
 	if (mode == F_OK)
 		printf("%s", "F_OK");
 	else

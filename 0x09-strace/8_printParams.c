@@ -105,12 +105,11 @@ void printParam(pid_t child_pid, struct user_regs_struct *regs,
 				      param, (size_t)regs->rdx);
 			break;
 		case STRUCT_STAT_P:
-			/*
-			 * only printing on syscall-exit-stop - retval should
-			 * default to -38 on syscall-enter-stop
-			 */
+			/* only printing on syscall-exit-stop */
 			if (regs->rax == 0)
 				printStatParam(child_pid, param);
+			else
+				printf("%#lx", param);
 			break;
 		case VARARGS:
 			printf("...");

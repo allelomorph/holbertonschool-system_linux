@@ -63,34 +63,28 @@ void printStatMode(mode_t mode)
 void printStatParam(pid_t child_pid, unsigned long param)
 {
 	mode_t mode;
-	dev_t rdev;    /* device ID (if special file) */
 	off_t size;
-	size_t mode_offs, size_offs, rdev_offs;
+	size_t mode_offs, size_offs;
 
 	/* calculate byte offsets of stat struct members */
 	mode_offs = offsetof(struct stat, st_mode);
 	size_offs = offsetof(struct stat, st_size);
-	rdev_offs = offsetof(struct stat, st_rdev);
 
 	mode = ptrace(PTRACE_PEEKTEXT, child_pid,
 		      param + mode_offs, NULL);
 	printf("{st_mode=");
 	printStatMode(mode);
 
-	/* regular files and symbolic links have st_size */
-	if (S_ISREG(mode) || S_ISLNK(mode))
-	{
-		size = ptrace(PTRACE_PEEKTEXT, child_pid,
-			      param + size_offs, NULL);
-		printf("st_size=%li, ", size);
-	}
-	else /* print reconstructed makedev call */
-	{
-		rdev = ptrace(PTRACE_PEEKTEXT, child_pid,
-			      param + rdev_offs, NULL);
-		/* makedev-related macros */
-		printf("st_rdev=makedev(%u, %u), ", major(rdev), minor(rdev));
-	}
+	size = ptrace(PTRACE_PEEKTEXT, child_pid,
+		      param + size_offs, NULL);
+	printf("st_size=%li, ", size);
+
+	/*
+	 * strace prints prints st_size for regular files and symbolic links,
+	 * and st_rdev for other types in the following format:
+	 *
+	 * printf("st_rdev=makedev(%u, %u), ", major(rdev), minor(rdev));
+	 */
 
 	printf("...}");
 }
