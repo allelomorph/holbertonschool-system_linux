@@ -79,22 +79,13 @@ void printParam(pid_t child_pid, struct user_regs_struct *regs,
 		switch (syscall.params[i])
 		{
 		case CHAR_P:
-			printStrParam(child_pid, syscall.table_n,
-				      param, (size_t)regs->rdx);
+			_printStrParam(child_pid, param);
 			break;
 		case VARARGS:
 			printf("...");
 			break;
 		case VOID:
 			break;
-		case VOID_P:
-			if (syscall.table_n == SYS_read ||
-			    syscall.table_n == SYS_write)
-			{
-				printStrParam(child_pid, syscall.table_n,
-					      param, (size_t)regs->rdx);
-				break;
-			}
 		default:
 			printf("%#lx", param);
 			break;

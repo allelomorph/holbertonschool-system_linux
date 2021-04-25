@@ -55,29 +55,6 @@ void printReturn(struct user_regs_struct *regs)
 
 
 /**
- * lateParamRead - filters syscall types for those that need to have
- *   parameters printed after syscall-exit-stop instead of syscall-enter-stop
- *
- * @syscall_n: syscall table number (SYS_*)
- * Return: 0 if normal parameter read, 1 if after syscall-exit-stop
- */
-int lateParamRead(size_t syscall_n)
-{
-	/* read calls set void *buf after return */
-
-	switch (syscall_n)
-	{
-	case SYS_read:
-		return (1);
-	default:
-		break;
-	}
-
-	return (0);
-}
-
-
-/**
  * printExecveParams - the parameters sent into execve in the parent are not
  *   visible to the child once the memory image is copied into the new
  *   process. This function directly prints them from their values in the
@@ -143,16 +120,11 @@ int tracerLoop(pid_t child_pid, int argc, char *argv[], char *envp[])
 			first_syscall = 0;
 		}
 		if (syscall_return)
-		{ /* syscalls with params passed by ref. print on exit-stop */
-			if (lateParamRead(syscalls_64[regs.orig_rax].table_n))
-				printParams(&regs, child_pid);
 			printReturn(&regs);
-		}
 		else
 		{
 			printf("%s(", syscalls_64[regs.orig_rax].name);
-			if (!lateParamRead(syscalls_64[regs.orig_rax].table_n))
-				printParams(&regs, child_pid);
+			printParams(&regs, child_pid);
 			fflush(stdout);
 		}
 		if (ptrace(PTRACE_SYSCALL, child_pid, NULL, NULL) == -1)

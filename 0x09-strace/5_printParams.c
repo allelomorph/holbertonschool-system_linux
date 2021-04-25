@@ -72,80 +72,24 @@ void printParam(pid_t child_pid, struct user_regs_struct *regs,
 
 	if (!regs)
 		return;
-	if (isPtrParam(syscall.params[i]) && param == 0)
-		printf("NULL");
-	else if (!printInt(syscall.table_n, syscall.params[i], i, param))
+
+	if (!_printInt(syscall.params[i], param))
 	{
 		switch (syscall.params[i])
 		{
 		case CHAR_P:
-			printStrParam(child_pid, syscall.table_n,
-				      param, (size_t)regs->rdx);
+			_printStrParam(child_pid, param);
 			break;
 		case VARARGS:
 			printf("...");
 			break;
 		case VOID:
 			break;
-		case VOID_P:
-			if (syscall.table_n == SYS_read ||
-			    syscall.table_n == SYS_write)
-			{
-				printStrParam(child_pid, syscall.table_n,
-					      param, (size_t)regs->rdx);
-				break;
-			}
 		default:
 			printf("%#lx", param);
 			break;
 		}
 	}
-}
-
-
-/**
- * isPtrParam - tbd
- *
- * @param_t: tbd
- * Return: tbd
- */
-int isPtrParam(type_t param_t)
-{
-	switch (param_t)
-	{
-		/* switch for (mostly) non-consecutive values */
-	case AIO_CONTEXT_T_P:
-	case CHAR_P:
-	case CHAR_PP:
-	case CPU_SET_T_P:
-	case FD_SET_P:
-	case GID_T_P:
-	case INT_P:
-	case LOFF_T_P:
-	case LONG_P:
-	case OFF_T_P:
-	case SIGINFO_T_P:
-	case SIGSET_T_P:
-	case SIZE_T_P:
-	case SOCKLEN_T_P:
-	case TIMER_T_P:
-	case TIME_T_P:
-	case UID_T_P:
-	case UNION_NFSCTL_RES_P:
-	case UNSIGNED_CHAR_P:
-	case UNSIGNED_INT_P:
-	case UNSIGNED_LONG_P:
-	case VOID_P:
-	case VOID_PP:
-		return (1);
-	default:
-		/* single test for consecutive value range */
-		if (param_t >= STACK_T_P &&
-		    param_t <= STRUCT___SYSCTL_ARGS_P)
-			return (1);
-	}
-
-	return (0);
 }
 
 
@@ -158,13 +102,9 @@ int isPtrParam(type_t param_t)
  * @value: tbd
  * Return: tbd
  */
-int printInt(size_t syscall_n, type_t param_t,
-	     size_t param_i, unsigned long value)
+int _printInt(type_t param_t, unsigned long value)
 {
 	char *format = NULL;
-
-	if (printFlagsInt(syscall_n, param_i, (int)value))
-		return (1);
 
 	switch (param_t)
 	{

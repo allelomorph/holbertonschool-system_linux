@@ -7,59 +7,75 @@ CFLAGS = -Wall -Werror -Wextra -pedantic
 
 
 # task 0. Step #0 - Syscall number
-strace_0.o: strace_0.c
-	$(CC) -c $(CFLAGS) strace_0.c
+0_strace.o: 0_strace.c
+	$(CC) -c $(CFLAGS) 0_strace.c
 
-strace_0: strace_0.o
-	$(CC) $(CFLAGS) strace_0.o -o strace_0
+strace_0: syscalls.h 0_strace.o
+	$(CC) $(CFLAGS) syscalls.h 0_strace.o -o strace_0
 
 
 # task 1. Step #1 - Syscall name
-strace_1.o: strace_1.c
-	$(CC) -c $(CFLAGS) strace_1.c
+1_strace.o: 1_strace.c
+	$(CC) -c $(CFLAGS) 1_strace.c
 
-strace_1: strace_1.o syscalls.h
-	$(CC) $(CFLAGS) strace_1.o -o strace_1
+strace_1: syscalls.h 1_strace.o
+	$(CC) $(CFLAGS) syscalls.h 1_strace.o -o strace_1
 
 
 # task 2. Step #2 - Return value
-strace_2.o: strace_2.c
-	$(CC) -c $(CFLAGS) strace_2.c
+2_strace.o: 2_strace.c
+	$(CC) -c $(CFLAGS) 2_strace.c
 
-strace_2: strace_2.o syscalls.h
-	$(CC) $(CFLAGS) strace_2.o -o strace_2
+strace_2: syscalls.h 2_strace.o
+	$(CC) $(CFLAGS) syscalls.h 2_strace.o -o strace_2
 
 
 # task 3. Step #3 - Raw parameters
-strace_3.o: strace_3.c
-	$(CC) -c $(CFLAGS) strace_3.c
+3_strace.o: 3_strace.c
+	$(CC) -c $(CFLAGS) 3_strace.c
 
-strace_3: strace_3.o syscalls.h
-	$(CC) $(CFLAGS) strace_3.o -o strace_3
+strace_3: syscalls.h 3_strace.o
+	$(CC) $(CFLAGS) syscalls.h 3_strace.o -o strace_3
 
 
 # task 4. Step #4 - Strings
+4_strace.o: 4_strace.c
+	$(CC) -c $(CFLAGS) 4_strace.c
+
+4_printParams.o: 4_printParams.c
+	$(CC) -c $(CFLAGS) 4_printParams.c
+
 strace_4: syscalls.h hstrace.h \
-	7_strace.o 7_printParams.o 7_printFlagsInt.o \
-	7_printStrParam.o
-	$(CC) $(CFLAGS) syscalls.h 7_strace.o 7_printParams.o \
-	7_printFlagsInt.o 7_printStrParam.o -o strace_4
+	4_strace.o 4_printParams.o 6_printStrParam.o
+	$(CC) $(CFLAGS) syscalls.h hstrace.h 4_printParams.o \
+	4_strace.o 6_printStrParam.o -o strace_5
 
 
 # task 5. Step #5 - Integers
+5_printParams.o: 5_printParams.c
+	$(CC) -c $(CFLAGS) 5_printParams.c
+
 strace_5: syscalls.h hstrace.h \
-	7_strace.o 7_printParams.o 7_printFlagsInt.o \
-	7_printStrParam.o
-	$(CC) $(CFLAGS) syscalls.h 7_strace.o 7_printParams.o \
-	7_printFlagsInt.o 7_printStrParam.o -o strace_5
+	6_strace.o 5_printParams.o 6_printStrParam.o
+	$(CC) $(CFLAGS) syscalls.h hstrace.h 5_printParams.o \
+	6_strace.o 6_printStrParam.o -o strace_5
 
 
 # task 6. Step #6 - Macros
+6_strace.o: 6_strace.c
+	$(CC) -c $(CFLAGS) 6_strace.c
+
+6_printParams.o: 6_printParams.c
+	$(CC) -c $(CFLAGS) 6_printParams.c
+
+6_printStrParam.o: 6_printStrParam.c
+	$(CC) -c $(CFLAGS) 6_printStrParam.c
+
 strace_6: syscalls.h hstrace.h \
-	7_strace.o 7_printParams.o 7_printFlagsInt.o \
-	7_printStrParam.o
-	$(CC) $(CFLAGS) syscalls.h 7_strace.o 7_printParams.o \
-	7_printFlagsInt.o 7_printStrParam.o -o strace_6
+	6_strace.o 6_printParams.o 6_printStrParam.o \
+	8_printFlagsInt.o
+	$(CC) $(CFLAGS) syscalls.h hstrace.h 6_strace.o 6_printParams.o \
+	8_printFlagsInt.o 6_printStrParam.o -o strace_6
 
 
 # task 7. Step #7 - Buffer
@@ -69,17 +85,11 @@ strace_6: syscalls.h hstrace.h \
 7_printParams.o: 7_printParams.c
 	$(CC) -c $(CFLAGS) 7_printParams.c
 
-7_printFlagsInt.o: 7_printFlagsInt.c
-	$(CC) -c $(CFLAGS) 7_printFlagsInt.c
-
-7_printStrParam.o: 7_printStrParam.c
-	$(CC) -c $(CFLAGS) 7_printStrParam.c
-
 strace_7: syscalls.h hstrace.h \
-	7_strace.o 7_printParams.o 7_printFlagsInt.o \
-	7_printStrParam.o
-	$(CC) $(CFLAGS) syscalls.h 7_strace.o 7_printParams.o \
-	7_printFlagsInt.o 7_printStrParam.o -o strace_7
+	7_strace.o 7_printParams.o \
+	8_printFlagsInt.o 8_printStrParam.o
+	$(CC) $(CFLAGS) syscalls.h hstrace.h 7_strace.o 7_printParams.o \
+	8_printFlagsInt.o 8_printStrParam.o -o strace_7
 
 
 # task 8. Step #8 - Structure
@@ -101,7 +111,7 @@ strace_7: syscalls.h hstrace.h \
 strace_8: syscalls.h hstrace.h \
 	8_strace.o 8_printParams.o 8_printFlagsInt.o \
 	8_printStrParam.o 8_printStatParam.o
-	$(CC) $(CFLAGS) syscalls.h 8_strace.o 8_printParams.o \
+	$(CC) $(CFLAGS) syscalls.h hstrace.h 8_strace.o 8_printParams.o \
 	8_printFlagsInt.o 8_printStrParam.o 8_printStatParam.o -o strace_8
 
 

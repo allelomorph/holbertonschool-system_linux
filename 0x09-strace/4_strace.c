@@ -20,60 +20,8 @@
  */
 void printReturn(struct user_regs_struct *regs)
 {
-	syscall_t syscall = syscalls_64[regs->orig_rax];
-	char *format = NULL;
-
-	if (!regs)
-		return;
-
-	switch (syscall.ret_t)
-	{
-	case INT:
-	case PID_T:
-		format = ") = %i\n";
-		break;
-	case LONG:
-	case SSIZE_T:
-		format = ") = %li\n";
-		break;
-	case UNSIGNED_INT:
-	case UINT32_T:
-		format = ") = %u\n";
-		break;
-	case UNSIGNED_LONG:
-	case U64:
-	case SIZE_T:
-		format = ") = %lu\n";
-		break;
-	default:
-		format = ") = %#lx\n";
-		break;
-	}
-
-	printf(format, regs->rax);
-}
-
-
-/**
- * lateParamRead - filters syscall types for those that need to have
- *   parameters printed after syscall-exit-stop instead of syscall-enter-stop
- *
- * @syscall_n: syscall table number (SYS_*)
- * Return: 0 if normal parameter read, 1 if after syscall-exit-stop
- */
-int lateParamRead(size_t syscall_n)
-{
-	/* read calls set void *buf after return */
-
-	switch (syscall_n)
-	{
-	case SYS_read:
-		return (1);
-	default:
-		break;
-	}
-
-	return (0);
+	if (regs)
+		printf(") = %#lx\n", (unsigned long)regs->rax);
 }
 
 
@@ -143,16 +91,11 @@ int tracerLoop(pid_t child_pid, int argc, char *argv[], char *envp[])
 			first_syscall = 0;
 		}
 		if (syscall_return)
-		{ /* syscalls with params passed by ref. print on exit-stop */
-			if (lateParamRead(syscalls_64[regs.orig_rax].table_n))
-				printParams(&regs, child_pid);
 			printReturn(&regs);
-		}
 		else
 		{
 			printf("%s(", syscalls_64[regs.orig_rax].name);
-			if (!lateParamRead(syscalls_64[regs.orig_rax].table_n))
-				printParams(&regs, child_pid);
+			printParams(&regs, child_pid);
 			fflush(stdout);
 		}
 		if (ptrace(PTRACE_SYSCALL, child_pid, NULL, NULL) == -1)
@@ -168,7 +111,7 @@ int tracerLoop(pid_t child_pid, int argc, char *argv[], char *envp[])
 
 
 /**
- * main - entry point for strace_7
+ * main - entry point for strace_5
  *
  * @argc: count of command line parameters
  * @argv: array of command line parameters
