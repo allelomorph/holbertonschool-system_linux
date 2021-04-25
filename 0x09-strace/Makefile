@@ -48,7 +48,7 @@ strace_3: syscalls.h 3_strace.o
 strace_4: syscalls.h hstrace.h \
 	4_strace.o 4_printParams.o 6_printStrParam.o
 	$(CC) $(CFLAGS) syscalls.h hstrace.h 4_printParams.o \
-	4_strace.o 6_printStrParam.o -o strace_5
+	4_strace.o 6_printStrParam.o -o strace_4
 
 
 # task 5. Step #5 - Integers
