@@ -8,12 +8,10 @@
 
 
 /**
- * printStrParam - tbd
+ * _printStrParam - prints CHAR_P type syscall parameter as ASCII string
  *
- * @child_pid: tbd
- * @syscall_n: tbd
- * @param: tbd
- * @count: tbd
+ * @child_pid: process id of traced child
+ * @param: parameter value from registers of traced child
  */
 void _printStrParam(pid_t child_pid, unsigned long param)
 {

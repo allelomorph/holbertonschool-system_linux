@@ -14,7 +14,8 @@
 
 
 /**
- * printReturn - prints syscall return values as integer type or raw hex
+ * printReturn - prints syscall return values as integer type or raw hex if
+ *   no appropriate format found
  *
  * @regs: pointer to struct containing current register values in child
  */

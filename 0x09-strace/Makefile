@@ -46,9 +46,11 @@ strace_3: syscalls.h 3_strace.o
 	$(CC) -c $(CFLAGS) 4_printParams.c
 
 strace_4: syscalls.h hstrace.h \
-	4_strace.o 4_printParams.o 6_printStrParam.o
-	$(CC) $(CFLAGS) syscalls.h hstrace.h 4_printParams.o \
-	4_strace.o 6_printStrParam.o -o strace_4
+	4_strace.o 4_printParams.o \
+	6_printStrParam.o
+	$(CC) $(CFLAGS) syscalls.h hstrace.h \
+	4_strace.o 4_printParams.o \
+	6_printStrParam.o -o strace_4
 
 
 # task 5. Step #5 - Integers
@@ -56,9 +58,11 @@ strace_4: syscalls.h hstrace.h \
 	$(CC) -c $(CFLAGS) 5_printParams.c
 
 strace_5: syscalls.h hstrace.h \
-	6_strace.o 5_printParams.o 6_printStrParam.o
-	$(CC) $(CFLAGS) syscalls.h hstrace.h 5_printParams.o \
-	6_strace.o 6_printStrParam.o -o strace_5
+	6_strace.o 5_printParams.o \
+	6_printStrParam.o
+	$(CC) $(CFLAGS) syscalls.h hstrace.h \
+	6_strace.o 5_printParams.o \
+	6_printStrParam.o -o strace_5
 
 
 # task 6. Step #6 - Macros
@@ -72,10 +76,11 @@ strace_5: syscalls.h hstrace.h \
 	$(CC) -c $(CFLAGS) 6_printStrParam.c
 
 strace_6: syscalls.h hstrace.h \
-	6_strace.o 6_printParams.o 6_printStrParam.o \
-	8_printFlagsInt.o
-	$(CC) $(CFLAGS) syscalls.h hstrace.h 6_strace.o 6_printParams.o \
-	8_printFlagsInt.o 6_printStrParam.o -o strace_6
+	6_strace.o 6_printParams.o \
+	6_printStrParam.o 8_printFlagsInt.o
+	$(CC) $(CFLAGS) syscalls.h hstrace.h \
+	6_strace.o 6_printParams.o \
+	6_printStrParam.o 8_printFlagsInt.o -o strace_6
 
 
 # task 7. Step #7 - Buffer
@@ -87,9 +92,10 @@ strace_6: syscalls.h hstrace.h \
 
 strace_7: syscalls.h hstrace.h \
 	7_strace.o 7_printParams.o \
-	8_printFlagsInt.o 8_printStrParam.o
-	$(CC) $(CFLAGS) syscalls.h hstrace.h 7_strace.o 7_printParams.o \
-	8_printFlagsInt.o 8_printStrParam.o -o strace_7
+	8_printStrParam.o 8_printFlagsInt.o
+	$(CC) $(CFLAGS) syscalls.h hstrace.h \
+	7_strace.o 7_printParams.o \
+	8_printStrParam.o 8_printFlagsInt.o -o strace_7
 
 
 # task 8. Step #8 - Structure
@@ -99,20 +105,23 @@ strace_7: syscalls.h hstrace.h \
 8_printParams.o: 8_printParams.c
 	$(CC) -c $(CFLAGS) 8_printParams.c
 
-8_printFlagsInt.o: 8_printFlagsInt.c
-	$(CC) -c $(CFLAGS) 8_printFlagsInt.c
-
 8_printStrParam.o: 8_printStrParam.c
 	$(CC) -c $(CFLAGS) 8_printStrParam.c
+
+8_printFlagsInt.o: 8_printFlagsInt.c
+	$(CC) -c $(CFLAGS) 8_printFlagsInt.c
 
 8_printStatParam.o: 8_printStatParam.c
 	$(CC) -c $(CFLAGS) 8_printStatParam.c
 
 strace_8: syscalls.h hstrace.h \
-	8_strace.o 8_printParams.o 8_printFlagsInt.o \
-	8_printStrParam.o 8_printStatParam.o
-	$(CC) $(CFLAGS) syscalls.h hstrace.h 8_strace.o 8_printParams.o \
-	8_printFlagsInt.o 8_printStrParam.o 8_printStatParam.o -o strace_8
+	8_strace.o 8_printParams.o \
+	8_printStrParam.o 8_printFlagsInt.o \
+	8_printStatParam.o
+	$(CC) $(CFLAGS) syscalls.h hstrace.h \
+	8_strace.o 8_printParams.o \
+	8_printStrParam.o 8_printFlagsInt.o \
+	8_printStatParam.o -o strace_8
 
 
 .PHONY: all clean_all oclean_all fclean_all re_all

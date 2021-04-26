@@ -10,12 +10,13 @@
 
 
 /**
- * printFlagsInt - tbd
+ * printFlagsInt - determines which macros to use when printing a bitwise flag
+ *   set from mmap(2), open(2), or access(2)
  *
- * @syscall_n: tbd
- * @param_i: tbd
- * @value: tbd
- * Return: tbd
+ * @syscall_n: syscall table number
+ * @param_i: paramter index, or order in prototype
+ * @value: paramter value
+ * Return: 1 if set found and printed, 0 if not found
  */
 int printFlagsInt(size_t syscall_n, size_t param_i, int value)
 {
@@ -43,10 +44,11 @@ int printFlagsInt(size_t syscall_n, size_t param_i, int value)
 
 
 /**
- * mmapProtPrint - tbd
+ * mmapProtPrint - prints macros in bitwise flag set for `prot` param to
+ *   mmap(2)
  *
- * @prot: tbd
- * Return: tbd
+ * @prot: param value of `prot`, third param to mmap(2)
+ * Return: 1 on success
  */
 int mmapProtPrint(int prot)
 {
@@ -77,10 +79,11 @@ int mmapProtPrint(int prot)
 
 
 /**
- * mmapFlagsPrint - tbd
+ * mmapFlagsPrint - prints macros in bitwise flag set for `flags` param to
+ *   mmap(2)
  *
- * @flags: tbd
- * Return: tbd
+ * @flags: param value of `flags`, fourth param to mmap(2)
+ * Return: 1 on success
  */
 int mmapFlagsPrint(int flags)
 {
@@ -116,10 +119,11 @@ int mmapFlagsPrint(int flags)
 
 
 /**
- * openFlagsPrint - tbd
+ * openFlagsPrint -  prints macros in bitwise flag set for `flags` param to
+ *   open(2)
  *
- * @flags: tbd
- * Return: tbd
+ * @flags: param value of `flags`, second param to open(2)
+ * Return: 1 on success
  */
 int openFlagsPrint(int flags)
 {
@@ -155,10 +159,11 @@ int openFlagsPrint(int flags)
 
 
 /**
- * accessModePrint - tbd
+ * accessModePrint - prints macros in bitwise flag set for `flags` param to
+ *   access(2)
  *
- * @mode: tbd
- * Return: tbd
+ * @mode: param value of `mode`, second param to access(2)
+ * Return: 1 on success
  */
 int accessModePrint(int mode)
 {

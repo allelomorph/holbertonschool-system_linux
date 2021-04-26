@@ -8,12 +8,13 @@
 
 
 /**
- * printStrParam - tbd
+ * printStrParam - prints CHAR_P type syscall parameters as ASCII string, and
+ *   VOID_P parameters to read(2) and write(2) with escape characters/octals
  *
- * @child_pid: tbd
- * @syscall_n: tbd
- * @param: tbd
- * @count: tbd
+ * @child_pid: process id of traced child
+ * @syscall_n: syscall table number
+ * @param: parameter value from registers of traced child
+ * @count: third parameter to read(2)/write(2), amount of bytes to read/write
  */
 void printStrParam(pid_t child_pid, size_t syscall_n,
 		   unsigned long param, size_t count)
@@ -51,9 +52,10 @@ void printStrParam(pid_t child_pid, size_t syscall_n,
 
 
 /**
- * printRWBuffChar - tbd
+ * printRWBuffChar - prints a character as ASCII if in printable range, or as
+ *   escape character or octal if not
  *
- * @uc: tbd
+ * @uc: unsigned char value to print
  */
 void printRWBuffChar(unsigned char uc)
 {

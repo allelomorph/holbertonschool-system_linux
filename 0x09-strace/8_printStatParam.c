@@ -8,9 +8,10 @@
 
 
 /**
- * printStatMode - tbd
+ * printStatMode - prints S_IF* macros in bitwise flag set `st_mode` in a
+ *   stat struct
  *
- * @mode: tbd
+ * @mode: param value of `st_mode`, third member of `struct stat`
  */
 void printStatMode(mode_t mode)
 {
@@ -34,10 +35,12 @@ void printStatMode(mode_t mode)
 
 
 /**
- * printStatParam - tbd
+ * printStatParam - after the successful return of fstat(2) and the population
+ *   of `struct stat *buf` with values, prints `st_mode` and `st_size` from
+ *   that struct
  *
- * @child_pid: tbd
- * @param: tbd
+ * @child_pid: process id of traced child
+ * @param: pointer to stat struct
  */
 void printStatParam(pid_t child_pid, unsigned long param)
 {

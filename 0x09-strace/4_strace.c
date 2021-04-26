@@ -14,7 +14,7 @@
 
 
 /**
- * printReturn - prints syscall return values as integer type or raw hex
+ * printReturn - prints syscall return value as raw hex
  *
  * @regs: pointer to struct containing current register values in child
  */
@@ -111,7 +111,7 @@ int tracerLoop(pid_t child_pid, int argc, char *argv[], char *envp[])
 
 
 /**
- * main - entry point for strace_5
+ * main - entry point for strace_4
  *
  * @argc: count of command line parameters
  * @argv: array of command line parameters

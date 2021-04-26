@@ -6,11 +6,12 @@
 
 
 /**
- * printParams - tbd
+ * printParams - fetches parameter values from register values in traced child
+ *   process and prints them in ", "-delimited series
  *
  * @regs: pointer to user_regs_struct containing latest registers queried
  *   from tracee
- * @child_pid: tbd
+ * @child_pid: process id of traced child
  */
 void printParams(struct user_regs_struct *regs, pid_t child_pid)
 {
@@ -57,13 +58,14 @@ void printParams(struct user_regs_struct *regs, pid_t child_pid)
 
 
 /**
- * printParam - tbd
+ * printParam - checks syscall number and parameter data type to determine
+ *   printing format of syscall parameter
  *
- * @child_pid: tbd
+ * @child_pid: process id of traced child
  * @regs: pointer to user_regs_struct containing latest registers queried
  *   from tracee
- * @param: tbd
- * @i: tbd
+ * @param: parameter value from registers of traced child
+ * @i: index value of paramter in sycall prototype
  */
 void printParam(pid_t child_pid, struct user_regs_struct *regs,
 		unsigned long param, size_t i)
