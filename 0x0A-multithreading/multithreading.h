@@ -5,7 +5,10 @@
 #include <stddef.h>
 /* uint8_t */
 #include <stdint.h>
-
+/* pthread_mutex_t */
+#include <pthread.h>
+/* list_t */
+#include "list.h"
 
 /**
  * struct pixel_s - RGB pixel
