@@ -5,8 +5,9 @@
 void blurPixel(const img_t *img, img_t *img_blur, const kernel_t *kernel,
 	       size_t px_x, size_t px_y)
 {
-	size_t i, j, x, y, k_radius, px_i;
+	size_t i, j,/* x, y,*/ k_radius, px_i;
 	float r_total = 0, g_total = 0, b_total = 0, weight = 0;
+	ssize_t x, y;
 /*
 	float r_delta, g_delta, b_delta;
 */
@@ -17,32 +18,37 @@ void blurPixel(const img_t *img, img_t *img_blur, const kernel_t *kernel,
 		return;
 
 	k_radius = kernel->size / 2;
-	for (i = 0, y = px_y - k_radius; i < kernel->size; i++, y++)
+	for (i = 0, y = (ssize_t)px_y - k_radius; i < kernel->size; i++, y++)
 	{
-		for (j = 0, x = px_x - k_radius; j < kernel->size; j++, x++)
+		for (j = 0, x = (ssize_t)px_x - k_radius; j < kernel->size; j++, x++)
 		{
-			weight += kernel->matrix[i][j];
 /*
-			printf("\ti:%lu y:%lu j:%lu x:%lu kernel->matrix[i][j]:%f\n", i, y, j, x, kernel->matrix[i][j]);
+			printf("\ti:%lu y:%li j:%lu x:%li kernel->matrix[i][j]:%f\n", i, y, j, x, kernel->matrix[i][j]);
 */
-			px_i = (y * img->w) + x;
+			if ((x >= 0 && (size_t)x < img->w) &&
+			    (y >= 0 && (size_t)y < img->h))
+			{
+				weight += kernel->matrix[i][j];
+				px_i = (y * img->w) + x;
 /*
-			printf("\toriginal image px_i:%lu R:%i G:%i B:%i\n", px_i, (img->pixels + px_i)->r, (img->pixels + px_i)->g, (img->pixels + px_i)->b);
+				printf("\toriginal image px_i:%lu R:%i G:%i B:%i\n", px_i, (img->pixels + px_i)->r, (img->pixels + px_i)->g, (img->pixels + px_i)->b);
 */
-			r_total += (img->pixels + px_i)->r * kernel->matrix[i][j];
-			b_total += (img->pixels + px_i)->g * kernel->matrix[i][j];
-		        g_total += (img->pixels + px_i)->b * kernel->matrix[i][j];
-/*
-			r_delta = (img->pixels + px_i)->r * kernel->matrix[i][j];
-			g_delta = (img->pixels + px_i)->g * kernel->matrix[i][j];
-		        b_delta = (img->pixels + px_i)->b * kernel->matrix[i][j];
 
-			printf("\tmodified: R:%f G:%f B:%f\n", r_delta, g_delta, b_delta);
+				r_total += (img->pixels + px_i)->r * kernel->matrix[i][j];
+				g_total += (img->pixels + px_i)->g * kernel->matrix[i][j];
+				b_total += (img->pixels + px_i)->b * kernel->matrix[i][j];
+/*
+				r_delta = (img->pixels + px_i)->r * kernel->matrix[i][j];
+				g_delta = (img->pixels + px_i)->g * kernel->matrix[i][j];
+				b_delta = (img->pixels + px_i)->b * kernel->matrix[i][j];
 
-			r_total += r_delta;
-			g_total += g_delta;
-			b_total += b_delta;
+				printf("\tmodified: R:%f G:%f B:%f\n", r_delta, g_delta, b_delta);
+
+				r_total += r_delta;
+				g_total += g_delta;
+				b_total += b_delta;
 */
+			}
 		}
 /*
 		printf("\n");
@@ -81,7 +87,6 @@ void blur_portion(blur_portion_t const *portion)
 	    !(portion->kernel->size > 1 && portion->kernel->size % 2))
 		return;
 
-/*
 	printf("img @ %p\n", (void *)portion->img);
 	if (portion->img)
 		printf("img->w:%lu img->h:%lu\n", portion->img->w, portion->img->h);
@@ -106,7 +111,6 @@ void blur_portion(blur_portion_t const *portion)
 			putchar('\n');
 		}
 	}
-*/
 
 	y_end = portion->y + portion->h;
 	x_end = portion->x + portion->w;
