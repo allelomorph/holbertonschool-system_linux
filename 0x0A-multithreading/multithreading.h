@@ -118,12 +118,16 @@ void *thread_entry(void *arg);
 void *thread_entry(void *arg);
 
 /* 10-blur_portion.c */
+void blurPixel(const img_t *img, img_t *img_blur, const kernel_t *kernel,
+	       size_t px_x, size_t px_y);
 void blur_portion(blur_portion_t const *portion);
 
 /* 11-blur_image.c */
 void blur_image(img_t *img_blur, img_t const *img, kernel_t const *kernel);
 
 /* 20-tprintf.c */
+void initTprintfMutex(void) __attribute__ ((constructor));
+void destroyTprintfMutex(void) __attribute__ ((destructor));
 int tprintf(char const *format, ...);
 
 /* 21-prime_factors.c */
