@@ -2,37 +2,52 @@
 /* strtoul free */
 #include <stdlib.h>
 
-#include <stdio.h>
 
-#ifdef ZZZ
-/* strlen */
-#include <string.h>
-/* isdigit */
-#include <ctype.h>
-
-
-/*
-void freeUL(void *node_data)
+/**
+ * addFactorToList - adds a factor to the factorization sequence for a number
+ *   contained in a DLL
+ *
+ * @factor_list: DLL containing factorization sequence of a number
+ * @n: factor value to add to list
+ * Return: pointer to node added to list, or NULL on failure
+ */
+node_t *addFactorToList(list_t *factor_list, unsigned long n)
 {
-	free((unsigned long *)node_data);
+	unsigned long *factor = NULL;
+
+	if (!factor_list)
+		return (NULL);
+
+	factor = malloc(sizeof(unsigned long));
+	if (!factor)
+	{
+		list_destroy(factor_list, free);
+		free(factor_list);
+		return (NULL);
+	}
+	*factor = n;
+
+	/* no failure provisions built into list_add (list.c) */
+	return (list_add(factor_list, factor));
 }
-*/
-#endif
+
 
 /**
  * prime_factors - factorizes a number into a list of prime factors
  *
  * @s: string representation of the number to factorize; this number will be
  *   positive and fit into an unsigned long
- * Return: ?? TBD (list_t defined in list.h)
+ * Return: list_t wrapper for a DLL containing the factorization sequence of a
+ *   number, or NULL on failure
  */
 list_t *prime_factors(char const *s)
 {
-	unsigned long n, i, steps = 0, *factor = NULL;
+	unsigned long n, i;
 	list_t *factor_list = NULL;
 
 	if (!s)
 		return (NULL);
+
 	factor_list = malloc(sizeof(list_t));
 	if (!factor_list)
 		return (NULL);
@@ -42,50 +57,26 @@ list_t *prime_factors(char const *s)
 
 	while (n % 2 == 0)
 	{
-		factor = malloc(sizeof(unsigned long));
-		if (!factor && factor_list)
-		{
-			list_destroy(factor_list, free);
+		if (!addFactorToList(factor_list, 2))
 			return (NULL);
-		}
-		*factor = 2;
-		list_add(factor_list, factor);
-
 		n /= 2;
-		steps++;
 	}
 
-	for (i = 3; i * i <= n; i += 2, steps++)
+	for (i = 3; i * i <= n; i += 2)
 	{
 		while (n % i == 0)
 		{
-			factor = malloc(sizeof(unsigned long));
-			if (!factor && factor_list)
-			{
-				list_destroy(factor_list, free);
+			if (!addFactorToList(factor_list, i))
 				return (NULL);
-			}
-			*factor = i;
-			list_add(factor_list, factor);
-
-			steps++;
 			n /= i;
 		}
 	}
 
 	if (n > 2)
 	{
-		factor = malloc(sizeof(unsigned long));
-		if (!factor && factor_list)
-		{
-			list_destroy(factor_list, free);
+		if (!addFactorToList(factor_list, n))
 			return (NULL);
-		}
-		*factor = n;
-		list_add(factor_list, factor);
 	}
-
-	printf("\tfactored in %lu steps\n", steps);
 
 	return (factor_list);
 }
