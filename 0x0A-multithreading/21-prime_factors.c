@@ -28,9 +28,8 @@ void freeUL(void *node_data)
  */
 list_t *prime_factors(char const *s)
 {
-	unsigned long n, i, j, steps = 0, *factor = NULL;
+	unsigned long n, i, steps = 0, *factor = NULL;
 	list_t *factor_list = NULL;
-	int is_prime;
 
 	if (!s)
 		return (NULL);
@@ -40,32 +39,50 @@ list_t *prime_factors(char const *s)
 	list_init(factor_list);
 
 	n = strtoul(s, NULL, 10); /* returns 0 for non-numeral strings */
-	for (i = 2; i <= n; i++, steps++)
+
+	while (n % 2 == 0)
 	{
-		if (n % i == 0)
+		factor = malloc(sizeof(unsigned long));
+		if (!factor && factor_list)
 		{
-			is_prime = 1;
-			for (j = 2; j <= i/2; j++, steps++)
-			{
-				if (i % j == 0)
-				{
-				        is_prime = 0;
-					break;
-				}
-			}
-			if (is_prime)
-			{
-				factor = malloc(sizeof(unsigned long));
-				if (!factor)
-				{
-					list_destroy(factor_list, free);
-					return (NULL);
-				}
-				*factor = i;
-				list_add(factor_list, factor);
-				n /= i;
-			}
+			list_destroy(factor_list, free);
+			return (NULL);
 		}
+		*factor = 2;
+		list_add(factor_list, factor);
+
+		n /= 2;
+		steps++;
+	}
+
+	for (i = 3; i * i <= n; i += 2, steps++)
+	{
+		while (n % i == 0)
+		{
+			factor = malloc(sizeof(unsigned long));
+			if (!factor && factor_list)
+			{
+				list_destroy(factor_list, free);
+				return (NULL);
+			}
+			*factor = i;
+			list_add(factor_list, factor);
+
+			steps++;
+			n /= i;
+		}
+	}
+
+	if (n > 2)
+	{
+		factor = malloc(sizeof(unsigned long));
+		if (!factor && factor_list)
+		{
+			list_destroy(factor_list, free);
+			return (NULL);
+		}
+		*factor = n;
+		list_add(factor_list, factor);
 	}
 
 	printf("\tfactored in %lu steps\n", steps);
