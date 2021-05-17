@@ -44,7 +44,7 @@ task_t *create_task(task_entry_t entry, void *param)
 		return (NULL);
 
 	task->entry = entry;
-	task->param = param; /* expect `list_t *` in this exercise */
+	task->param = param;
 	task->status = PENDING;
 	task->result = NULL;
 	/* mutex is initialized in constructor initTaskStatusMutex */
@@ -67,16 +67,16 @@ void destroy_task(task_t *task)
 
 	/*
 	 * In this project, task->param can be expected to be a string from
-	 * argv, which does not need to be freed. There is currently no way of
-	 * knowing from outside this function what the data type and thus
-	 * freeing function for task->param is.
+	 * argv, which does not need to be freed. There is currently no way for
+	 * this function to know from its parameters what the data type
+	 * and thus freeing function for task->param is.
 	 */
 
 	/*
 	 * In this project, task->result can be expected to be `list_t *` with
-	 * data of `unsigned long *`. Similar to task->param, there is
-	 * currently no way of knowing from outside this function what the data
-	 * type and thus freeing function for task->result is.
+	 * node content of `unsigned long *`. Similar to task->param, there is
+	 * currently no way for this function to know from its parameters what
+	 * the data type and thus freeing function for task->result is.
 	 */
 	if (task->result)
 	{
