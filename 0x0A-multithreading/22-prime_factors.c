@@ -44,10 +44,10 @@ task_t *create_task(task_entry_t entry, void *param)
 		return (NULL);
 
 	task->entry = entry;
-	task->param = param; /* expect list_t * in this exercise */
+	task->param = param; /* expect `list_t *` in this exercise */
 	task->status = PENDING;
 	task->result = NULL;
-	/* mutex is initialized in constructor */
+	/* mutex is initialized in constructor initTaskStatusMutex */
 	task->lock = task_status_mutex;
 
 	return (task);
@@ -66,16 +66,17 @@ void destroy_task(task_t *task)
 		return;
 
 	/*
-	 * expect param to be string from argv, which does not need to be
-	 * freed; there is currently no way of knowing from outside this
-	 * function what the data type and thus freeing function for
-	 * param is.
+	 * In this project, task->param can be expected to be a string from
+	 * argv, which does not need to be freed. There is currently no way of
+	 * knowing from outside this function what the data type and thus
+	 * freeing function for task->param is.
 	 */
 
 	/*
-	 * expect result to be `list_t *` with data of `unsigned long *` in this
-	 * exercise; there is currently no way of knowing from outside this
-	 * function what the data type and thus freeing function for result is.
+	 * In this project, task->result can be expected to be `list_t *` with
+	 * data of `unsigned long *`. Similar to task->param, there is
+	 * currently no way of knowing from outside this function what the data
+	 * type and thus freeing function for task->result is.
 	 */
 	if (task->result)
 	{
@@ -83,24 +84,23 @@ void destroy_task(task_t *task)
 		free(task->result);
 	}
 
-	/* task->lock destroyed in destructor */
+	/* task->lock destroyed in destructor destroyTaskStatusMutex */
 
 	free(task);
 }
 
 
 /**
- * exec_tasks - TBD
+ * exec_tasks - entry function to a thread which starts any tasks in a task
+ *   list that have not been started by other threads
  *
- * "This function serves as a thread entry; This function can safely return
- *  NULL as its return value will not be retrieved; This function must go
- *  through the list of tasks and execute them, but theres a challenge:
- *  Multiple thread will be going through the list of tasks, and a task must
- *  only be executed once; You must use tprintf to print when a task is
- *  started, and completed"
+ * Note: In project description: "This function can safely return
+ *  NULL as its return value will not be retrieved." Perhaps prototype cannot
+ *  just return `void` since pthread_create() requires a function pointer of
+ *  type void *(*) (void *) ?
  *
  * @tasks: pointer to the list of tasks to be executed
- * Return: ?? TBD (list_t defined in list.h)
+ * Return: always returns NULL (see note above)
  */
 void *exec_tasks(list_t const *tasks)
 {
@@ -117,15 +117,14 @@ void *exec_tasks(list_t const *tasks)
 		task = (task_t *)curr_node->content;
 		if (!task)
 			continue;
-		/* begin critical section? */
+
 		pthread_mutex_lock(&task_status_mutex);
 		if (task->status == PENDING)
 		{
 			task->status = STARTED;
 			pthread_mutex_unlock(&task_status_mutex);
-			/* end critical section? */
+
 			tprintf("[%02lu] Started\n", i);
-			/* factors = prime_factors((char *)task->param); */
 			task->result = task->entry(task->param);
 			if (!task->result)
 			{
@@ -141,6 +140,6 @@ void *exec_tasks(list_t const *tasks)
 		else
 			pthread_mutex_unlock(&task_status_mutex);
 	}
-	/* why does prototype return `void *` when there's no data to return? */
+
 	return (NULL);
 }
