@@ -134,6 +134,8 @@ int tprintf(char const *format, ...);
 list_t *prime_factors(char const *s);
 
 /* 22-prime_factors.c */
+void initTaskStatusMutex(void) __attribute__ ((constructor));
+void destroyTaskStatusMutex(void) __attribute__ ((destructor));
 task_t *create_task(task_entry_t entry, void *param);
 void destroy_task(task_t *task);
 void *exec_tasks(list_t const *tasks);
