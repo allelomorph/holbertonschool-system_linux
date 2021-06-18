@@ -29,7 +29,7 @@ Project 0x02 found in separate repo [`shell_v2/`](https://github.com/allelomorph
 ### [0x0A. Multithreading](./0x0A-multithreading/)
 
 ### [0x0B. C - malloc](https://github.com/allelomorph/malloc)
-Project 0x02 found in separate repo [`malloc/`](https://github.com/allelomorph/malloc).
+Project 0x0B found in separate repo [`malloc/`](https://github.com/allelomorph/malloc).
 
 ---
 
