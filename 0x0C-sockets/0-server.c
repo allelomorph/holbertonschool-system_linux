@@ -1,4 +1,3 @@
-/* no include guard on netinet/in.h, so including it first */
 /* netinet/in.h also includes sys/types.h and sys/socket.h */
 /* sys/types.h needed for socket.h portability beyond Linux / POSIX.1-2001 */
 /* netinet/in.h: sockaddr_in htons htonl; sys/socket.h: socket bind listen */
@@ -75,6 +74,7 @@ int simpleServer(void)
 	if (listen(sckt_id, MAX_PENDING) == -1)
 		errorExit(sckt_id, "simpleServer: listen");
 
+	/* assuming LSB environment */
 	printf("Server listening on port %i\n",
 	       __builtin_bswap16((uint16_t)(sckt_addr.sin_port)));
 
