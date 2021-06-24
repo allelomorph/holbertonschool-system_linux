@@ -89,8 +89,8 @@ int newTCPIPv4Socket(uint16_t port, struct sockaddr_in *addr)
 int simpleServer(void)
 {
 	int server_id, client_id;
-	struct sockaddr_in server_addr, client_addr;
-	socklen_t client_addr_sz;
+	struct sockaddr_in server_addr = {0}, client_addr = {0};
+	socklen_t client_addr_sz = 0;
 	char recv_buf[RECV_BUFSZ] = {'\0'};
 
 	server_id = newTCPIPv4Socket(12345, &server_addr);

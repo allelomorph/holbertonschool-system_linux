@@ -52,8 +52,8 @@ void errorExit(int sock_id, char *error_msg)
 int simpleServer(void)
 {
 	int server_id, client_id;
-	struct sockaddr_in server_addr, client_addr;
-	socklen_t client_addr_sz;
+	struct sockaddr_in server_addr = {0}, client_addr = {0};
+	socklen_t client_addr_sz = 0;
 
 	server_id = socket(PF_INET, SOCK_STREAM, 0);
 	if (server_id == -1)
