@@ -1,10 +1,8 @@
-/* USHRT_MAX */
-/* #include <limits.h> */
 /* netinet/in.h also includes sys/types.h and sys/socket.h */
 /* sys/types.h needed for socket.h portability beyond Linux / POSIX.1-2001 */
 /* sockaddr_in htons htonl; sys/socket.h: socket bind listen accept recv */
 #include <netinet/in.h>
-/* addrinfo */
+/* addrinfo getaddrinfo freeaddrinfo*/
 #include <netdb.h>
 /* close */
 #include <unistd.h>
@@ -17,10 +15,13 @@
 
 
 /**
- * simpleClient -  connects to a listening server
+ * simpleClient - connects to a listening server
  *
- * Program will hang indefinitely, expecting to be killed by a signal.
- * Does not accept incoming connections.
+ * Once a connection is established with the server, prints a message and exits
+ *
+ * @hostname: hostname or IP address in IPv4 format
+ * @port: port number
+ * Return: EXIT_FAILUREor EXIT_SUCCESS
  */
 int simpleClient(const char *hostname, const char *port)
 {
@@ -49,11 +50,7 @@ int simpleClient(const char *hostname, const char *port)
 	        return (EXIT_FAILURE);
 	}
 
-	/* getaddrinfo() returns a list of address structures.
-              Try each address until we successfully connect(2).
-              If socket(2) (or connect(2)) fails, we (close the socket
-              and) try the next address. */
-
+	/* try socket creation and connection with every candidate address */
 	for (ai_temp = host_ai; ai_temp != NULL; ai_temp = ai_temp->ai_next)
 	{
 		client_id = socket(ai_temp->ai_family, ai_temp->ai_socktype,
@@ -94,7 +91,7 @@ int simpleClient(const char *hostname, const char *port)
 
 
 /**
- * main -  entry point for simpleClient
+ * main - entry point for simpleClient
  *
  * @argc: count of command line arguments
  * @argv: array of command line arguments
