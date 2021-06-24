@@ -15,27 +15,25 @@
 
 
 /**
- * simpleClient - connects to a listening server
- *
- * Once a connection is established with the server, prints a message and exits
+ * getIPv4Addrs - TCP/IPv4-sepcific wrapper for getaddrinfo, gets list of
+ *   candidate addresses for a given hostname
  *
  * @hostname: hostname or IP address in IPv4 format
  * @port: port number
- * Return: EXIT_FAILUREor EXIT_SUCCESS
+ * Return: pointer to list of candidate addresses, or NULL on failure
  */
-int simpleClient(const char *hostname, const char *port)
+struct addrinfo *getIPv4Addrs(const char *hostname, const char *port)
 {
-	int client_id, gai_retval;
+	int gai_retval;
 	struct addrinfo hints;
-	struct addrinfo *host_ai, *ai_temp;
+	struct addrinfo *host_ai;
 
 	if (!hostname || !port)
 	{
-		fprintf(stderr, "simpleClient: NULL paramter\n");
-		return (EXIT_FAILURE);
+		fprintf(stderr, "getIPv4Addrs: NULL paramter\n");
+		return (NULL);
 	}
 
-	/* Obtain address(es) matching host/port */
 	memset(&hints, 0, sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
@@ -45,12 +43,37 @@ int simpleClient(const char *hostname, const char *port)
 	gai_retval = getaddrinfo(hostname, port, &hints, &host_ai);
 	if (gai_retval != 0)
 	{
-		fprintf(stderr, "simpleClient: getaddrinfo: %s\n",
+		fprintf(stderr, "getIPv4Addrs: getaddrinfo: %s\n",
 			gai_strerror(gai_retval));
-	        return (EXIT_FAILURE);
+		return (NULL);
 	}
 
-	/* try socket creation and connection with every candidate address */
+	return (host_ai);
+}
+
+
+/**
+ * testIPAddrs - walks a list of addrinfo structs, testing socket creation and
+ *   connection to each. Once a connection is established with the server,
+ *   prints a message and exits
+ *
+ * @host_ai: SLL of structs containing address candidate matches for hostname
+ * @hostname: hostname or IP address in IPv4 format
+ * @port: port number
+ * Return: socket fd for first successful connection, or -1 on failure
+ */
+int testIPAddrs(struct addrinfo *host_ai,
+		const char *hostname, const char *port)
+{
+	int client_id;
+	struct addrinfo *ai_temp;
+
+	if (!host_ai || !hostname)
+	{
+		fprintf(stderr, "testIPAddrs: NULL parameters\n");
+		return (-1);
+	}
+
 	for (ai_temp = host_ai; ai_temp != NULL; ai_temp = ai_temp->ai_next)
 	{
 		client_id = socket(ai_temp->ai_family, ai_temp->ai_socktype,
@@ -67,18 +90,51 @@ int simpleClient(const char *hostname, const char *port)
 
 		if (close(client_id) != 0)
 		{
-			perror("simpleClient: close");
-		        return (EXIT_FAILURE);
+			perror("testIPAddrs: close");
+			return (-1);
 		}
 	}
 
-	if (ai_temp == NULL)
+	if (!ai_temp)
 	{
-		fprintf(stderr, "simpleClient: Could not connect to any IP "
-			"address associated with %s\n", hostname);
-	        return (EXIT_FAILURE);
+		fprintf(stderr,
+			"testIPAddrs: no valid address found for '%s'\n",
+			hostname);
+		return (-1);
 	}
+
+	return (client_id);
+}
+
+
+/**
+ * simpleClient - connects to a listening server
+ *
+ * Once a connection is established with the server, prints a message and exits
+ *
+ * @hostname: hostname or IP address in IPv4 format
+ * @port: port number
+ * Return: EXIT_FAILURE or EXIT_SUCCESS
+ */
+int simpleClient(const char *hostname, const char *port)
+{
+	int client_id;
+	struct addrinfo *host_ai;
+
+	if (!hostname || !port)
+	{
+		fprintf(stderr, "simpleClient: NULL paramter\n");
+		return (EXIT_FAILURE);
+	}
+
+	host_ai = getIPv4Addrs(hostname, port);
+	if (!host_ai)
+		return (EXIT_FAILURE);
+
+	client_id = testIPAddrs(host_ai, hostname, port);
 	freeaddrinfo(host_ai);
+	if (client_id == -1)
+		return (EXIT_FAILURE);
 
 	if (close(client_id) != 0)
 	{
@@ -95,29 +151,15 @@ int simpleClient(const char *hostname, const char *port)
  *
  * @argc: count of command line arguments
  * @argv: array of command line arguments
+ * Return: return value of simpleClient, or EXIT_FAILURE
  */
 int main(int argc, char *argv[])
 {
-/*
-	char *host = NULL;
-	unsigned short int port = 0;
-	int _port;
-*/
 	if (argc != 3)
 	{
 		printf("Usage: %s <host> <port>\n", argv[0]);
 		return (EXIT_FAILURE);
 	}
-/*
-	_port = atoi(argv[2]);
-	if (errno != 0 || _port < 0 || _port > USHRT_MAX)
-	{
-		printf("Invalid port number:%s\n", argv[2]);
-		return (EXIT_FAILURE);
-	}
 
-	port = (unsigned short int)_port;
-	host = argv[1];
-*/
 	return (simpleClient(argv[1], argv[2]));
 }
