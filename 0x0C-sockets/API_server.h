@@ -3,6 +3,10 @@
 
 /* size_t */
 #include <stddef.h>
+/* netinet/in.h also includes sys/types.h and sys/socket.h */
+/* sys/types.h needed for socket.h portability beyond Linux / POSIX.1-2001 */
+/* sockaddr_in */
+#include <netinet/in.h>
 
 
 typedef struct HTTP_header_s {
@@ -59,5 +63,17 @@ typedef struct todo_s {
 	char *description;
 	struct todo_s *next;
 } todo_t;
+
+
+/* API_server.c */
+void errorExit(int sock_fd, char *error_msg);
+int newTCPIPv4Socket(uint16_t port, struct sockaddr_in *addr);
+int API_server(void);
+/* int main(void) */
+
+/* parse_request.c */
+char *strtokSubstr(char *str, char *delim);
+HTTP_request_t *parseHTTPRequest(char *recv_str);
+
 
 #endif /* API_SERVER_H */

@@ -25,10 +25,10 @@
  * @sock_id: fd of socket to close on exit
  * @error_msg: message to print on exit
  */
-void errorExit(int sock_id, char *error_msg)
+void errorExit(int sock_fd, char *error_msg)
 {
 	/* tries to complete transmissions first, otherwise use shutdown(2) */
-	if (close(sock_id) != 0)
+	if (close(sock_fd) != 0)
 	{
 		perror("API_server: close");
 		exit(EXIT_FAILURE);
@@ -106,16 +106,21 @@ int API_server(void)
 	printf("Server listening on port %i\n",
 	       __builtin_bswap16((uint16_t)(server_addr.sin_port)));
 
-	client_fd = accept(server_fd, (struct sockaddr *)&client_addr,
-			    &client_addr_sz);
-	if (client_fd == -1)
-		errorExit(server_fd, "API_server: accept");
-	printf("Client connected: %s\n",
-	       inet_ntoa(client_addr.sin_addr));
+	for (;;)
+	{
+		client_fd = accept(server_fd, (struct sockaddr *)&client_addr,
+				   &client_addr_sz);
+		if (client_fd == -1)
+			errorExit(server_fd, "API_server: accept");
+		printf("Client connected: %s\n",
+		       inet_ntoa(client_addr.sin_addr));
 
-	if (recv(client_fd, (void *)recv_buf, RECV_BUFSZ, 0) == -1)
-		errorExit(server_fd, "API_server: recv");
-	printf("Message received: \"%s\"\n", recv_buf);
+		if (recv(client_fd, (void *)recv_buf, RECV_BUFSZ, 0) == -1)
+			errorExit(server_fd, "API_server: recv");
+		printf("Raw request:\"%s\"\n", recv_buf);
+
+		parseHTTPRequest(recv_buf);
+	}
 
 	if (close(client_fd) != 0 || close(server_fd) != 0)
 	{

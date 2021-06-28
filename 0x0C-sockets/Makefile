@@ -7,11 +7,14 @@ CFLAGS = -Wall -Werror -Wextra -pedantic
 
 
 # task 4. REST API - The Request
-#: .c
-#	$(CC) -c $(CFLAGS) .c
+API_server.o: API_server.c
+	$(CC) -c $(CFLAGS) API_server.c
 
-todo_api_0: .h .o
-	$(CC) $(CFLAGS) .h .o -o todo_api_0
+parse_request.o: parse_request.c
+	$(CC) -c $(CFLAGS) parse_request.c
+
+todo_api_0: API_server.h API_server.o parse_request.o
+	$(CC) $(CFLAGS) API_server.h API_server.o parse_request.o -o todo_api_0
 
 
 # task 5. REST API - Queries
