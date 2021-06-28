@@ -64,9 +64,8 @@ typedef struct todo_s {
 	struct todo_s *next;
 } todo_t;
 
-
 /* API_server.c */
-void errorExit(int sock_fd, char *error_msg);
+void errorExit(char *error_msg);
 int newTCPIPv4Socket(uint16_t port, struct sockaddr_in *addr);
 int API_server(void);
 /* int main(void) */

@@ -12,26 +12,82 @@
 #include <unistd.h>
 /* exit EXIT_FAILURE EXIT_SUCCESS */
 #include <stdlib.h>
+/* sigaction */
+#include <signal.h>
+/* memset */
+#include <string.h>
+
+
+/* socket fds made global to be seen by signal handler */
+/* static to avoid linter error, -1 represents "unused" state */
+static int server_fd = -1;
+static int client_fd = -1;
 
 
 #define MAX_PENDING 10
 #define RECV_BUFSZ 1024
 
+/**
+ * SIGINT_SIGTERM_handler - closes any open socket fds in the event of a
+ *   termination or interrupt
+ *
+ * @signum: code number of incoming signal
+ */
+void SIGINT_SIGTERM_handler(int signum)
+{
+	/* signum required by expected handler prototype */
+	(void)signum;
+
+	/* tries to complete transmissions first, otherwise use shutdown(2) */
+	if (server_fd != -1)
+	{
+		if (close(server_fd) != 0)
+		{
+			perror("SIGINT_SIGTERM_handler: close");
+			exit(EXIT_FAILURE);
+		}
+		server_fd = -1;
+	}
+
+	if (client_fd != -1)
+	{
+		if (close(client_fd) != 0)
+		{
+			perror("SIGINT_SIGTERM_handler: close");
+			exit(EXIT_FAILURE);
+		}
+		client_fd = -1;
+	}
+}
+
 
 /**
- * errorExit - exits calling function with message, after closing the socket
- *   specified by fd sckt_id
+ * errorExit - exits calling function with message, after closing any open
+ *   sockets
  *
- * @sock_id: fd of socket to close on exit
  * @error_msg: message to print on exit
  */
-void errorExit(int sock_fd, char *error_msg)
+void errorExit(char *error_msg)
 {
 	/* tries to complete transmissions first, otherwise use shutdown(2) */
-	if (close(sock_fd) != 0)
+	if (server_fd != -1)
 	{
-		perror("API_server: close");
-		exit(EXIT_FAILURE);
+		if (close(server_fd) != 0)
+		{
+			perror("errorExit: close");
+			exit(EXIT_FAILURE);
+		}
+		server_fd = -1;
+	}
+
+	if (client_fd != -1)
+	{
+		if (close(client_fd) != 0)
+		{
+			perror("errorExit: close");
+			exit(EXIT_FAILURE);
+		}
+		client_fd = -1;
 	}
 
 	if (error_msg)
@@ -89,18 +145,24 @@ int newTCPIPv4Socket(uint16_t port, struct sockaddr_in *addr)
  */
 int API_server(void)
 {
-	int server_fd, client_fd;
 	struct sockaddr_in server_addr = {0}, client_addr = {0};
 	socklen_t client_addr_sz = sizeof(struct sockaddr_in);
 	char recv_buf[RECV_BUFSZ] = {'\0'};
+	struct sigaction sa;
+
+	memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = SIGINT_SIGTERM_handler;
+        if (sigaction(SIGINT, &sa, NULL) == -1 ||
+	    sigaction(SIGTERM, &sa, NULL) == -1)
+		errorExit("API_server: sigaction");
 
 	server_fd = newTCPIPv4Socket(8080, &server_addr);
 	if (bind(server_fd, (struct sockaddr *)&server_addr,
 		 sizeof(struct sockaddr_in)) == -1)
-		errorExit(server_fd, "API_server: bind");
+		errorExit("API_server: bind");
 
 	if (listen(server_fd, MAX_PENDING) == -1)
-		errorExit(server_fd, "API_server: listen");
+		errorExit("API_server: listen");
 
 	/* assuming LSB environment (network byte order is canonically MSB) */
 	printf("Server listening on port %i\n",
@@ -111,21 +173,15 @@ int API_server(void)
 		client_fd = accept(server_fd, (struct sockaddr *)&client_addr,
 				   &client_addr_sz);
 		if (client_fd == -1)
-			errorExit(server_fd, "API_server: accept");
+			errorExit("API_server: accept");
 		printf("Client connected: %s\n",
 		       inet_ntoa(client_addr.sin_addr));
 
 		if (recv(client_fd, (void *)recv_buf, RECV_BUFSZ, 0) == -1)
-			errorExit(server_fd, "API_server: recv");
+			errorExit("API_server: recv");
 		printf("Raw request:\"%s\"\n", recv_buf);
 
 		parseHTTPRequest(recv_buf);
-	}
-
-	if (close(client_fd) != 0 || close(server_fd) != 0)
-	{
-		perror("API_server: close");
-		return (EXIT_FAILURE);
 	}
 
 	return (EXIT_SUCCESS);
