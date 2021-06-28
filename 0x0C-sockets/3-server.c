@@ -90,7 +90,7 @@ int simpleServer(void)
 {
 	int server_id, client_id;
 	struct sockaddr_in server_addr = {0}, client_addr = {0};
-	socklen_t client_addr_sz = 0;
+	socklen_t client_addr_sz = sizeof(struct sockaddr_in);
 	char recv_buf[RECV_BUFSZ] = {'\0'};
 
 	server_id = newTCPIPv4Socket(12345, &server_addr);
