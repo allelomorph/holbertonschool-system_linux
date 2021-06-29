@@ -6,9 +6,17 @@
 #include <stdio.h>
 /* malloc free */
 #include <stdlib.h>
+/* close */
+#include <unistd.h>
 
-#define SEND_BUFSZ 1024
 
+/**
+ * get1XX_3XXReasonPhrase - helper to getReasonPhrase, finds HTTP/1.1 defined
+ *   Reason-Phrase for a given Status-Codes up to 400
+ *
+ * @Status_Code: code indicating state of server or issue with last request
+ * Return: matching Reason-Phrase, or NULL if none found
+ */
 char *get1XX_3XXReasonPhrase(unsigned int Status_Code)
 {
 	switch (Status_Code)
@@ -36,6 +44,13 @@ char *get1XX_3XXReasonPhrase(unsigned int Status_Code)
 }
 
 
+/**
+ * get4XX_5XXReasonPhrase - helper to getReasonPhrase, finds HTTP/1.1 defined
+ *   Reason-Phrase for a given Status-Code at or above 400
+ *
+ * @Status_Code: code indicating state of server or issue with last request
+ * Return: matching Reason-Phrase, or NULL if none found
+ */
 char *get4XX_5XXReasonPhrase(unsigned int Status_Code)
 {
 	switch (Status_Code)
@@ -70,6 +85,14 @@ char *get4XX_5XXReasonPhrase(unsigned int Status_Code)
 	};
 }
 
+
+/**
+ * getReasonPhrase - finds HTTP/1.1 defined Reason-Phrase for a given
+ *   Status-Code
+ *
+ * @Status_Code: code indicating state of server or issue with last request
+ * Return: matching Reason-Phrase, or NULL if none found
+ */
 char *getReasonPhrase(unsigned int Status_Code)
 {
 	if (Status_Code < 400)
@@ -79,45 +102,46 @@ char *getReasonPhrase(unsigned int Status_Code)
 }
 
 
-
+/**
+ * HTTP_response - sends HTTP/1.1 formatted response to client
+ *
+ * @Status_Code: code indicating state of server or issue with last request
+ * @message_headers: SLL of HTTP_header_t headers, or NULL if none
+ * @message_body: message-body, could be "" or NULL if none
+ */
 void HTTP_response(unsigned int Status_Code,
 		   HTTP_header_t *message_headers, char *message_body)
 {
-        HTTP_response_t response = {0};
-	char sc_buf[5] = {0}, send_buf[SEND_BUFSZ] = {0};
-	char *Reason_Phrase, *buf_temp, *err_msg = NULL;
+	char send_buf[SEND_BUFSZ] = {0};
+	char *HTTP_Version = "HTTP/1.1", *Reason_Phrase, *buf_temp;
 	HTTP_header_t *hdr_temp;
-
-	if (snprintf(sc_buf, 5, "%u", Status_Code) < 0)
-	{
-		err_msg = "HTTP_response: snprintf";
-		Status_Code = 500;
-	}
 
 	Reason_Phrase = getReasonPhrase(Status_Code);
 	if (!Reason_Phrase)
+	{
 		Status_Code = 500;
+		Reason_Phrase = getReasonPhrase(Status_Code);
+		message_headers = NULL;
+		message_body = NULL;
+	}
 
-        response.HTTP_Version = "HTTP/1.1";
-	response.Status_Code = sc_buf;
-	response.Reason_Phrase = Reason_Phrase;
-	response.headers = message_headers;
-	response.message_body = message_body;
-
-	buf_temp = send_buf + sprintf(send_buf, "%s %s %s\r\n",
-				      response.HTTP_Version,
-				      response.Status_Code,
+	buf_temp = send_buf + sprintf(send_buf, "%s %u %s\r\n",
+				      HTTP_Version, Status_Code,
 				      Reason_Phrase);
-        for (hdr_temp = response.headers; hdr_temp; hdr_temp = hdr_temp->next)
+
+	for (hdr_temp = message_headers; hdr_temp; hdr_temp = hdr_temp->next)
 		buf_temp += sprintf(buf_temp, "%s: %s\r\n",
 				    hdr_temp->header, hdr_temp->value);
+
 	buf_temp += sprintf(buf_temp, "\r\n");
-	if (response.message_body)
-		buf_temp += sprintf(buf_temp, "%s", response.message_body);
+
+	if (message_body)
+		buf_temp += sprintf(buf_temp, "%s", message_body);
 
 	if (send(client_fd, (void *)send_buf, strlen(send_buf), 0) == -1)
 		errorExit("HTTP_response: send");
 
-	if (Status_Code == 500)
-		errorExit(err_msg);
+	if (close(client_fd) != 0)
+		errorExit("HTTP_response: close");
+	client_fd = -1;
 }

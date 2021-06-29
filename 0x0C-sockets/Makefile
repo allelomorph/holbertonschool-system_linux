@@ -7,19 +7,25 @@ CFLAGS = -Wall -Werror -Wextra -pedantic
 
 
 # task 4. REST API - The Request
-API_server.o: API_server.c
-	$(CC) -c $(CFLAGS) API_server.c
+API_server_0.o: API_server_0.c
+	$(CC) -c $(CFLAGS) API_server_0.c
 
-parse_request.o: parse_request.c
-	$(CC) -c $(CFLAGS) parse_request.c
+signal_handler.o: signal_handler.c
+	$(CC) -c $(CFLAGS) signal_handler.c
+
+tokenize.o: tokenize.c
+	$(CC) -c $(CFLAGS) tokenize.c
+
+parse_request_0.o: parse_request_0.c
+	$(CC) -c $(CFLAGS) parse_request_0.c
 
 responses.o: responses.c
 	$(CC) -c $(CFLAGS) responses.c
 
 todo_api_0: API_server.h \
-	API_server.o parse_request.o responses.o
+	API_server_0.o signal_handler.o tokenize.o parse_request_0.o responses.o
 	$(CC) $(CFLAGS) API_server.h \
-	API_server.o parse_request.o responses.o \
+	API_server_0.o signal_handler.o tokenize.o parse_request_0.o responses.o \
 	-o todo_api_0
 
 
