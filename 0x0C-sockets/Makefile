@@ -13,8 +13,14 @@ API_server.o: API_server.c
 parse_request.o: parse_request.c
 	$(CC) -c $(CFLAGS) parse_request.c
 
-todo_api_0: API_server.h API_server.o parse_request.o
-	$(CC) $(CFLAGS) API_server.h API_server.o parse_request.o -o todo_api_0
+responses.o: responses.c
+	$(CC) -c $(CFLAGS) responses.c
+
+todo_api_0: API_server.h \
+	API_server.o parse_request.o responses.o
+	$(CC) $(CFLAGS) API_server.h \
+	API_server.o parse_request.o responses.o \
+	-o todo_api_0
 
 
 # task 5. REST API - Queries

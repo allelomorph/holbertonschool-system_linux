@@ -19,10 +19,9 @@
 
 
 /* socket fds made global to be seen by signal handler */
-/* static to avoid linter error, -1 represents "unused" state */
-static int server_fd = -1;
-static int client_fd = -1;
-
+/* -1 represents "unused" state */
+int server_fd = -1;
+int client_fd = -1;
 
 #define MAX_PENDING 10
 #define RECV_BUFSZ 1024
@@ -182,6 +181,11 @@ int API_server(void)
 		printf("Raw request:\"%s\"\n", recv_buf);
 
 		parseHTTPRequest(recv_buf);
+		HTTP_response(200, NULL, NULL);
+
+		if (close(client_fd) != 0)
+			errorExit("API_server: close");
+		client_fd = -1;
 	}
 
 	return (EXIT_SUCCESS);
