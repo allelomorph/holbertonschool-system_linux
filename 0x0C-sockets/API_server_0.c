@@ -5,7 +5,7 @@
 #include <netinet/in.h>
 /* inet_ntoa */
 #include <arpa/inet.h>
-/* perror printf */
+/* perror printf setbuf */
 #include <stdio.h>
 /* close */
 #include <unistd.h>
@@ -162,6 +162,9 @@ int API_server(void)
 int main(void)
 {
 	setSigHandler();
+
+	/* make all output unbuffered instead of repeated calls to fflush() */
+	setbuf(stdout, NULL);
 
 	return (API_server());
 }
