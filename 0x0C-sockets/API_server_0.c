@@ -136,7 +136,7 @@ int API_server(void)
 			HTTP_response(500, NULL, NULL);
 			errorExit("API_server: recv");
 		}
-		printf("Raw request:\"%s\"\n", recv_buf);
+		printf("Raw request: \"%s\"\n", recv_buf);
 
 		request = parseHTTPRequest(recv_buf);
 		if (request)
