@@ -123,7 +123,11 @@ int API_server(void)
 		client_fd = accept(server_fd, (struct sockaddr *)&client_addr,
 				   &client_addr_sz);
 		if (client_fd == -1)
+		{
+			if (errno == EINTR)
+				errorExit(NULL);
 			errorExit("API_server: accept");
+		}
 		printf("Client connected: %s\n",
 		       inet_ntoa(client_addr.sin_addr));
 
