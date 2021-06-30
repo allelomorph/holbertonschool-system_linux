@@ -42,6 +42,8 @@ void SIGINT_SIGTERM_handler(int signum)
 		}
 		client_fd = -1;
 	}
+
+	freeTodos();
 }
 
 

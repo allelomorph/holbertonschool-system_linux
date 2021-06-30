@@ -29,3 +29,22 @@ void freeRequest(HTTP_request_t *request)
 
 	free(request);
 }
+
+
+/**
+ * freeTodos - frees global SLL of todos
+ */
+void freeTodos(void)
+{
+	todo_t *temp, *curr;
+
+	for (temp = todos; temp;)
+	{
+		curr = temp;
+		temp = temp->next;
+
+		free(curr->title);
+		free(curr->description);
+		free(curr);
+	}
+}

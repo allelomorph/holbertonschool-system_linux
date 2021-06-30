@@ -23,6 +23,10 @@
 int server_fd = -1;
 int client_fd = -1;
 
+/* global head of list for storage in process memory instead of file or DB */
+/* declaration in API_server.h */
+todo_t *todos = NULL;
+
 
 /**
  * errorExit - exits calling function with message, after closing any open
@@ -52,6 +56,8 @@ void errorExit(char *error_msg)
 		}
 		client_fd = -1;
 	}
+
+	freeTodos();
 
 	if (error_msg)
 		perror(error_msg);

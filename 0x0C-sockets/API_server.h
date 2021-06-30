@@ -107,9 +107,14 @@ typedef struct todo_s
 
 
 /* socket fds made global to be seen by signal handler */
-/* definition in API_server.c */
+/* definition in *-API_server.c */
 extern int server_fd;
 extern int client_fd;
+
+/* global head of list, storage in process memory instead of file or DB */
+/* definition in todos.c */
+extern todo_t *todos;
+
 
 /* *-API_server.c */
 void errorExit(char *error_msg);
@@ -155,7 +160,7 @@ void printRequest(HTTP_request_t *request);
 
 /* cleanup.c */
 void freeRequest(HTTP_request_t *request);
-
+void freeTodos(void);
 
 /*
  * typedef struct HTTP_response_s {
