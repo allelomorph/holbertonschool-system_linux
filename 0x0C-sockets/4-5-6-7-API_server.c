@@ -143,7 +143,7 @@ int API_server(void)
 		if (request)
 		{
 			printRequest(request);
-			free(request);
+			freeRequest(request);
 			HTTP_response(200, NULL, NULL);
 		}
 

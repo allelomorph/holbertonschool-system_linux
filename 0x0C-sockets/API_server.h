@@ -56,6 +56,7 @@ typedef struct HTTP_header_s
  * @Method: HTTP method requested
  * @Request_URI: path to resource [ + url-encoded query ]
  * @HTTP_Version: HTTP version, should be "HTTP/1.1" for this implementation
+ * @URI_query: URL-encoded query '?'-delimited from Request-URI
  * @headers: SLL of HTTP_header_t headers
  * @message_body: message-body, may be NULL or ""
  */
@@ -147,8 +148,12 @@ int isVersionSupported(const char *HTTP_Version);
 int parseRequestLine(char *recv_str, char **message_lines,
 		     HTTP_request_t *request);
 
-/* *-printRequest.c */
+/* ?-printRequest.c */
 void printRequest(HTTP_request_t *request);
+
+/* cleanup.c */
+void freeRequest(HTTP_request_t *request);
+
 /*
  * typedef struct HTTP_response_s {
  *	char *HTTP_Version;

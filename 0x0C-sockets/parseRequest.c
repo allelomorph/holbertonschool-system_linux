@@ -141,7 +141,7 @@ char **parseMessageLines(char *recv_str, HTTP_request_t *request,
 	message_lines = tokenizeBySubstr(recv_str, "\r\n", message_line_ct);
 	if (!message_lines)
 	{
-	        HTTP_response(500, NULL, NULL);
+		HTTP_response(500, NULL, NULL);
 		return (NULL);
 	}
 
@@ -180,7 +180,7 @@ HTTP_request_t *parseRequest(char *recv_str)
 	}
 	memset(request, 0, sizeof(HTTP_request_t));
 
-        message_lines = parseMessageLines(recv_str, request,
+	message_lines = parseMessageLines(recv_str, request,
 					  &message_line_ct);
 	if (!message_lines)
 	{
@@ -188,7 +188,7 @@ HTTP_request_t *parseRequest(char *recv_str)
 		return (NULL);
 	}
 
-        if (parseRequestLine(recv_str, message_lines, request) != 0 ||
+	if (parseRequestLine(recv_str, message_lines, request) != 0 ||
 	    parseHeaders(recv_str, message_lines,
 			 message_line_ct, request) != 0)
 	{

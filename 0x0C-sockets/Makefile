@@ -23,6 +23,9 @@ parseRequestLine.o: parseRequestLine.c
 HTTP_response.o: HTTP_response.c
 	$(CC) -c $(CFLAGS) HTTP_response.c
 
+cleanup.o: cleanup.c
+	$(CC) -c $(CFLAGS) cleanup.c
+
 
 # task 4. REST API - The Request
 4-printRequest.o: 4-printRequest.c
@@ -30,11 +33,11 @@ HTTP_response.o: HTTP_response.c
 
 todo_api_0: API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o \
+	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
 	4-printRequest.o
 	$(CC) $(CFLAGS) API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o \
+	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
 	4-printRequest.o \
 	-o todo_api_0
 
@@ -45,11 +48,11 @@ todo_api_0: API_server.h \
 
 todo_api_1: API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o \
+	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
 	5-printRequest.o
 	$(CC) $(CFLAGS) API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o \
+	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
 	5-printRequest.o \
 	-o todo_api_1
 
@@ -60,11 +63,11 @@ todo_api_1: API_server.h \
 
 todo_api_2: API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o \
+	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
 	6-printRequest.o
 	$(CC) $(CFLAGS) API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o \
+	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
 	6-printRequest.o \
 	-o todo_api_2
 
@@ -75,11 +78,11 @@ todo_api_2: API_server.h \
 
 todo_api_3: API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o \
+	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
 	7-printRequest.o
 	$(CC) $(CFLAGS) API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o \
+	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
 	7-printRequest.o \
 	-o todo_api_3
 
