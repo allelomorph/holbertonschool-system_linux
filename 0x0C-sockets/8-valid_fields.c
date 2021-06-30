@@ -15,9 +15,9 @@ int isMethodImplemented(const char *Method)
 	size_t i;
 	char *valid_methods[] = {
 		/* "OPTIONS", */
-		"GET",
-		"HEAD",
-		/* "POST", */
+		/* "GET", */
+		/* "HEAD", */
+	        "POST",
 		/* "PUT", */
 		/* "DELETE", */
 		/* "TRACE", */
