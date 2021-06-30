@@ -38,14 +38,14 @@ typedef enum header_type_e
  * struct HTTP_header_s - contains type, key and value for HTTP header
  *
  * @type: header type
- * @header: header name/key
+ * @name: header name/key
  * @value: header value (may be multiple comma delimited for select headers)
  * @next: pointer to next node in SLL, or NULL at tail
  */
 typedef struct HTTP_header_s
 {
 	header_type_t type;
-	char *header;
+	char *name;
 	char *value;
 	struct HTTP_header_s *next;
 } HTTP_header_t;
@@ -64,6 +64,7 @@ typedef struct HTTP_request_s
 	char *Method;
 	char *Request_URI;
 	char *HTTP_Version;
+	char *URI_query;
 	HTTP_header_t *headers;
 	char *message_body;
 } HTTP_request_t;

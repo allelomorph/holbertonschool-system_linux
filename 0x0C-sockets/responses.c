@@ -131,7 +131,7 @@ void HTTP_response(unsigned int Status_Code,
 
 	for (hdr_temp = message_headers; hdr_temp; hdr_temp = hdr_temp->next)
 		buf_temp += sprintf(buf_temp, "%s: %s\r\n",
-				    hdr_temp->header, hdr_temp->value);
+				    hdr_temp->name, hdr_temp->value);
 
 	buf_temp += sprintf(buf_temp, "\r\n");
 
