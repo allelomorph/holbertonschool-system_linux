@@ -17,4 +17,6 @@ void printRequest(HTTP_request_t *request)
 	printf("Method: %s\nPath: %s\nVersion: %s\n",
 	       request->Method, request->Request_URI,
 	       request->HTTP_Version);
+
+	HTTP_response(200, NULL, NULL);
 }

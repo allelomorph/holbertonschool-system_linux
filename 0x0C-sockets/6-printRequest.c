@@ -21,4 +21,6 @@ void printRequest(HTTP_request_t *request)
 		printf("Header: \"%s\" -> \"%s\"\n",
 		       hdr->name, hdr->value);
 	}
+
+	HTTP_response(200, NULL, NULL);
 }
