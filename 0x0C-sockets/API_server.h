@@ -111,9 +111,9 @@ typedef struct todo_s
 extern int server_fd;
 extern int client_fd;
 
-/* 4-5-6-7-API_server.c / 8-9-10-11-API_server.c */
+/* *-API_server.c */
 void errorExit(char *error_msg);
-int listenTCPIPv4Socket(uint16_t port);
+void listenTCPIPv4Socket(uint16_t port);
 int API_server(void);
 /* int main(void) */
 
@@ -141,9 +141,11 @@ char *getReasonPhrase(unsigned int Status_Code);
 void HTTP_response(unsigned int Status_Code,
 		   HTTP_header_t *message_headers, char *message_body);
 
-/* parseRequestLine.c */
+/* *-valid_fields.c */
 int isMethodImplemented(const char *Method);
 int isPathValid(const char *Request_URI);
+
+/* parseRequestLine.c */
 int isVersionSupported(const char *HTTP_Version);
 int parseRequestLine(char *recv_str, char **message_lines,
 		     HTTP_request_t *request);
@@ -153,6 +155,7 @@ void printRequest(HTTP_request_t *request);
 
 /* cleanup.c */
 void freeRequest(HTTP_request_t *request);
+
 
 /*
  * typedef struct HTTP_response_s {

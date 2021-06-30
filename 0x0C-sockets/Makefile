@@ -17,6 +17,12 @@ tokenizeBySubstr.o: tokenizeBySubstr.c
 parseRequest.o: parseRequest.c
 	$(CC) -c $(CFLAGS) parseRequest.c
 
+4-5-6-7-valid_fields.o: 4-5-6-7-valid_fields.c
+	$(CC) -c $(CFLAGS) 4-5-6-7-valid_fields.c
+
+9-10-valid_fields.o: 9-10-valid_fields.c
+	$(CC) -c $(CFLAGS) 9-10-valid_fields.c
+
 parseRequestLine.o: parseRequestLine.c
 	$(CC) -c $(CFLAGS) parseRequestLine.c
 
@@ -33,12 +39,12 @@ cleanup.o: cleanup.c
 
 todo_api_0: API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
-	4-printRequest.o
+	parseRequest.o 4-5-6-7-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o 4-printRequest.o
 	$(CC) $(CFLAGS) API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
-	4-printRequest.o \
+	parseRequest.o 4-5-6-7-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o 4-printRequest.o \
 	-o todo_api_0
 
 
@@ -48,12 +54,12 @@ todo_api_0: API_server.h \
 
 todo_api_1: API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
-	5-printRequest.o
+	parseRequest.o 4-5-6-7-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o 5-printRequest.o
 	$(CC) $(CFLAGS) API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
-	5-printRequest.o \
+	parseRequest.o 4-5-6-7-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o 5-printRequest.o \
 	-o todo_api_1
 
 
@@ -63,12 +69,12 @@ todo_api_1: API_server.h \
 
 todo_api_2: API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
-	6-printRequest.o
+	parseRequest.o 4-5-6-7-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o 6-printRequest.o
 	$(CC) $(CFLAGS) API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
-	6-printRequest.o \
+	parseRequest.o 4-5-6-7-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o 6-printRequest.o \
 	-o todo_api_2
 
 
@@ -78,16 +84,19 @@ todo_api_2: API_server.h \
 
 todo_api_3: API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
-	7-printRequest.o
+	parseRequest.o 4-5-6-7-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o 7-printRequest.o
 	$(CC) $(CFLAGS) API_server.h \
 	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
-	parseRequest.o parseRequestLine.o HTTP_response.o cleanup.o \
-	7-printRequest.o \
+	parseRequest.o 4-5-6-7-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o 7-printRequest.o \
 	-o todo_api_3
 
 
 # task 8. REST API - Create TODO
+8-valid_fields.o: 8-valid_fields.c
+	$(CC) -c $(CFLAGS) 8-valid_fields.c
+
 #: .c
 #	$(CC) -c $(CFLAGS) .c
 
@@ -112,6 +121,9 @@ todo_api_6: .h .o
 
 
 # task 11. REST API - Delete a TODO
+11-valid_fields.o: 11-valid_fields.c
+	$(CC) -c $(CFLAGS) 11-valid_fields.c
+
 #: .c
 #	$(CC) -c $(CFLAGS) .c
 
