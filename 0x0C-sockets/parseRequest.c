@@ -8,9 +8,16 @@
 #include <stdlib.h>
 
 
+/**
+ * getHeaderType - classifies a HTTP 1.1 header name as general, request,
+ *   repsonse, or entity header type
+ *
+ * @hdr_name: name of a header in request
+ * Return: header enum value, or HT_UNKNOWN on failure
+ */
 header_type_t getHeaderType(char *hdr_name)
 {
-	int i, j, gen_hdr_ct = 8, req_hdr_ct = 19,
+	int i, gen_hdr_ct = 8, req_hdr_ct = 19,
 		res_hdr_ct = 9, ent_hdr_ct = 10;
 	char *gen_hdrs[] = {"Cache-Control", "Connection", "Date",
 			    "Pragma", "Trailer", "Transfer-Encoding",
@@ -50,6 +57,16 @@ header_type_t getHeaderType(char *hdr_name)
 	return (HT_UNKNOWN);
 }
 
+
+/**
+ * parseHeaders - validates and parses a header lines from a HTTP request
+ *
+ * @recv_str: buffer of raw request received from client
+ * @message_lines: array of pointers to recv_str after being tokenized by CRLF
+ * @message_line_ct: count of tokens after splitting by CRLF
+ * @request: struct to populate with processed values, modified by reference
+ * Return: 1 on failure, 0 on success
+ */
 int parseHeaders(char *recv_str, char **message_lines,
 		 size_t message_line_ct, HTTP_request_t *request)
 {
@@ -90,57 +107,22 @@ int parseHeaders(char *recv_str, char **message_lines,
 			hdrs_tail = new_hdr;
 		}
 	}
+	request->headers = hdrs_head;
 
 	return (0);
 }
 
 
-int parseRequestLine(char *recv_str, char **message_lines,
-		     HTTP_request_t *request)
-{
-	if (!request || !message_lines || !recv_str)
-	{
-		HTTP_response(500, NULL, NULL);
-		return (1);
-	}
-
-	request->Method = strtok(message_lines[0], " ");
-	request->Request_URI = strtok(NULL, " ");
-	request->HTTP_Version = strtok(NULL, " ");
-	/* validate expected HTTP/1.1 syntax of 3 SP-delimited tokens */
-	if (!request->Method || !strlen(request->Method) ||
-	    !request->Request_URI || !strlen(request->Request_URI) ||
-	    !request->HTTP_Version || !strlen(request->HTTP_Version))
-	{
-		HTTP_response(400, NULL, NULL);
-		return (1);
-	}
-	/* RFC 2616 recommends URIs <= 255 chars for legacy compliance */
-	if (strlen(request->Request_URI) > 255)
-	{
-		HTTP_response(414, NULL, NULL);
-		return (1);
-	}
-
-	request->Request_URI = strtok(request->Request_URI, "?");
-	request->URI_query = strtok(NULL, "?");
-
-	if (!isMethodImplemented(request->Method) ||
-	    !isPathRecognized(request->Request_URI))
-	{
-		HTTP_response(404, NULL, NULL);
-		return (1);
-	}
-	if (!isVersionSupported(request->HTTP_Version))
-	{
-		HTTP_response(505, NULL, NULL);
-		return (1);
-	}
-
-	return(0);
-}
-
-
+/**
+ * parseMessageLines - first stage of parsing an HTTP reuqest, tokenizes raw
+ *   request by CRLF
+ *
+ * @recv_str: buffer of raw request received from client
+ * @request: struct to populate with processed values, modified by reference
+ * @message_line_ct: count of tokens after splitting by CRLF, modifed by
+ *   reference
+ * Return: array of message lines, or NULL on failure
+ */
 char **parseMessageLines(char *recv_str, HTTP_request_t *request,
 			 size_t *message_line_ct)
 {
@@ -156,7 +138,7 @@ char **parseMessageLines(char *recv_str, HTTP_request_t *request,
 	while (*recv_str == '\r' && *(recv_str + 1) == '\n')
 		recv_str += 2;
 
-	message_lines = tokenizeBySubstr(recv_str, "\r\n", &message_line_ct);
+	message_lines = tokenizeBySubstr(recv_str, "\r\n", message_line_ct);
 	if (!message_lines)
 	{
 	        HTTP_response(500, NULL, NULL);
@@ -164,27 +146,27 @@ char **parseMessageLines(char *recv_str, HTTP_request_t *request,
 	}
 
 	/* validate expected HTTP/1.1 syntax of CRLF-delimited lines */
-	if (message_line_ct < 2 || !strlen(message_lines[0]) ||
-	    strlen(message_lines[message_line_ct - 2]))
+	if (*message_line_ct < 2 || !strlen(message_lines[0]) ||
+	    strlen(message_lines[*message_line_ct - 2]))
 	{
 		HTTP_response(400, NULL, NULL);
 		free(message_lines);
 		return (NULL);
 	}
 
-	request->message_body = message_lines[message_line_ct - 1];
+	request->message_body = message_lines[*message_line_ct - 1];
 
 	return (message_lines);
 }
 
 
 /**
- * parseHTTPRequest - parses raw HTTP request to populate request data struct
+ * parseRequest - parses raw HTTP request to populate request data struct
  *
  * @recv_str: raw request string recieved from client
  * Return: pointer to populated HTTP_request_s, or NULL on failure
  */
-HTTP_request_t *parseHTTPRequest(char *recv_str)
+HTTP_request_t *parseRequest(char *recv_str)
 {
 	char **message_lines;
 	size_t message_line_ct;

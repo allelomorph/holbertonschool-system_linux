@@ -110,31 +110,45 @@ typedef struct todo_s
 extern int server_fd;
 extern int client_fd;
 
-/* API_server.c */
+/* 4-5-6-7-API_server.c / 8-9-10-11-API_server.c */
 void errorExit(char *error_msg);
 int listenTCPIPv4Socket(uint16_t port);
 int API_server(void);
 /* int main(void) */
 
-/* signal_handler.c */
+/* setSigHandler.c */
 void SIGINT_SIGTERM_handler(int signum);
 void setSigHandler(void);
 
-/* tokenize.c */
+/* tokenizeBySubstr.c */
 char *strtokSubstr(char *str, const char *delim);
 size_t countTokensBySubstr(const char *str, const char *delim);
 char **tokenizeBySubstr(char *str, const char *delim, size_t *token_ct);
 
-/* parse_request.c */
-HTTP_request_t *parseHTTPRequest(char *recv_str);
+/* parseRequest.c */
+header_type_t getHeaderType(char *hdr_name);
+int parseHeaders(char *recv_str, char **message_lines,
+		 size_t message_line_ct, HTTP_request_t *request);
+char **parseMessageLines(char *recv_str, HTTP_request_t *request,
+			 size_t *message_line_ct);
+HTTP_request_t *parseRequest(char *recv_str);
 
-/* responses.c */
+/* HTTP_response.c */
 char *get1XX_3XXReasonPhrase(unsigned int Status_Code);
 char *get4XX_5XXReasonPhrase(unsigned int Status_Code);
 char *getReasonPhrase(unsigned int Status_Code);
 void HTTP_response(unsigned int Status_Code,
 		   HTTP_header_t *message_headers, char *message_body);
 
+/* parseRequestLine.c */
+int isMethodImplemented(const char *Method);
+int isPathValid(const char *Request_URI);
+int isVersionSupported(const char *HTTP_Version);
+int parseRequestLine(char *recv_str, char **message_lines,
+		     HTTP_request_t *request);
+
+/* *-printRequest.c */
+void printRequest(HTTP_request_t *request);
 /*
  * typedef struct HTTP_response_s {
  *	char *HTTP_Version;

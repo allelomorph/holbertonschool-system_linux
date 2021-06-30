@@ -119,13 +119,11 @@ char **tokenizeBySubstr(char *str, const char *delim, size_t *token_ct)
 
 	tokens = malloc(sizeof(char *) * *token_ct);
 	if (!tokens)
-		/* response 500? */
 		return (NULL);
 
 	tokens[0] = strtokSubstr(str, delim);
 	if (!tokens[0])
 	{
-		/* response 500? */
 		free(tokens);
 		return (NULL);
 	}
@@ -135,7 +133,6 @@ char **tokenizeBySubstr(char *str, const char *delim, size_t *token_ct)
 		tokens[i] = strtokSubstr(NULL, delim);
 		if (!tokens[i])
 		{
-			/* response 500? */
 			free(tokens);
 			return (NULL);
 		}

@@ -136,14 +136,13 @@ int API_server(void)
 			HTTP_response(500, NULL, NULL);
 			errorExit("API_server: recv");
 		}
+
 		printf("Raw request: \"%s\"\n", recv_buf);
 
-		request = parseHTTPRequest(recv_buf);
+		request = parseRequest(recv_buf);
 		if (request)
 		{
-			printf("Method: %s\nPath: %s\nVersion: %s\n",
-			       request->Method, request->Request_URI,
-			       request->HTTP_Version);
+			printRequest(request);
 			free(request);
 			HTTP_response(200, NULL, NULL);
 		}
