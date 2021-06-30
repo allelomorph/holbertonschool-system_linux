@@ -67,13 +67,12 @@ void errorExit(char *error_msg)
  * @port: port number to assign to socket
  * Return: fd/socket id of new IPv4/TCP socket (direct exit on failure)
  */
-int listenTCPIPv4Socket(uint16_t port)
+void listenTCPIPv4Socket(uint16_t port)
 {
-	int sock_fd;
 	struct sockaddr_in addr = {0};
 
-	sock_fd = socket(PF_INET, SOCK_STREAM, 0);
-	if (sock_fd == -1)
+	server_fd = socket(PF_INET, SOCK_STREAM, 0);
+	if (server_fd == -1)
 		errorExit("listenTCPIPv4Socket: socket");
 
 	/* address family in host byte order */
@@ -84,18 +83,16 @@ int listenTCPIPv4Socket(uint16_t port)
 	/* INADDR_ANY is wildcard for IPv4, see getaddrinfo(3) */
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	if (bind(sock_fd, (struct sockaddr *)&addr,
+	if (bind(server_fd, (struct sockaddr *)&addr,
 		 sizeof(struct sockaddr_in)) == -1)
 		errorExit("listenTCPIPv4Socket: bind");
 
-	if (listen(sock_fd, MAX_PENDING) == -1)
+	if (listen(server_fd, MAX_PENDING) == -1)
 		errorExit("listenTCPIPv4Socket: listen");
 
 	/* assuming LSB environment (network byte order is canonically MSB) */
 	printf("Server listening on port %i\n",
 	       __builtin_bswap16((uint16_t)(addr.sin_port)));
-
-	return (sock_fd);
 }
 
 
@@ -116,7 +113,7 @@ int API_server(void)
 	char recv_buf[RECV_BUFSZ] = {0};
 	HTTP_request_t *request = NULL;
 
-	server_fd = listenTCPIPv4Socket(8080);
+	listenTCPIPv4Socket(8080);
 
 	for (;;)
 	{
@@ -144,7 +141,6 @@ int API_server(void)
 		{
 			printRequest(request);
 			freeRequest(request);
-			HTTP_response(200, NULL, NULL);
 		}
 
 		memset(recv_buf, 0, RECV_BUFSZ);
