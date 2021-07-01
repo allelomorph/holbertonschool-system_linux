@@ -1,7 +1,10 @@
 #include "API_server.h"
 
-
-/* calling func: 404 on failure, 200 on success */
+/*
+malloc
+strdup
+free spritnf
+*/
 
 todo_t *getTodoByID(size_t id)
 {
@@ -17,7 +20,7 @@ todo_t *getTodoByID(size_t id)
 }
 
 
-/* calling func: 500 on failure, 201 on success */
+
 
 todo_t *createTodo(const char *title, const char *description)
 {
@@ -51,7 +54,7 @@ todo_t *createTodo(const char *title, const char *description)
 }
 
 
-/* calling func: 404 on failure, 204 on success */
+
 int deleteTodo(size_t id)
 {
 	todo_t *temp, *prev;
@@ -63,7 +66,7 @@ int deleteTodo(size_t id)
 		free(temp->title);
 		free(temp->description);
 		free(temp);
-		return (1);
+		return (0);
 	}
 
 	for (prev = todos, temp = todos->next;
@@ -76,31 +79,32 @@ int deleteTodo(size_t id)
 			free(temp->title);
 			free(temp->description);
 			free(temp);
-			return (1);
+			return (0);
 		}
 	}
 
-	HTTP_response(404, NULL, NULL);
-	return;
+	return (1);
 }
 
 
-char *JSONSerializeAllTodos(size_t *JSON_len)
+
+size_t JSONSerializeAllTodos(char *JSON_output)
 {
 	char JSON_buf[JSON_BUFSZ] = {0};
 	char *curr, *todo_JSON =
 		"{\"id\":%lu,\"title\":\"%s\",\"description\":\"%s\"}";
 	todo_t *temp;
+        size_t JSON_len;
 	int incr;
 
-	if (!JSON_len)
-		reurn (NULL);
+	if (!JSON_output)
+		reurn (0);
 
 	curr = JSON_buf;
-	*JSON_len = 0;
+	JSON_len = 0;
 
         *curr = '[';
-	(*JSON_len)++;
+        JSON_len++;
 	curr++;
 
 	for (temp = todos; temp; temp = temp->next)
@@ -108,35 +112,40 @@ char *JSONSerializeAllTodos(size_t *JSON_len)
 		incr = sprintf(curr, temp_JSON, temp->id, temp->title,
 			       temp->description);
 
-		(*JSON_len) += incr;
+		JSON_len += incr;
 		curr += incr;
 
 		if (temp->next)
 		{
 		        *curr = ',';
-			(*JSON_len)++;
+			JSON_len++;
 			curr++;
 		}
 	}
 
 	*curr = ']';
-	(*JSON_len)++;
+        JSON_len++;
 	curr++;
 
-	return (strdup(JSON_buf));
+	*JSON_output = strdup(JSON_buf);
+
+	return (JSON_len);
 }
 
-char *JSONSerializeTodo(todo_t *todo, size_t *JSON_len)
+size_t JSONSerializeTodo(todo_t *todo, char **JSON_output)
 {
-	char todo_JSON =
+	size_t JSON_len;
+	char todo_JSON_fmt =
 		"{\"id\":%lu,\"title\":\"%s\",\"description\":\"%s\"}";
 	char JSON_buf[JSON_BUFSZ] = {0};
 
-	if (!todo || !JSON_len)
-		reurn (NULL);
+	if (!todo || !JSON_output)
+		reurn (0);
 
-	*JSON_Len = sprintf(todo_JSON, todo->id, todo->title,
-			    todo->description);
+	JSON_Len = sprintf(todo_JSON_fmt, todo->id, todo->title,
+			   todo->description);
 
-	return (strdup(JSON_buf));
+	*JSON_output = strdup(JSON_buf);
+
+	return (JSON_len);
 }

@@ -8,6 +8,9 @@ CFLAGS = -Wall -Werror -Wextra -pedantic
 4-5-6-7-API_server.o: 4-5-6-7-API_server.c
 	$(CC) -c $(CFLAGS) 4-5-6-7-API_server.c
 
+#8-9-10-11-API_server.o: 8-9-10-11-API_server.c
+#	$(CC) -c $(CFLAGS) 8-9-10-11-API_server.c
+
 setSignalHandler.o: setSignalHandler.c
 	$(CC) -c $(CFLAGS) setSignalHandler.c
 
@@ -20,8 +23,14 @@ parseRequest.o: parseRequest.c
 4-5-6-7-valid_fields.o: 4-5-6-7-valid_fields.c
 	$(CC) -c $(CFLAGS) 4-5-6-7-valid_fields.c
 
+8-valid_fields.o: 8-valid_fields.c
+	$(CC) -c $(CFLAGS) 8-valid_fields.c
+
 9-10-valid_fields.o: 9-10-valid_fields.c
 	$(CC) -c $(CFLAGS) 9-10-valid_fields.c
+
+11-valid_fields.o: 11-valid_fields.c
+	$(CC) -c $(CFLAGS) 11-valid_fields.c
 
 parseRequestLine.o: parseRequestLine.c
 	$(CC) -c $(CFLAGS) parseRequestLine.c
@@ -31,6 +40,13 @@ HTTP_response.o: HTTP_response.c
 
 cleanup.o: cleanup.c
 	$(CC) -c $(CFLAGS) cleanup.c
+
+methods.o: methods.c
+	$(CC) -c $(CFLAGS) methods.c
+
+todos.o: todos.c
+	$(CC) -c $(CFLAGS) todos.c
+
 
 
 # task 4. REST API - The Request
@@ -94,42 +110,51 @@ todo_api_3: API_server.h \
 
 
 # task 8. REST API - Create TODO
-8-valid_fields.o: 8-valid_fields.c
-	$(CC) -c $(CFLAGS) 8-valid_fields.c
-
-#: .c
-#	$(CC) -c $(CFLAGS) .c
-
-todo_api_4: .h .o
-	$(CC) $(CFLAGS) .h .o -o todo_api_4
+todo_api_4: API_server.h \
+	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
+	parseRequest.o 8-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o methods.o todos.o
+	$(CC) $(CFLAGS) API_server.h \
+	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
+	parseRequest.o 8-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o methods.o todos.o \
+	-o todo_api_4
 
 
 # task 9. REST API - Retrieve all TODOs
-#: .c
-#	$(CC) -c $(CFLAGS) .c
-
-todo_api_5: .h .o
-	$(CC) $(CFLAGS) .h .o -o todo_api_5
+todo_api_5: API_server.h \
+	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
+	parseRequest.o 9-10-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o methods.o todos.o
+	$(CC) $(CFLAGS) API_server.h \
+	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
+	parseRequest.o 9-10-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o methods.o todos.o \
+	-o todo_api_5
 
 
 # task 10. REST API - Retrieve a single TODO
-#: .c
-#	$(CC) -c $(CFLAGS) .c
-
-todo_api_6: .h .o
-	$(CC) $(CFLAGS) .h .o -o todo_api_6
+todo_api_6: API_server.h \
+	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
+	parseRequest.o 9-10-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o methods.o todos.o
+	$(CC) $(CFLAGS) API_server.h \
+	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
+	parseRequest.o 9-10-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o methods.o todos.o \
+	-o todo_api_6
 
 
 # task 11. REST API - Delete a TODO
-11-valid_fields.o: 11-valid_fields.c
-	$(CC) -c $(CFLAGS) 11-valid_fields.c
-
-#: .c
-#	$(CC) -c $(CFLAGS) .c
-
-todo_api_7: .h .o
-	$(CC) $(CFLAGS) .h .o -o todo_api_7
-
+todo_api_7: API_server.h \
+	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
+	parseRequest.o 11-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o methods.o todos.o
+	$(CC) $(CFLAGS) API_server.h \
+	4-5-6-7-API_server.o setSignalHandler.o tokenizeBySubstr.o \
+	parseRequest.o 11-valid_fields.o parseRequestLine.o \
+	HTTP_response.o cleanup.o methods.o todos.o \
+	-o todo_api_7
 
 .PHONY: all clean_all oclean_all fclean_all re_all
 

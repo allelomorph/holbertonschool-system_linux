@@ -11,10 +11,14 @@
 
 
 #define MAX_PENDING 10
-#define RECV_BUFSZ 1024
-#define SEND_BUFSZ 1024
 #define HT_NB 5
 
+#define RECV_BUFSZ 1024
+#define SEND_BUFSZ 1024
+#define JSON_BUFSZ 512
+
+#define INCL_MSG_BODY 0
+#define NO_MSG_BODY 1
 
 /**
  * enum header_type_e - enumerates the different HTTP header types.
@@ -161,6 +165,25 @@ void printRequest(HTTP_request_t *request);
 /* cleanup.c */
 void freeRequest(HTTP_request_t *request);
 void freeTodos(void);
+
+/* methods.c */
+int addRepsonseHeader(HTTP_header_t **head, const char *name,
+		      const char *description);
+void freeRepsonseHeaders(HTTP_header_t **head);
+HTTP_header_t *getHeaderByName(const char *name, HTTP_header_t *headers);
+int todoValuesFromQuery(const char *query, char **title, char **description);
+int IDFromQuery(const char *query, size_t *id);
+void methodPOST(HTTP_request *request);
+void methodGET(HTTP_request *request, int GET_body_flag);
+void methodDELETE(HTTP_request *request);
+void runMethod(HTTP_request *request);
+
+/* todos.c */
+todo_t *getTodoByID(size_t id);
+todo_t *createTodo(const char *title, const char *description);
+int deleteTodo(size_t id);
+size_t JSONSerializeAllTodos(char *JSON_output);
+size_t JSONSerializeTodo(todo_t *todo, char **JSON_output);
 
 /*
  * typedef struct HTTP_response_s {
