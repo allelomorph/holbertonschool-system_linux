@@ -51,7 +51,7 @@ methods.o: methods.c
 	$(CC) -c $(CFLAGS) methods.c
 
 method_utils.o: method_utils.c
-	$(CC) -c $(CFLAG_UTILS) method_utils.c
+	$(CC) -c $(CFLAGS) method_utils.c
 
 todos.o: todos.c
 	$(CC) -c $(CFLAGS) todos.c
