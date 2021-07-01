@@ -131,8 +131,7 @@ int API_server(void)
 				errorExit(NULL);
 			errorExit("API_server: accept");
 		}
-		printf("%s ",
-		       inet_ntoa(client_addr.sin_addr));
+		printf("%s ", inet_ntoa(client_addr.sin_addr));
 
 		if (recv(client_fd, (void *)recv_buf, RECV_BUFSZ, 0) == -1)
 		{
@@ -143,7 +142,6 @@ int API_server(void)
 		request = parseRequest(recv_buf);
 		if (request)
 		{
-			printf("%s %s", request->Method, request->Request_URI);
 			runMethod(request);
 			freeRequest(request);
 		}

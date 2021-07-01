@@ -1,10 +1,12 @@
 #include "API_server.h"
 
-/*
-malloc
-strdup
-free spritnf
-*/
+/* malloc free */
+#include <stdlib.h>
+/* strdup */
+#include <string.h>
+/* sprintf */
+#include <stdio.h>
+
 
 todo_t *getTodoByID(size_t id)
 {
@@ -88,17 +90,17 @@ int deleteTodo(size_t id)
 
 
 
-size_t JSONSerializeAllTodos(char *JSON_output)
+size_t JSONSerializeAllTodos(char **JSON_output)
 {
 	char JSON_buf[JSON_BUFSZ] = {0};
-	char *curr, *todo_JSON =
+	char *curr, *todo_JSON_fmt =
 		"{\"id\":%lu,\"title\":\"%s\",\"description\":\"%s\"}";
 	todo_t *temp;
         size_t JSON_len;
 	int incr;
 
 	if (!JSON_output)
-		reurn (0);
+		return (0);
 
 	curr = JSON_buf;
 	JSON_len = 0;
@@ -109,8 +111,8 @@ size_t JSONSerializeAllTodos(char *JSON_output)
 
 	for (temp = todos; temp; temp = temp->next)
 	{
-		incr = sprintf(curr, temp_JSON, temp->id, temp->title,
-			       temp->description);
+		incr = sprintf(curr, todo_JSON_fmt, temp->id,
+			       temp->title, temp->description);
 
 		JSON_len += incr;
 		curr += incr;
@@ -135,15 +137,15 @@ size_t JSONSerializeAllTodos(char *JSON_output)
 size_t JSONSerializeTodo(todo_t *todo, char **JSON_output)
 {
 	size_t JSON_len;
-	char todo_JSON_fmt =
+	char *todo_JSON_fmt =
 		"{\"id\":%lu,\"title\":\"%s\",\"description\":\"%s\"}";
 	char JSON_buf[JSON_BUFSZ] = {0};
 
 	if (!todo || !JSON_output)
-		reurn (0);
+		return (0);
 
-	JSON_Len = sprintf(todo_JSON_fmt, todo->id, todo->title,
-			   todo->description);
+	JSON_len = sprintf(JSON_buf, todo_JSON_fmt, todo->id,
+			   todo->title, todo->description);
 
 	*JSON_output = strdup(JSON_buf);
 

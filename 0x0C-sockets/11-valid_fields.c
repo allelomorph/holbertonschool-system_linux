@@ -50,7 +50,7 @@ int isPathValid(const char *Request_URI)
 {
 	size_t i;
 	char *valid_paths[] = {
-		"/todo", /* tasks 8-11 API use */
+		"/todos", /* tasks 8-11 API use */
 		NULL
 	};
 

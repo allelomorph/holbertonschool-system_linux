@@ -126,7 +126,7 @@ void listenTCPIPv4Socket(uint16_t port);
 int API_server(void);
 /* int main(void) */
 
-/* setSigHandler.c */
+/* *-setSigHandler.c */
 void SIGINT_SIGTERM_handler(int signum);
 void setSigHandler(void);
 
@@ -143,7 +143,7 @@ char **parseMessageLines(char *recv_str, HTTP_request_t *request,
 			 size_t *message_line_ct);
 HTTP_request_t *parseRequest(char *recv_str);
 
-/* HTTP_response.c */
+/* *-HTTP_response.c */
 char *get1XX_3XXReasonPhrase(unsigned int Status_Code);
 char *get4XX_5XXReasonPhrase(unsigned int Status_Code);
 char *getReasonPhrase(unsigned int Status_Code);
@@ -167,22 +167,22 @@ void freeRequest(HTTP_request_t *request);
 void freeTodos(void);
 
 /* methods.c */
-int addRepsonseHeader(HTTP_header_t **head, const char *name,
+int addResponseHeader(HTTP_header_t **head, const char *name,
 		      const char *description);
-void freeRepsonseHeaders(HTTP_header_t **head);
+void freeResponseHeaders(HTTP_header_t **head);
 HTTP_header_t *getHeaderByName(const char *name, HTTP_header_t *headers);
-int todoValuesFromQuery(const char *query, char **title, char **description);
-int IDFromQuery(const char *query, size_t *id);
-void methodPOST(HTTP_request *request);
-void methodGET(HTTP_request *request, int GET_body_flag);
-void methodDELETE(HTTP_request *request);
-void runMethod(HTTP_request *request);
+int todoValuesFromQuery(char *query, char **title, char **description);
+int IDFromQuery(char *query, size_t *id);
+void methodPOST(HTTP_request_t *request);
+void methodGET(HTTP_request_t *request, int GET_body_flag);
+void methodDELETE(HTTP_request_t *request);
+void runMethod(HTTP_request_t *request);
 
 /* todos.c */
 todo_t *getTodoByID(size_t id);
 todo_t *createTodo(const char *title, const char *description);
 int deleteTodo(size_t id);
-size_t JSONSerializeAllTodos(char *JSON_output);
+size_t JSONSerializeAllTodos(char **JSON_output);
 size_t JSONSerializeTodo(todo_t *todo, char **JSON_output);
 
 /*

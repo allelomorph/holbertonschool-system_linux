@@ -43,8 +43,11 @@ void freeTodos(void)
 		curr = temp;
 		temp = temp->next;
 
-		free(curr->title);
-		free(curr->description);
+		if (curr->title)
+			free(curr->title);
+		if (curr->description)
+			free(curr->description);
 		free(curr);
+		curr = NULL;
 	}
 }

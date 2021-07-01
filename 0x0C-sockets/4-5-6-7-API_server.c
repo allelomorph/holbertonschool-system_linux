@@ -57,8 +57,6 @@ void errorExit(char *error_msg)
 		client_fd = -1;
 	}
 
-	freeTodos();
-
 	if (error_msg)
 		perror(error_msg);
 

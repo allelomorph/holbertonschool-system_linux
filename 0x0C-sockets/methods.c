@@ -1,13 +1,14 @@
 #include "API_server.h"
 
-/*
-malloc free
-strncmp strlen strtok strtoul
-sprintf
+/* malloc free strtoul */
+#include <stdlib.h>
+/* strncmp strlen strtok */
+#include <string.h>
+/* sprintf */
+#include <stdio.h>
 
-*/
 
-int addRepsonseHeader(HTTP_header_t **head, const char *name,
+int addResponseHeader(HTTP_header_t **head, const char *name,
 		      const char *description)
 {
 	HTTP_header_t *new = NULL, *temp;
@@ -38,7 +39,7 @@ int addRepsonseHeader(HTTP_header_t **head, const char *name,
 }
 
 
-void freeRepsonseHeaders(HTTP_header_t **head)
+void freeResponseHeaders(HTTP_header_t **head)
 {
 	HTTP_header_t *temp, *curr;
 
@@ -50,8 +51,8 @@ void freeRepsonseHeaders(HTTP_header_t **head)
 		curr = temp;
 		temp = temp->next;
 
-		free(curr->title);
-		free(curr->description);
+		free(curr->name);
+		free(curr->value);
 		free(curr);
 		curr = NULL;
 	}
@@ -66,7 +67,7 @@ HTTP_header_t *getHeaderByName(const char *name, HTTP_header_t *headers)
 	HTTP_header_t *temp;
 
 	if (!name || !headers)
-		reutrn (NULL);
+		return (NULL);
 
 	for (temp = headers; temp; temp = temp->next)
 	{
@@ -80,9 +81,9 @@ HTTP_header_t *getHeaderByName(const char *name, HTTP_header_t *headers)
 
 
 
-int todoValuesFromQuery(const char *query, char **title, char **description)
+int todoValuesFromQuery(char *query, char **title, char **description)
 {
-	char *kv_pair, *key, *value;
+	char *kv_pair1, *kv_pair2, *key, *value;
 
 	if (!query || !title || !description)
 	{
@@ -90,31 +91,23 @@ int todoValuesFromQuery(const char *query, char **title, char **description)
 		return (1);
 	}
 
-	kv_pair = strtok(query, "&");
-	key = strtok(kv_pair, "=");
+	kv_pair1 = strtok(query, "&");
+	kv_pair2 = strtok(NULL, "&");
+
+	key = strtok(kv_pair1, "=");
 	value = strtok(NULL, "=");
-	if (!kv_pair || !key)
-	{
-		HTTP_response(400, NULL, NULL);
-		return (1);
-	}
-	if (!value || strncmp("title", key, strlen("title") + 1) != 0)
+	if (!kv_pair1 || !key || !value ||
+	    strncmp("title", key, strlen("title") + 1) != 0)
 	{
 		HTTP_response(422, NULL, NULL);
 		return (1);
 	}
 	*title = value;
 
-	kv_pair = strtok(query, "&");
-	key = strtok(kv_pair, "=");
+	key = strtok(kv_pair2, "=");
 	value = strtok(NULL, "=");
-	if (!kv_pair || !key)
-	{
-		HTTP_response(400, NULL, NULL);
-		return (1);
-	}
-	if (!value || strncmp("description", key,
-			      strlen("description") + 1) != 0)
+	if (!kv_pair2 || !key || !value ||
+	    strncmp("description", key, strlen("description") + 1) != 0)
 	{
 		HTTP_response(422, NULL, NULL);
 		return (1);
@@ -127,7 +120,7 @@ int todoValuesFromQuery(const char *query, char **title, char **description)
 
 
 
-int IDFromQuery(const char *query, size_t *id)
+int IDFromQuery(char *query, size_t *id)
 {
 	char *key, *value;
 	int i, kv_pair_ct = 1;
@@ -171,7 +164,7 @@ int IDFromQuery(const char *query, size_t *id)
 
 
 
-void methodPOST(HTTP_request *request)
+void methodPOST(HTTP_request_t *request)
 {
 	todo_t *todo;
 	HTTP_header_t *resp_hdrs = NULL;
@@ -197,17 +190,17 @@ void methodPOST(HTTP_request *request)
 	JSON_len = JSONSerializeTodo(todo, &msg_body);
 	sprintf(JSON_len_buf, "%lu", JSON_len);
 
-	if (addRepsonseHeader(&resp_hdrs, "Content-Type",
+	if (addResponseHeader(&resp_hdrs, "Content-Type",
 			      "application/json") != 0 ||
-	if (addRepsonseHeader(&resp_hdrs, "Content-Length",
+	    addResponseHeader(&resp_hdrs, "Content-Length",
 			      JSON_len_buf) != 0)
 	{
 		HTTP_response(500, NULL, NULL);
 		return;
 	}
 
-	HTTP_response(201, response_hdrs, msg_body);
-	freeRepsonseHeaders(resp_hdrs);
+	HTTP_response(201, resp_hdrs, msg_body);
+	freeResponseHeaders(&resp_hdrs);
 	free(msg_body);
 }
 
@@ -230,21 +223,15 @@ Response:
 
  */
 
-void methodGET(HTTP_request *request, int GET_body_flag)
+void methodGET(HTTP_request_t *request, int GET_body_flag)
 {
-	size_t id;
+	size_t id, JSON_len = 0;
 	todo_t *todo;
 	HTTP_header_t *resp_hdrs = NULL;
 	char *msg_body = NULL;
+	char JSON_len_buf[20] = {0};
 
 	if (!request)
-	{
-		HTTP_response(500, NULL, NULL);
-		return;
-	}
-
-	if (addRepsonseHeader(&resp_hdrs, "Content-Type",
-			      "application/json") != 0)
 	{
 		HTTP_response(500, NULL, NULL);
 		return;
@@ -263,13 +250,25 @@ void methodGET(HTTP_request *request, int GET_body_flag)
 			HTTP_response(404, NULL, NULL);
 			return;
 		}
-		if (GET_body_flag == INCL_MSG_BODY)
-			JSONSerializeTodo(todo, &msg_body);
+			JSON_len = JSONSerializeTodo(todo, &msg_body);
+	}
+	else
+		JSON_len = JSONSerializeAllTodos(&msg_body);
+
+	sprintf(JSON_len_buf, "%lu", JSON_len);
+	if (addResponseHeader(&resp_hdrs, "Content-Type",
+			      "application/json") != 0 ||
+	    addResponseHeader(&resp_hdrs, "Content-Length",
+			      JSON_len_buf) != 0)
+	{
+		HTTP_response(500, NULL, NULL);
+		return;
 	}
 
 	if (GET_body_flag == INCL_MSG_BODY)
-		JSONSerializeAllTodos(&msg_body);
-	HTTP_response(200, resp_hdrs, msg_body);
+		HTTP_response(200, resp_hdrs, msg_body);
+	else
+		HTTP_response(200, resp_hdrs, NULL);
 	free(resp_hdrs);
 	free(msg_body);
 }
@@ -291,7 +290,7 @@ Response:
  */
 
 
-void methodDELETE(HTTP_request *request)
+void methodDELETE(HTTP_request_t *request)
 {
 	size_t id;
 	char *key, *value;
@@ -333,7 +332,7 @@ void methodDELETE(HTTP_request *request)
 }
 
 
-void runMethod(HTTP_request *request)
+void runMethod(HTTP_request_t *request)
 {
 	if (!request)
 	{
@@ -342,16 +341,26 @@ void runMethod(HTTP_request *request)
 	}
 
 	if (strncmp("POST", request->Method, strlen("POST") + 1) == 0)
-		return (methodPOST(request));
+	{
+		methodPOST(request);
+		return;
+	}
 
-	if (strncmp("GET", request->Method, strlen("GET") + 1) == 0)
-		return (methodGET(request), INCL_MSG_BODY);
-
-	if (strncmp("HEAD", request->Method, strlen("HEAD") + 1) == 0)
-		return (methodGET(request), NO_MSG_BODY);
-
-	if (strncmp("DELETE", request->Method, strlen("DELETE") + 1) == 0)
-		return (methodDELETE(request));
+	else if (strncmp("GET", request->Method, strlen("GET") + 1) == 0)
+	{
+	        methodGET(request, INCL_MSG_BODY);
+		return;
+	}
+	else if (strncmp("HEAD", request->Method, strlen("HEAD") + 1) == 0)
+	{
+		methodGET(request, NO_MSG_BODY);
+		return;
+	}
+	else if (strncmp("DELETE", request->Method, strlen("DELETE") + 1) == 0)
+	{
+		methodDELETE(request);
+		return;
+	}
 
 	/* redundant check, methods already filtered by isMethodImplemented() */
 	HTTP_response(404, NULL, NULL);
