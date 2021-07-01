@@ -39,10 +39,10 @@ void methodPOST(HTTP_request_t *request)
 	JSON_len = JSONSerializeTodo(todo, &msg_body);
 	sprintf(JSON_len_buf, "%lu", JSON_len);
 
-	if (addResponseHeader(&resp_hdrs, "Content-Type",
-			      "application/json") != 0 ||
-	    addResponseHeader(&resp_hdrs, "Content-Length",
-			      JSON_len_buf) != 0)
+	if (addResponseHeader(&resp_hdrs, "Content-Length",
+			      JSON_len_buf) != 0 ||
+	    addResponseHeader(&resp_hdrs, "Content-Type",
+			      "application/json") != 0)
 	{
 		HTTP_response(500, NULL, NULL);
 		return;
@@ -90,10 +90,10 @@ void methodGET(HTTP_request_t *request, int GET_body_flag)
 	else
 		JSON_len = JSONSerializeAllTodos(&msg_body);
 	sprintf(JSON_len_buf, "%lu", JSON_len);
-	if (addResponseHeader(&resp_hdrs, "Content-Type",
-			      "application/json") != 0 ||
-	    addResponseHeader(&resp_hdrs, "Content-Length",
-			      JSON_len_buf) != 0)
+	if (addResponseHeader(&resp_hdrs, "Content-Length",
+			      JSON_len_buf) != 0 ||
+	    addResponseHeader(&resp_hdrs, "Content-Type",
+			      "application/json") != 0)
 	{
 		HTTP_response(500, NULL, NULL);
 		return;

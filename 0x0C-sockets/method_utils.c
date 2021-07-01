@@ -104,7 +104,8 @@ HTTP_header_t *getHeaderByName(const char *name, HTTP_header_t *headers)
  */
 int todoValuesFromQuery(char *query, char **title, char **description)
 {
-	char *kv_pair1, *kv_pair2, *key, *value;
+	char *kv_pair1, *kv_pair2, *key1, *value1 = NULL,
+		*key2, *value2 = NULL;
 
 	if (!query || !title || !description)
 	{
@@ -115,25 +116,30 @@ int todoValuesFromQuery(char *query, char **title, char **description)
 	kv_pair1 = strtok(query, "&");
 	kv_pair2 = strtok(NULL, "&");
 
-	key = strtok(kv_pair1, "=");
-	value = strtok(NULL, "=");
-	if (!kv_pair1 || !key || !value ||
-	    strncmp("title", key, strlen("title") + 1) != 0)
+	key1 = strtok(kv_pair1, "=");
+	value1 = strtok(NULL, "=");
+	if (!kv_pair1 || !key1 || !value1)
 	{
 		HTTP_response(422, NULL, NULL);
 		return (1);
 	}
-	*title = value;
+	key2 = strtok(kv_pair2, "=");
+	value2 = strtok(NULL, "=");
+	if (!kv_pair2 || !key2 || !value2)
+	{
+		HTTP_response(422, NULL, NULL);
+		return (1);
+	}
 
-	key = strtok(kv_pair2, "=");
-	value = strtok(NULL, "=");
-	if (!kv_pair2 || !key || !value ||
-	    strncmp("description", key, strlen("description") + 1) != 0)
-	{
-		HTTP_response(422, NULL, NULL);
-		return (1);
-	}
-	*description = value;
+	if (strncmp("title", key1, strlen("title") + 1) == 0)
+		*title = value1;
+	if (strncmp("title", key2, strlen("title") + 1) == 0)
+		*title = value2;
+
+	if (strncmp("description", key1, strlen("description") + 1) == 0)
+		*description = value1;
+	if (strncmp("description", key2, strlen("description") + 1) == 0)
+		*description = value2;
 
 	return (0);
 }
