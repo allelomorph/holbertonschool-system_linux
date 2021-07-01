@@ -17,7 +17,7 @@ int isMethodImplemented(const char *Method)
 		/* "OPTIONS", */
 		/* "GET", */
 		/* "HEAD", */
-	        "POST",
+		"POST",
 		/* "PUT", */
 		/* "DELETE", */
 		/* "TRACE", */

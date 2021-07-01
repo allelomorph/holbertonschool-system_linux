@@ -167,16 +167,18 @@ void freeRequest(HTTP_request_t *request);
 void freeTodos(void);
 
 /* methods.c */
+void methodPOST(HTTP_request_t *request);
+void methodGET(HTTP_request_t *request, int GET_body_flag);
+void methodDELETE(HTTP_request_t *request);
+void runMethod(HTTP_request_t *request);
+
+/* method_utils.c */
 int addResponseHeader(HTTP_header_t **head, const char *name,
 		      const char *description);
 void freeResponseHeaders(HTTP_header_t **head);
 HTTP_header_t *getHeaderByName(const char *name, HTTP_header_t *headers);
 int todoValuesFromQuery(char *query, char **title, char **description);
 int IDFromQuery(char *query, size_t *id);
-void methodPOST(HTTP_request_t *request);
-void methodGET(HTTP_request_t *request, int GET_body_flag);
-void methodDELETE(HTTP_request_t *request);
-void runMethod(HTTP_request_t *request);
 
 /* todos.c */
 todo_t *getTodoByID(size_t id);
