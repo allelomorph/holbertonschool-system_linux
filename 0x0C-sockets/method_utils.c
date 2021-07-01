@@ -118,28 +118,29 @@ int todoValuesFromQuery(char *query, char **title, char **description)
 
 	key1 = strtok(kv_pair1, "=");
 	value1 = strtok(NULL, "=");
-	if (!kv_pair1 || !key1 || !value1)
-	{
-		HTTP_response(422, NULL, NULL);
-		return (1);
-	}
+
 	key2 = strtok(kv_pair2, "=");
 	value2 = strtok(NULL, "=");
-	if (!kv_pair2 || !key2 || !value2)
-	{
-		HTTP_response(422, NULL, NULL);
-		return (1);
-	}
 
 	if (strncmp("title", key1, strlen("title") + 1) == 0)
 		*title = value1;
+	else if (strncmp("description", key1, strlen("description") + 1) == 0)
+		*description = value1;
+	else
+	{
+		HTTP_response(422, NULL, NULL);
+		return (1);
+	}
+
 	if (strncmp("title", key2, strlen("title") + 1) == 0)
 		*title = value2;
-
-	if (strncmp("description", key1, strlen("description") + 1) == 0)
-		*description = value1;
-	if (strncmp("description", key2, strlen("description") + 1) == 0)
+	else if (strncmp("description", key2, strlen("description") + 1) == 0)
 		*description = value2;
+	else
+	{
+		HTTP_response(422, NULL, NULL);
+		return (1);
+	}
 
 	return (0);
 }
