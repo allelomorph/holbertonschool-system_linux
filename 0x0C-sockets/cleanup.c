@@ -15,16 +15,16 @@
  */
 void freeRequest(HTTP_request_t *request)
 {
-	HTTP_header_t *temp, *curr;
+	HTTP_header_t *temp;
 
-	if (!request || !request->headers)
+	if (!request)
 		return;
 
-	for (temp = request->headers; temp;)
+	while (request->headers)
 	{
-		curr = temp;
-		temp = temp->next;
-		free(curr);
+		temp = request->headers;
+		request->headers = request->headers->next;
+		free(temp);
 	}
 
 	free(request);
@@ -36,18 +36,14 @@ void freeRequest(HTTP_request_t *request)
  */
 void freeTodos(void)
 {
-	todo_t *temp, *curr;
+	todo_t *temp;
 
-	for (temp = todos; temp;)
+	while (todos)
 	{
-		curr = temp;
-		temp = temp->next;
-
-		if (curr->title)
-			free(curr->title);
-		if (curr->description)
-			free(curr->description);
-		free(curr);
-		curr = NULL;
+		temp = todos;
+		todos = todos->next;
+		free(temp->title);
+		free(temp->description);
+		free(temp);
 	}
 }

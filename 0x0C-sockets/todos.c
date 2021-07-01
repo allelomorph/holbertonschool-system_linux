@@ -77,27 +77,30 @@ int deleteTodo(size_t id)
 {
 	todo_t *temp, *prev;
 
-	if (todos && todos->id == id)
+	if (todos)
 	{
-		temp = todos;
-		todos = todos->next;
-		free(temp->title);
-		free(temp->description);
-		free(temp);
-		return (0);
-	}
-
-	for (prev = todos, temp = todos->next;
-	     temp;
-	     prev = temp, temp = temp->next)
-	{
-		if (temp->id == id)
+		if (todos->id == id)
 		{
-			prev->next = temp->next;
+			temp = todos;
+			todos = todos->next;
 			free(temp->title);
 			free(temp->description);
 			free(temp);
 			return (0);
+		}
+
+		for (prev = todos, temp = todos->next;
+		     temp;
+		     prev = temp, temp = temp->next)
+		{
+			if (temp->id == id)
+			{
+				prev->next = temp->next;
+				free(temp->title);
+				free(temp->description);
+				free(temp);
+				return (0);
+			}
 		}
 	}
 
