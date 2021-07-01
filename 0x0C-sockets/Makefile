@@ -122,7 +122,7 @@ todo_api_3: API_server.h \
 todo_api_4: API_server.h \
 	8-9-10-11-API_server.o 8-9-10-11-setSignalHandler.o tokenizeBySubstr.o \
 	parseRequest.o 8-valid_fields.o parseRequestLine.o \
-	8-9-10-11-HTTP_response.o cleanup.o methods.o todos.o
+	8-9-10-11-HTTP_response.o cleanup.o methods.o method_utils.o todos.o
 	$(CC) $(CFLAGS) API_server.h \
 	8-9-10-11-API_server.o 8-9-10-11-setSignalHandler.o tokenizeBySubstr.o \
 	parseRequest.o 8-valid_fields.o parseRequestLine.o \
@@ -134,7 +134,7 @@ todo_api_4: API_server.h \
 todo_api_5: API_server.h \
 	8-9-10-11-API_server.o 8-9-10-11-setSignalHandler.o tokenizeBySubstr.o \
 	parseRequest.o 9-10-valid_fields.o parseRequestLine.o \
-	8-9-10-11-HTTP_response.o cleanup.o methods.o todos.o
+	8-9-10-11-HTTP_response.o cleanup.o methods.o method_utils.o todos.o
 	$(CC) $(CFLAGS) API_server.h \
 	8-9-10-11-API_server.o 8-9-10-11-setSignalHandler.o tokenizeBySubstr.o \
 	parseRequest.o 9-10-valid_fields.o parseRequestLine.o \
@@ -146,7 +146,7 @@ todo_api_5: API_server.h \
 todo_api_6: API_server.h \
 	8-9-10-11-API_server.o 8-9-10-11-setSignalHandler.o tokenizeBySubstr.o \
 	parseRequest.o 9-10-valid_fields.o parseRequestLine.o \
-	8-9-10-11-HTTP_response.o cleanup.o methods.o todos.o
+	8-9-10-11-HTTP_response.o cleanup.o methods.o method_utils.o todos.o
 	$(CC) $(CFLAGS) API_server.h \
 	8-9-10-11-API_server.o 8-9-10-11-setSignalHandler.o tokenizeBySubstr.o \
 	parseRequest.o 9-10-valid_fields.o parseRequestLine.o \
