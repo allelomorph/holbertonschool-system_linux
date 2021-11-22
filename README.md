@@ -11,7 +11,7 @@ Building a clone of the Linux function `ls`.
 ### [(322) 0x01. C - Static variables, getline](./0x01-getline/)
 Introduction to static variables in C and building a clone of the glibc function `getline`.
 
-### [(327) 0x02. C - Shell v2](https://github.com/allelomorph/shell_v2)
+### [(327) 0x02. C - Shell v2](./0x02-shell_v2/)
 Revisiting (235) 0x16. C - Simple Shell to build a second clone of `dash` / Ubuntu `sh`, now with logical operators, piping, and input/output redirections.
 
 Project 0x02 found in separate repo [`shell_v2/`](https://github.com/allelomorph/shell_v2).
