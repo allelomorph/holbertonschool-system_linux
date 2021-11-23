@@ -16,13 +16,17 @@ Revisiting (235) 0x16. C - Simple Shell to build a second clone of `dash` / Ubun
 
 Project 0x02 found in separate repo [`shell_v2/`](https://github.com/allelomorph/shell_v2).
 
-### [0x03. Python - /proc filesystem](./0x03-proc_filesystem/)
+### [(360) 0x03. Python - /proc filesystem](./0x03-proc_filesystem/)
+Introduction to using the `/proc` filesystem to explore the memory footprint of a running process.
 
-### [0x04. C - ELF: readelf](./0x04-readelf/)
+### [(364) 0x04. C - ELF: readelf](./0x04-readelf/)
+Introduction to ELF or the Executable and Linkable Format, its uses, and structure.
 
-### [0x05. x86 Assembly - libASM](./0x05-libasm/)
+### [(376) 0x05. x86 Assembly - libASM](./0x05-libasm/)
+Introduction to x86 assembly: Intel vs AT&T, flag registers, stack frames, function and system calls.
 
-### [0x06. C - Signals](./0x06-signals/)
+### [(362) 0x06. C - Signals](./0x06-signals/)
+Introduction to Unix signals: sending, listening, and catching.
 
 ### [0x07. C - ELF: nm/objdump](./0x07-nm_objdump/)
 
@@ -34,6 +38,8 @@ Project 0x02 found in separate repo [`shell_v2/`](https://github.com/allelomorph
 
 ### [0x0B. C - malloc](https://github.com/allelomorph/malloc)
 Project 0x0B found in separate repo [`malloc/`](https://github.com/allelomorph/malloc).
+
+### [0x0C. Sockets](./0x0C-sockets/)
 
 ---
 
