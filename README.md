@@ -28,11 +28,14 @@ Introduction to x86 assembly: Intel vs AT&T, flag registers, stack frames, funct
 ### [(362) 0x06. C - Signals](./0x06-signals/)
 Introduction to Unix signals: sending, listening, and catching.
 
-### [0x07. C - ELF: nm/objdump](./0x07-nm_objdump/)
+### [(369) 0x07. C - ELF: nm/objdump](./0x07-nm_objdump/)
+Continued exploration of ELF structures, now in building clones of `nm` and `objdump`.
 
-### [0x08. CPython](./0x08_CPython/)
+### [(277) 0x08. CPython](./0x08_CPython/)
+An investigation into how Python 3 is implemented in C and how to access it via its C API.
 
-### [0x09. C - Strace](./0x09-strace/)
+### [(393) 0x09. C - Strace](./0x09-strace/)
+Learning more about syscalls and registers, and the use of the `ptrace` library through cloning behavior of `strace`.
 
 ### [0x0A. Multithreading](./0x0A-multithreading/)
 
