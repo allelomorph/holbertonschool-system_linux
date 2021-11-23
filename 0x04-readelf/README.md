@@ -12,19 +12,26 @@ Introduction to ELF or the Executable and Linkable Format, its uses, and structu
 
 ### Requirements
 Allowed Functions and System Calls
-
 * Unless specified otherwise, you are allowed to use the C standard library
 * You’re not allowed to use `system`(3)
 * You’re not allowed to use `exec`(2) and `exec`(3)
 
 Tests
-
 * Your program must be able to handle both 32-bit and 64-bit ELF files
 * Your program must be able to handle both little and big endian ELF files
 * Your program must be able to handle all types of ELF files
 
-
 ### Provided file(s)
+* Test ELF files:
+  * [jpeg.mod](./ELF_examples/jpeg.mod)
+  * [libperl.so.5.18](./ELF_examples/libperl.so.5.18)
+  * [netbsd32](./ELF_examples/netbsd32)
+  * [python.obj](./ELF_examples/python.obj)
+  * [sftp-server](./ELF_examples/sftp-server)
+  * [solaris32](./ELF_examples/solaris32)
+  * [sortix32](./ELF_examples/sortix32)
+  * [sparcbigendian32](./ELF_examples/sparcbigendian32)
+  * [ubuntu64](./ELF_examples/ubuntu64)
 
 ---
 
