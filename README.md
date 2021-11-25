@@ -14,7 +14,7 @@ Introduction to static variables in C and building a clone of the glibc function
 ### [(327) 0x02. C - Shell v2](./0x02-shell_v2/)
 Revisiting (235) 0x16. C - Simple Shell to build a second clone of `dash` / Ubuntu `sh`, now with logical operators, piping, and input/output redirections.
 
-Project 0x02 found in separate repo [`shell_v2/`](https://github.com/allelomorph/shell_v2).
+Project 0x02 found in separate repository [`shell_v2/`](https://github.com/allelomorph/shell_v2).
 
 ### [(360) 0x03. Python - /proc filesystem](./0x03-proc_filesystem/)
 Introduction to using the `/proc` filesystem to explore the memory footprint of a running process.
@@ -37,14 +37,18 @@ An investigation into how Python 3 is implemented in C and how to access it via 
 ### [(393) 0x09. C - Strace](./0x09-strace/)
 Learning more about syscalls and registers, and the use of the `ptrace` library through cloning behavior of `strace`.
 
-### [0x0A. Multithreading](./0x0A-multithreading/)
+### [(442) 0x0A. Multithreading](./0x0A-multithreading/)
+Introduction to the `pthread` library and concepts like concurrency vs parallelism, mutual exclusion, and race conditions.
 
-### [0x0B. C - malloc](https://github.com/allelomorph/malloc)
-Project 0x0B found in separate repo [`malloc/`](https://github.com/allelomorph/malloc).
+### [(374) 0x0B. C - malloc](./0x0B-malloc/)
+Investigating virtual memory and the heap by building clones of the glibc `malloc`, `free`, `calloc`, and `realloc`.
 
-### [0x0C. Sockets](./0x0C-sockets/)
+Project 0x0B found in separate repository [`malloc/`](https://github.com/allelomorph/malloc).
+
+### [(441) 0x0C. Sockets](./0x0C-sockets/)
+Introduction to networking in C using sockets; building a simple HTTP server.
 
 ---
 
-## Author
+## Student
 * **Samuel Pomeroy** - [allelomorph](github.com/allelomorph)
