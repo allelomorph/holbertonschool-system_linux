@@ -21,7 +21,7 @@ Big O Notation in Answer File
 * “short” notation (don’t use constants)
 
 ### Provided file(s)
-[1-test_lists.py](./tests/1-test_lists.py) [2-tests.py](./tests/2-tests.py) [3-tests.py](./tests/3-tests.py) [4-tests.py](./tests/4-tests.py) [5-tests.py](./tests/5-tests.py) [100-tests.py](./tests/100-tests.py)
+[`1-test_lists.py`](./tests/1-test_lists.py) [`2-tests.py`](./tests/2-tests.py) [`3-tests.py`](./tests/3-tests.py) [`4-tests.py`](./tests/4-tests.py) [`5-tests.py`](./tests/5-tests.py) [`100-tests.py`](./tests/100-tests.py)
 
 ---
 
@@ -42,7 +42,7 @@ Write the big O notations for the following lists operations (one per line, in t
 * L11 - Reversing the list. Example: `holberton.reverse()`
 * L12 - Deleting the list. Example: `del holberton`
 
-File(s): [0-python_lists_bigO](./0-python_lists_bigO)
+File(s): [`0-python_lists_bigO`](./0-python_lists_bigO)
 
 ### :white_check_mark: 1. CPython #0: Python lists
 CPython is the reference implementation of the Python programming language. Written in C, CPython is the default and most widely used implementation of the language.
@@ -59,7 +59,7 @@ Create a C function that prints some basic info about Python lists.
     * [Common Object Structures](https://docs.python.org/3.4/c-api/structures.html)
     * [List Objects](https://docs.python.org/3.4/c-api/list.html)
 
-File(s): [1-python.c](./1-python.c)\
+File(s): [`1-python.c`](./1-python.c)\
 Compiled: `gcc -Wall -Werror -Wextra -pedantic -std=c99 -shared -Wl,-soname,PyList -o libPyList.so -fPIC -I/usr/include/python3.4 1-python.c`
 
 ### :white_check_mark: 2. CPython #1: PyBytesObject
@@ -84,7 +84,7 @@ About:
     * `PyBytes_AS_STRING`
     * `PyBytes_GET_SIZE`
 
-File(s): [2-python.c](./2-python.c)\
+File(s): [`2-python.c`](./2-python.c)\
 Compiled: `gcc -Wall -Werror -Wextra -pedantic -std=c99 -shared -Wl,-soname,libPython.so -o libPython.so -fPIC -I/usr/include/python3.4 2-python.c`
 
 ### :white_check_mark: 3. CPython #2: PyFloatObject
@@ -127,7 +127,7 @@ About:
 * The Python script will be launched using the `-u` option (force stdout to be unbuffered).
 * It is **strongly** advised to either use `setbuf(stdout, NULL);` or `fflush(stdout)` in your C functions IF you choose to use printf. The reason to that is that Python's `print` and libC's `printf` don’t share the same buffer, and the output can appear disordered.
 
-File(s): [3-python.c](./3-python.c)\
+File(s): [`3-python.c`](./3-python.c)\
 Compiled: `gcc -Wall -Werror -Wextra -pedantic -std=c99 -shared -Wl,-soname,libPython.so -o libPython.so -fPIC -I/usr/include/python3.4 3-python.c`
 
 ### :white_check_mark: 4. CPython #3: Python Strings
@@ -141,7 +141,7 @@ About:
 * You are allowed to use the C standard library
 * Your shared library will be compiled with this command line: `gcc -Wall -Wextra -pedantic -Werror -std=c99 -shared -Wl,-soname,libPython.so -o libPython.so -fPIC -I/usr/include/python3.4 4-python.c`
 
-File(s): [4-python.c](./4-python.c)\
+File(s): [`4-python.c`](./4-python.c)\
 Compiled: `gcc -Wall -Wextra -pedantic -Werror -std=c99 -shared -Wl,-soname,libPython.so -o libPython.so -fPIC -I/usr/include/python3.4 4-python.c`
 
 ### :white_check_mark: 5. CPython Integers
@@ -160,7 +160,7 @@ About:
     * `PyLong_Check`
 * Your shared library will be compiled with this command line: `gcc -Wall -Wextra -pedantic -Werror -std=c99 -shared -Wl,-soname,libPython.so -o libPython.so -fPIC -I/usr/include/python3.4 5-python.c`
 
-File(s): [5-python.c](./5-python.c)\
+File(s): [`5-python.c`](./5-python.c)\
 Compiled: `gcc -Wall -Wextra -pedantic -Werror -std=c99 -shared -Wl,-soname,libPython.so -o libPython.so -fPIC -I/usr/include/python3.4 5-python.c`
 
 ## Advanced Tasks
@@ -180,7 +180,7 @@ About:
     * `PyLong_Check`
 * Your shared library will be compiled with this command line: `gcc -Wall -Wextra -pedantic -Werror -std=c99 -shared -Wl,-soname,libPython.so.2 -o libPython.so.2 -fPIC -I/usr/include/python3.4 100-python.c`
 
-File(s): [100-python.c](./100-python.c)\
+File(s): [`100-python.c`](./100-python.c)\
 Compiled: `gcc -Wall -Wextra -pedantic -Werror -std=c99 -shared -Wl,-soname,libPython.so.2 -o libPython.so.2 -fPIC -I/usr/include/python3.4 100-python.c`
 
 ---

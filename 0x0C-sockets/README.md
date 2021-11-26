@@ -31,7 +31,7 @@ Here are the different routes that will have to be implemented:
     * `DELETE` -> Delete the todo with the corresponding id
 
 ### Provided file(s)
-* [1-client](./tests/1-client) [2-server](./tests/2-server) [3-client](./tests/3-client)
+* [`1-client`](./tests/1-client) [`2-server`](./tests/2-server) [`3-client`](./tests/3-client)
 
 ---
 
