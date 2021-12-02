@@ -1,7 +1,18 @@
 # holbertonschool-system_linux
 
 ## Description
-Linux component of the Holberton school "Low-Level and Algorithms" specialization curriculum. One directory per project, mandatory tasks are files `?-*.c`, advanced tasks `???-*.c`.
+C programming and Linux components of the Holberton school "Low-Level and Algorithms" specialization curriculum.
+
+## General C project requirements
+
+### Compilation conditions
+* Ubuntu 14.04 LTS
+* gcc 4.8.4
+* flags `-Wall -Werror -Wextra -pedantic`
+
+### Linters
+* [betty-style](https://github.com/holbertonschool/Betty/blob/master/betty-style.pl)
+* [betty-doc](https://github.com/holbertonschool/Betty/blob/master/betty-doc.pl)
 
 ---
 
