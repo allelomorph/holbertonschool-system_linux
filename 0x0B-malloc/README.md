@@ -35,7 +35,7 @@ Build the naive malloc that is presented in the Holberton **[EYNTK] Writing your
 * Prototype: `void *naive_malloc(size_t size);`
 * Where `size` is the size needed to be allocated for the user
 * Your function must return a pointer to the allocated memory that is suitably aligned for any kind of variable
-* You naive malloc should be able to:
+* Your naive malloc should be able to:
     * Allocate enough memory to store
         * A `size_t` as the chunk header
         * The size requested as parameter
@@ -44,7 +44,7 @@ Build the naive malloc that is presented in the Holberton **[EYNTK] Writing your
 File(s): [`naive_malloc.c`](https://github.com/allelomorph/malloc/blob/master/naive_malloc.c) [`malloc.h`](https://github.com/allelomorph/malloc/blob/master/malloc.h)
 
 ### :white_check_mark: 1. malloc
-Write you own `malloc` function that allocates space in the heap
+Write your own `malloc` function that allocates space in the heap
 
 * Prototype: `void *_malloc(size_t size);`
 * Where `size` is the size needed to be allocated for the user
@@ -52,22 +52,22 @@ Write you own `malloc` function that allocates space in the heap
 
 File(s): [`malloc.c`](https://github.com/allelomorph/malloc/blob/master/malloc.c) [`malloc.h`](https://github.com/allelomorph/malloc/blob/master/malloc.h)\
 Compiled: (into "shim" shared library) `gcc -Wall -Werror -Wextra -pedantic -shared -fPIC -ldl tests/_malloc_shim.c malloc.h malloc.c free.c  calloc.c realloc.c -o _malloc_shim.so`\
-Test in place of glibc function with: `LD_PRELOAD=_malloc_shim.so <executable to shim> <arg(s)>`
+Test in place of glibc function with: `LD_PRELOAD=./_malloc_shim.so <executable to shim> <arg(s)>`
 
 ### :white_check_mark: 2. free
-Write you own `free` function that frees a memory space
+Write your own `free` function that frees a memory space
 
 * Prototype: `void _free(void *ptr);`
 * Where `ptr` is a pointer to the memory space to be freed
 
 File(s): [`free.c`](https://github.com/allelomorph/malloc/blob/master/free.c) [`malloc.c`](https://github.com/allelomorph/malloc/blob/master/malloc.c) [`malloc.h`](https://github.com/allelomorph/malloc/blob/master/malloc.h)\
 Compiled: (into "shim" shared library) `gcc -Wall -Werror -Wextra -pedantic -shared -fPIC -ldl tests/_malloc_shim.c malloc.h malloc.c free.c  calloc.c realloc.c -o _malloc_shim.so`\
-Test in place of glibc function with: `LD_PRELOAD=_malloc_shim.so <executable to shim> <arg(s)>`
+Test in place of glibc function with: `LD_PRELOAD=./_malloc_shim.so <executable to shim> <arg(s)>`
 
 ## Advanced Tasks
 
 ### :white_check_mark: 3. calloc
-Write you own `malloc` function that allocates space in the heap
+Write your own `malloc` function that allocates space in the heap
 
 * Prototype: `void *_calloc(size_t nmemb, size_t size);`
 * Where `nmemb` is the number of elements in the array, and size is the size of each element
@@ -75,10 +75,10 @@ Write you own `malloc` function that allocates space in the heap
 
 File(s): [`calloc.c`](https://github.com/allelomorph/malloc/blob/master/calloc.c) [`free.c`](https://github.com/allelomorph/malloc/blob/master/free.c) [`malloc.c`](https://github.com/allelomorph/malloc/blob/master/malloc.c) [`malloc.h`](https://github.com/allelomorph/malloc/blob/master/malloc.h)\
 Compiled: (into "shim" shared library) `gcc -Wall -Werror -Wextra -pedantic -shared -fPIC -ldl tests/_malloc_shim.c malloc.h malloc.c free.c calloc.c realloc.c -o _malloc_shim.so`\
-Test in place of glibc function with: `LD_PRELOAD=_malloc_shim.so <executable to shim> <arg(s)>`
+Test in place of glibc function with: `LD_PRELOAD=./_malloc_shim.so <executable to shim> <arg(s)>`
 
 ### :white_check_mark: 4. realloc
-Write you own `malloc` function that allocates space in the heap
+Write your own `malloc` function that allocates space in the heap
 
 * Prototype: `void *_realloc(void *ptr, size_t size);`
 * Where `ptr` is a pointer to the memory space to resize, and `size` is the new size needed to be allocated for the user
@@ -86,7 +86,7 @@ Write you own `malloc` function that allocates space in the heap
 
 File(s): [`realloc.c`](https://github.com/allelomorph/malloc/blob/master/realloc.c) [`free.c`](https://github.com/allelomorph/malloc/blob/master/free.c) [`malloc.c`](https://github.com/allelomorph/malloc/blob/master/malloc.c) [`malloc.h`](https://github.com/allelomorph/malloc/blob/master/malloc.h)\
 Compiled: (into "shim" shared library) `gcc -Wall -Werror -Wextra -pedantic -shared -fPIC -ldl tests/_malloc_shim.c malloc.h malloc.c free.c  calloc.c realloc.c -o _malloc_shim.so`\
-Test in place of glibc function with: `LD_PRELOAD=_malloc_shim.so <executable to shim> <arg(s)>`
+Test in place of glibc function with: `LD_PRELOAD=./_malloc_shim.so <executable to shim> <arg(s)>`
 
 ### :white_check_mark: 5. Multithreading
 Handle multithreading!
@@ -102,7 +102,7 @@ Resources:
 
 File(s): [`malloc.c`](https://github.com/allelomorph/malloc/blob/pthread/malloc.c) [`free.c`](https://github.com/allelomorph/malloc/blob/pthread/free.c) [`realloc.c`](https://github.com/allelomorph/malloc/blob/pthread/realloc.c) [`calloc.c`](https://github.com/allelomorph/malloc/blob/pthread/calloc.c) [`malloc.h`](https://github.com/allelomorph/malloc/blob/pthread/malloc.h)\
 Compiled: (into "shim" shared library) `gcc -Wall -Werror -Wextra -pedantic -shared -fPIC -ldl -pthread tests/_malloc_shim.c malloc.h malloc.c free.c calloc.c realloc.c -o _malloc_shim.so`\
-Test in place of glibc function with: `LD_PRELOAD=_malloc_shim.so <executable to shim> <arg(s)>`
+Test in place of glibc function with: `LD_PRELOAD=./_malloc_shim.so <executable to shim> <arg(s)>`
 
 ---
 
