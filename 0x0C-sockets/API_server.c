@@ -136,7 +136,7 @@ int API_server(void)
 		printf("Client connected: %s\n",
 		       inet_ntoa(client_addr.sin_addr));
 #else
-		printf("%s ", inet_ntoa(client_addr.sin_addr));
+		printf("%s", inet_ntoa(client_addr.sin_addr));
 #endif
 		if (recv(client_fd, (void *)recv_buf, RECV_BUFSZ, 0) == -1)
 		{

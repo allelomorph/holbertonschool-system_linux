@@ -150,6 +150,7 @@ void HTTP_response(unsigned int Status_Code,
 	client_fd = -1;
 
 #if SRC_VERSION >= 8
-	printf("-> %u %s\n", Status_Code, Reason_Phrase);
+	/* Follows request method and URI in server output */
+	printf(" -> %u %s\n", Status_Code, Reason_Phrase);
 #endif
 }

@@ -12,15 +12,11 @@ tokenizeBySubstr.o: tokenizeBySubstr.c
 parseRequest.o: parseRequest.c
 	$(CC) -c $(CFLAGS) parseRequest.c
 
-parseRequestLine.o: parseRequestLine.c
-	$(CC) -c $(CFLAGS) parseRequestLine.c
-
 cleanup.o: cleanup.c
 	$(CC) -c $(CFLAGS) cleanup.c
 
 4_11_SHARED_OBJ := \
-	tokenizeBySubstr.o parseRequest.o \
-	parseRequestLine.o cleanup.o
+	tokenizeBySubstr.o parseRequest.o cleanup.o
 
 4-7-API_server.o \
 8-11-API_server.o: API_server.c
@@ -34,8 +30,13 @@ cleanup.o: cleanup.c
 8-11-HTTP_response.o: HTTP_response.c
 	$(CC) -c $(CFLAGS) -D SRC_VERSION=$(VERSION) $^ -o $@
 
+4-7-parseRequestLine.o \
+8-11-parseRequestLine.o: parseRequestLine.c
+	$(CC) -c $(CFLAGS) -D SRC_VERSION=$(VERSION) $^ -o $@
+
 4_7_SHARED_OBJ := \
-	4-7-API_server.o 4-7-setSignalHandler.o 4-7-HTTP_response.o
+	4-7-API_server.o 4-7-setSignalHandler.o \
+	4-7-HTTP_response.o 4-7-parseRequestLine.o
 
 methods.o: methods.c
 	$(CC) -c $(CFLAGS) methods.c
@@ -47,7 +48,8 @@ todos.o: todos.c
 	$(CC) -c $(CFLAGS) todos.c
 
 8_11_SHARED_OBJ := \
-	8-11-API_server.o 8-11-setSignalHandler.o 8-11-HTTP_response.o \
+	8-11-API_server.o 8-11-setSignalHandler.o \
+	8-11-HTTP_response.o 8-11-parseRequestLine.o \
 	methods.o method_utils.o todos.o
 
 4-7-valid_fields.o \
