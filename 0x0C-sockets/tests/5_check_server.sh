@@ -1,10 +1,11 @@
 #!/bin/bash
 
-if [ $# -lt 1 ]
-then
-        echo "Usage: $0 <command>" >&2
-        exit 1
-fi
+# Unknown why checker script had this test
+# if [ $# -lt 1 ]
+# then
+#         echo "Usage: $0 <command>" >&2
+#         exit 1
+# fi
 
 rm -rf todo_api_output
 rm -rf curl_output
