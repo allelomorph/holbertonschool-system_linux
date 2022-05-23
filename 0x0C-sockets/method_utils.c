@@ -7,12 +7,13 @@
 
 
 /**
- * addResponseHeader - TBD
+ * addResponseHeader - Adds node to tail of a linked list of parsed HTTP
+ *   headers, or sets as head if head is NULL
  *
- * @head: TBD
- * @name: TBD
- * @description: TBD
- * Return: TBD
+ * @head: Double pointer to head of linked list of headers
+ * @name: Name of new header
+ * @description: Description of new header
+ * Return: 1 on failure, 0 on success
  */
 int addResponseHeader(HTTP_header_t **head, const char *name,
 		      const char *description)
@@ -37,7 +38,6 @@ int addResponseHeader(HTTP_header_t **head, const char *name,
 	{
 		for (temp = *head; temp && temp->next; temp = temp->next)
 		{}
-
 		temp->next = new;
 	}
 
@@ -46,9 +46,10 @@ int addResponseHeader(HTTP_header_t **head, const char *name,
 
 
 /**
- * freeResponseHeaders - TBD
+ * freeResponseHeaders - Frees memory allocated for a linked list of parsed
+ *   headers
  *
- * @head: TBD
+ * @head: Double pointer to head of a linked list of parsed headers
  */
 void freeResponseHeaders(HTTP_header_t **head)
 {
@@ -71,11 +72,13 @@ void freeResponseHeaders(HTTP_header_t **head)
 
 
 /**
- * getHeaderByName - TBD
+ * getHeaderByName - Retrieves HTTP header struct pointer from list of headers
+ *   in a parsed request or prepared response. ** Not called in source versions
+ *   4-11, but included for testing or future use. **
  *
- * @name: TBD
- * @headers: TBD
- * Return: TBD
+ * @name: Target name of header to match
+ * @headers: Head of a linked list of parsed headers
+ * Return: Pointer to matching header, or NULL on failure
  */
 HTTP_header_t *getHeaderByName(const char *name, HTTP_header_t *headers)
 {
@@ -95,12 +98,14 @@ HTTP_header_t *getHeaderByName(const char *name, HTTP_header_t *headers)
 
 
 /**
- * todoValuesFromQuery - TBD
+ * todoValuesFromQuery - Parses the message body of POST request to derive the
+ *   title and description to assign to a new todo record (expects format of
+ *   "title={}&description={}")
  *
- * @query: TBD
- * @title: TBD
- * @description: TBD
- * Return: TBD
+ * @query: Message body from a parsed incoming HTTP POST request
+ * @title: Title of new todo record
+ * @description: Description of new todo record
+ * Return: 0 on success, 1 on failure
  */
 int todoValuesFromQuery(char *query, char **title, char **description)
 {
@@ -147,11 +152,11 @@ int todoValuesFromQuery(char *query, char **title, char **description)
 
 
 /**
- * IDFromQuery - TBD
+ * IDFromQuery - Retrieves todo id from parsed request URI
  *
- * @query: TBD
- * @id: TBD
- * Return: TBD
+ * @query: Query string '?'-delimited from main request URI, expecting "?id={}"
+ * @id: Pointer to id to set from string value
+ * Return: 1 on failure, 0 on success
  */
 int IDFromQuery(char *query, size_t *id)
 {
