@@ -15,11 +15,15 @@ int isMethodImplemented(const char *Method)
 	size_t i;
 	char *valid_methods[] = {
 		/* "OPTIONS", */
+#if SRC_VERSION != 8
 		"GET",
 		"HEAD",
+#endif
 		"POST",
 		/* "PUT", */
-		/* "DELETE", */
+#if SRC_VERSION == 11
+		"DELETE",
+#endif
 		/* "TRACE", */
 		/* "CONNECT", */
 		NULL
@@ -48,12 +52,29 @@ int isMethodImplemented(const char *Method)
  */
 int isPathValid(const char *Request_URI)
 {
+#if SRC_VERSION >= 8
+	size_t i;
+	char *valid_paths[] = {
+		"/todos", /* tasks 8-11 API use */
+		NULL
+	};
+#endif
+
 	if (!Request_URI)
 		return (0);
 
+#if SRC_VERSION <= 7
 	if (strlen(Request_URI) &&
 	    Request_URI[0] == '/')
 		return (1);
-
+#else
+	for (i = 0; valid_paths[i]; i++)
+	{
+		if (strncmp(valid_paths[i],
+			    Request_URI,
+			    strlen(valid_paths[i]) + 1) == 0)
+			return (1);
+	}
+#endif
 	return (0);
 }

@@ -43,7 +43,9 @@ void SIGINT_SIGTERM_handler(int signum)
 		client_fd = -1;
 	}
 
+#if SRC_VERSION >= 8
 	freeTodos();
+#endif
 }
 
 

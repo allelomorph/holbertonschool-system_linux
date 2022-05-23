@@ -9,10 +9,10 @@
 
 
 /**
- * getTodoByID - TBD
+ * getTodoByID - Retrieves todo record by ID number from a list of todos
  *
- * @id: TBD
- * Return: TBD
+ * @id: ID number of todo to retrieve
+ * Return: Pointer to matching todo, or NULL on failure
  */
 todo_t *getTodoByID(size_t id)
 {
@@ -29,11 +29,12 @@ todo_t *getTodoByID(size_t id)
 
 
 /**
- * createTodo - TBD
+ * createTodo - Allocates memory for a new todo record, and populates its
+ *   fields
  *
- * @title: TBD
- * @description: TBD
- * Return: TBD
+ * @title: Title of new todo record
+ * @description: Description of new todo record
+ * Return: Pointer to new todo record, or NULL on failure
  */
 todo_t *createTodo(const char *title, const char *description)
 {
@@ -68,10 +69,10 @@ todo_t *createTodo(const char *title, const char *description)
 
 
 /**
- * deleteTodo - TBD
+ * deleteTodo - Removes a todo record from a linked list of todos
  *
- * @id: TBD
- * Return: TBD
+ * @id: ID of todo to delete
+ * Return: 0 on successful deletion, 1 if todo ID not found
  */
 int deleteTodo(size_t id)
 {
@@ -109,10 +110,10 @@ int deleteTodo(size_t id)
 
 
 /**
- * JSONSerializeAllTodos - TBD
+ * JSONSerializeAllTodos - Creates JSON-formatted string of current todo list
  *
- * @JSON_output: TBD
- * Return: TBD
+ * @JSON_output: Double pointer to buffer to contain output
+ * Return: Length of formatted JSON string, in bytes
  */
 size_t JSONSerializeAllTodos(char **JSON_output)
 {
@@ -160,11 +161,11 @@ size_t JSONSerializeAllTodos(char **JSON_output)
 
 
 /**
- * JSONSerializeTodo - TBD
+ * JSONSerializeTodo - Creates JSON-formatted string from todo record
  *
- * @todo: TBD
- * @JSON_output: TBD
- * Return: TBD
+ * @todo: Pointer to todo record
+ * @JSON_output: Double pointer to buffer for JSON output
+ * Return: Length of serialization, in bytes
  */
 size_t JSONSerializeTodo(todo_t *todo, char **JSON_output)
 {

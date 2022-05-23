@@ -149,5 +149,8 @@ void HTTP_response(unsigned int Status_Code,
 		errorExit("HTTP_response: close");
 	client_fd = -1;
 
-	printf("-> %u %s\n", Status_Code, Reason_Phrase);
+#if SRC_VERSION >= 8
+	/* Follows request method and URI in server output */
+	printf(" -> %u %s\n", Status_Code, Reason_Phrase);
+#endif
 }

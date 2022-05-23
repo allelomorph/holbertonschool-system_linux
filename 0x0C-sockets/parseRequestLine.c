@@ -2,6 +2,8 @@
 
 /* strncmp strlen */
 #include <string.h>
+/* printf */
+#include <stdio.h>
 
 
 /**
@@ -50,7 +52,6 @@ int parseRequestLine(char *recv_str, char **message_lines,
 		HTTP_response(500, NULL, NULL);
 		return (1);
 	}
-
 	request->Method = strtok(message_lines[0], " ");
 	request->Request_URI = strtok(NULL, " ");
 	request->HTTP_Version = strtok(NULL, " ");
@@ -68,10 +69,12 @@ int parseRequestLine(char *recv_str, char **message_lines,
 		HTTP_response(414, NULL, NULL);
 		return (1);
 	}
-
 	request->Request_URI = strtok(request->Request_URI, "?");
 	request->URI_query = strtok(NULL, "?");
-
+#if SRC_VERSION >= 8
+	/* Follows client address in server output line */
+	printf(" %s %s", request->Method, request->Request_URI);
+#endif
 	if (!isMethodImplemented(request->Method) ||
 	    !isPathValid(request->Request_URI))
 	{
@@ -83,6 +86,5 @@ int parseRequestLine(char *recv_str, char **message_lines,
 		HTTP_response(505, NULL, NULL);
 		return (1);
 	}
-
 	return (0);
 }

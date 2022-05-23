@@ -57,7 +57,9 @@ void errorExit(char *error_msg)
 		client_fd = -1;
 	}
 
+#if SRC_VERSION >= 8
 	freeTodos();
+#endif
 
 	if (error_msg)
 		perror(error_msg);
@@ -120,7 +122,6 @@ int API_server(void)
 	HTTP_request_t *request = NULL;
 
 	listenTCPIPv4Socket(8080);
-
 	for (;;)
 	{
 		client_fd = accept(server_fd, (struct sockaddr *)&client_addr,
@@ -131,21 +132,27 @@ int API_server(void)
 				errorExit(NULL);
 			errorExit("API_server: accept");
 		}
-		printf("%s ", inet_ntoa(client_addr.sin_addr));
-
+#if SRC_VERSION <= 7
+		printf("Client connected: %s\n",
+		       inet_ntoa(client_addr.sin_addr));
+#else
+		printf("%s", inet_ntoa(client_addr.sin_addr));
+#endif
 		if (recv(client_fd, (void *)recv_buf, RECV_BUFSZ, 0) == -1)
 		{
 			HTTP_response(500, NULL, NULL);
 			errorExit("API_server: recv");
 		}
-
 		request = parseRequest(recv_buf);
 		if (request)
 		{
+#if SRC_VERSION <= 7
+			printRequest(request);
+#else
 			runMethod(request);
+#endif
 			freeRequest(request);
 		}
-
 		memset(recv_buf, 0, RECV_BUFSZ);
 	}
 	return (EXIT_SUCCESS);

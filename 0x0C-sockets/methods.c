@@ -9,9 +9,10 @@
 
 
 /**
- * methodPOST - TBD
+ * methodPOST - Performs POST from incoming HTTP request, specifically for this
+ *   API adding a todo record to the list todos
  *
- * @request: TBD
+ * @request: Pointer to struct containing strings parsed from raw HTTP request
  */
 void methodPOST(HTTP_request_t *request)
 {
@@ -55,10 +56,14 @@ void methodPOST(HTTP_request_t *request)
 
 
 /**
- * methodGET - TBD
+ * methodGET - Performs GET or HEAD from incoming HTTP request, specifically
+ *   for this API reading a todo record from the list todos, including the
+ *   message body for GET and not for HEAD
  *
- * @request: TBD
- * @GET_body_flag: TBD
+ * @request: Pointer to struct containing strings parsed from raw HTTP request
+ *
+ * @GET_body_flag: If 1/INCL_MSG_BODY, treat as GET request; if 0/NO_MSG_BODY,
+ *   treat as HEAD
  */
 void methodGET(HTTP_request_t *request, int GET_body_flag)
 {
@@ -85,7 +90,7 @@ void methodGET(HTTP_request_t *request, int GET_body_flag)
 			HTTP_response(404, NULL, NULL);
 			return;
 		}
-			JSON_len = JSONSerializeTodo(todo, &msg_body);
+		JSON_len = JSONSerializeTodo(todo, &msg_body);
 	}
 	else
 		JSON_len = JSONSerializeAllTodos(&msg_body);
@@ -106,9 +111,10 @@ void methodGET(HTTP_request_t *request, int GET_body_flag)
 
 
 /**
- * methodDELETE - TBD
+ * methodDELETE - Performs DELETE from incoming HTTP request, specifically for
+ *   this API removing a todo record from the list todos
  *
- * @request: TBD
+ * @request: Pointer to struct containing strings parsed from raw HTTP request
  */
 void methodDELETE(HTTP_request_t *request)
 {
@@ -153,9 +159,9 @@ void methodDELETE(HTTP_request_t *request)
 
 
 /**
- * runMethod - TBD
+ * runMethod - Checks request Method field to run appropriate method helper
  *
- * @request: TBD
+ * @request: Pointer to struct containing strings parsed from raw HTTP request
  */
 void runMethod(HTTP_request_t *request)
 {
