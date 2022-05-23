@@ -200,7 +200,7 @@ HTTP/1.1 200 OK^M$
 $
 ```
 
-File(s): [`API_server.h`](./API_server.h) [`4-5-6-7-API_server.c`](./4-5-6-7-API_server.c) [`4-5-6-7-setSignalHandler.c`](./4-5-6-7-setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`4-5-6-7-valid_fields.c`](./4-5-6-7-valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`4-5-6-7-HTTP_response.c`](./) [`cleanup.c`](./cleanup.c) [`4-printRequest.c`](./4-printRequest.c)\
+File(s): [`API_server.h`](./API_server.h) [`API_server.c`](./API_server.c) [`setSignalHandler.c`](./setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`valid_fields.c`](./valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`HTTP_response.c`](./HTTP_response.c) [`cleanup.c`](./cleanup.c) [`4-printRequest.c`](./4-printRequest.c)\
 Compiled: `make todo_api_0`
 
 ### :white_check_mark: 5. REST API - Queries
@@ -244,7 +244,7 @@ HTTP/1.1 200 OK^M$
 $ 
 ```
 
-File(s): [`API_server.h`](./API_server.h) [`4-5-6-7-API_server.c`](./4-5-6-7-API_server.c) [`4-5-6-7-setSignalHandler.c`](./4-5-6-7-setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`4-5-6-7-valid_fields.c`](./4-5-6-7-valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`4-5-6-7-HTTP_response.c`](./) [`cleanup.c`](./cleanup.c) [`5-printRequest.c`](./5-printRequest.c)\
+File(s): [`API_server.h`](./API_server.h) [`API_server.c`](./API_server.c) [`setSignalHandler.c`](./setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`valid_fields.c`](./valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`HTTP_response.c`](./HTTP_response.c) [`cleanup.c`](./cleanup.c) [`5-printRequest.c`](./5-printRequest.c)\
 Compiled: `make todo_api_1`
 
 ### :white_check_mark: 6. REST API - Headers
@@ -288,7 +288,7 @@ HTTP/1.1 200 OK^M$
 $ 
 ```
 
-File(s): [`API_server.h`](./API_server.h) [`4-5-6-7-API_server.c`](./4-5-6-7-API_server.c) [`4-5-6-7-setSignalHandler.c`](./4-5-6-7-setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`4-5-6-7-valid_fields.c`](./4-5-6-7-valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`4-5-6-7-HTTP_response.c`](./) [`cleanup.c`](./cleanup.c) [`6-printRequest.c`](./6-printRequest.c)\
+File(s): [`API_server.h`](./API_server.h) [`API_server.c`](./API_server.c) [`setSignalHandler.c`](./setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`valid_fields.c`](./valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`HTTP_response.c`](./HTTP_response.c) [`cleanup.c`](./cleanup.c) [`6-printRequest.c`](./6-printRequest.c)\
 Compiled: `make todo_api_2`
 
 ### :white_check_mark: 7. REST API - Body parameters
@@ -335,7 +335,7 @@ HTTP/1.1 200 OK^M$
 $ 
 ```
 
-File(s): [`API_server.h`](./API_server.h) [`4-5-6-7-API_server.c`](./4-5-6-7-API_server.c) [`4-5-6-7-setSignalHandler.c`](./4-5-6-7-setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`4-5-6-7-valid_fields.c`](./4-5-6-7-valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`4-5-6-7-HTTP_response.c`](./) [`cleanup.c`](./cleanup.c) [`7-printRequest.c`](./7-printRequest.c)\
+File(s): [`API_server.h`](./API_server.h) [`API_server.c`](./API_server.c) [`setSignalHandler.c`](./setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`valid_fields.c`](./valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`HTTP_response.c`](./HTTP_response.c) [`cleanup.c`](./cleanup.c) [`7-printRequest.c`](./7-printRequest.c)\
 Compiled: `make todo_api_3`
 
 ### :white_check_mark: 8. REST API - Create TODO
@@ -395,7 +395,7 @@ HTTP/1.1 404 Not Found^M$
 $ 
 ```
 
-File(s): [`API_server.h`](./API_server.h) [`8-9-10-11-API_server.c`](./8-9-10-11-API_server.c) [`8-9-10-11-setSignalHandler.c`](./8-9-10-11-setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`8-valid_fields.c`](./8-valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`8-9-10-11-HTTP_response.c`](./8-9-10-11-HTTP_response.c) [`cleanup.c`](./cleanup.c) [`methods.c`](./methods.c) [`method_utils.c`](./method_utils.c) [`todos.c`](./todos.c)\
+File(s): [`API_server.h`](./API_server.h) [`API_server.c`](./API_server.c) [`setSignalHandler.c`](./setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`valid_fields.c`](./valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`HTTP_response.c`](./HTTP_response.c) [`cleanup.c`](./cleanup.c) [`methods.c`](./methods.c) [`method_utils.c`](./method_utils.c) [`todos.c`](./todos.c)\
 Compiled: `make todo_api_4`
 
 ### :white_check_mark: 9. REST API - Retrieve all TODOs
@@ -464,7 +464,7 @@ Content-Type: application/json^M$
 $ 
 ```
 
-File(s): [`API_server.h`](./API_server.h) [`8-9-10-11-API_server.c`](./8-9-10-11-API_server.c) [`8-9-10-11-setSignalHandler.c`](./8-9-10-11-setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`9-10-valid_fields.c`](./9-10-valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`8-9-10-11-HTTP_response.c`](./8-9-10-11-HTTP_response.c) [`cleanup.c`](./cleanup.c) [`methods.c`](./methods.c) [`method_utils.c`](./method_utils.c) [`todos.c`](./todos.c)\
+File(s): [`API_server.h`](./API_server.h) [`API_server.c`](./API_server.c) [`setSignalHandler.c`](./setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`valid_fields.c`](./valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`HTTP_response.c`](./HTTP_response.c) [`cleanup.c`](./cleanup.c) [`methods.c`](./methods.c) [`method_utils.c`](./method_utils.c) [`todos.c`](./todos.c)\
 Compiled: `make todo_api_5`
 
 ## Advanced Tasks
@@ -540,7 +540,7 @@ Content-Type: application/json^M$
 $ 
 ```
 
-File(s): [`API_server.h`](./API_server.h) [`8-9-10-11-API_server.c`](./8-9-10-11-API_server.c) [`8-9-10-11-setSignalHandler.c`](./8-9-10-11-setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`9-10-valid_fields.c`](./9-10-valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`8-9-10-11-HTTP_response.c`](./8-9-10-11-HTTP_response.c) [`cleanup.c`](./cleanup.c) [`methods.c`](./methods.c) [`method_utils.c`](./method_utils.c) [`todos.c`](./todos.c)\
+File(s): [`API_server.h`](./API_server.h) [`API_server.c`](./API_server.c) [`setSignalHandler.c`](./setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`valid_fields.c`](./valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`HTTP_response.c`](./HTTP_response.c) [`cleanup.c`](./cleanup.c) [`methods.c`](./methods.c) [`method_utils.c`](./method_utils.c) [`todos.c`](./todos.c)\
 Compiled: `make todo_api_6`
 
 ### :white_check_mark: 11. REST API - Delete a TODO
@@ -609,7 +609,7 @@ HTTP/1.1 404 Not Found^M$
 $ 
 ```
 
-File(s): [`API_server.h`](./API_server.h) [`8-9-10-11-API_server.c`](./8-9-10-11-API_server.c) [`8-9-10-11-setSignalHandler.c`](./8-9-10-11-setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`11-valid_fields.c`](./11-valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`8-9-10-11-HTTP_response.c`](./8-9-10-11-HTTP_response.c) [`cleanup.c`](./cleanup.c) [`methods.c`](./methods.c) [`method_utils.c`](./method_utils.c) [`todos.c`](./todos.c)\
+File(s): [`API_server.h`](./API_server.h) [`API_server.c`](./API_server.c) [`setSignalHandler.c`](./setSignalHandler.c) [`tokenizeBySubstr.c`](./tokenizeBySubstr.c) [`parseRequest.c`](./parseRequest.c) [`valid_fields.c`](./valid_fields.c) [`parseRequestLine.c`](./parseRequestLine.c) [`HTTP_response.c`](./HTTP_response.c) [`cleanup.c`](./cleanup.c) [`methods.c`](./methods.c) [`method_utils.c`](./method_utils.c) [`todos.c`](./todos.c)\
 Compiled: `make todo_api_7`
 
 ---
